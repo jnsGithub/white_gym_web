@@ -16,7 +16,6 @@ class SpotManagement{
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
         spotList.add(Spot.fromMap(data));
-        print(data['imageUrlList']);
       }
       return spotList;
     } catch (e) {

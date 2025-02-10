@@ -9,18 +9,35 @@ import 'package:white_gym_web/view/mainPage/mainPage.dart';
 import 'package:white_gym_web/view/sign/findPassword/findPasswordView.dart';
 import 'package:white_gym_web/view/sign/signIn/signInView.dart';
 import 'package:white_gym_web/view/sign/signUp/singUpView.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
+import 'package:white_gym_web/view/user/userManagementController.dart';
 import 'firebase_options.dart';
+import 'global.dart';
 
-void main() async{
+bool isLogin = false;
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ko_KR', null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if(FirebaseAuth.instance.currentUser != null){
+    await getMyInfo(FirebaseAuth.instance.currentUser!.uid);
+    isLogin = true;
+  }
+  else{
+    isLogin = false;
+  }
+
   Get.put(SpotManagementController());
-  Get.put(SpotManagementController());
+  Get.put(UserManagementController());
+
   runApp(const MyApp());
 }
 

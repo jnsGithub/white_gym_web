@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
 import 'package:white_gym_web/models/spotItem.dart';
 import 'package:white_gym_web/util/spotItemManagement.dart';
@@ -54,6 +55,8 @@ class MembershipManagementController extends GetxController{
   TextEditingController monthlyController = TextEditingController();
   TextEditingController pauseController = TextEditingController();
 
+  RxInt selectedSpotIndex = 0.obs;
+
 
   @override
   void onInit() {
@@ -66,9 +69,9 @@ class MembershipManagementController extends GetxController{
   }
 
   init() async{
-    await getSpotList();
     await getSpotItemList();
-    searchSpotItem(spotList[0]);
+    await getSpotList();
+    searchSpotItem(spotList[selectedSpotIndex.value]);
   }
 
   clearController(){
@@ -87,11 +90,20 @@ class MembershipManagementController extends GetxController{
   searchSpotItem(Spot spot){
     selectedSpot.value = spot.copyWith();
     selectedSpotItemList.value = spotItemList.where((element) => element.spotDocumentId == spot.documentId).toList();
-    print(selectedSpotItemList.length);
   }
 
   Future<void> getSpotList() async {
-    spotList.value = await SpotManagement().getSpotList();
+    List<Spot> temp = await SpotManagement().getSpotList();
+    print('포지션 : ' + myInfo.value.position);
+    if(myInfo.value.position != '마스터'){
+      for(int i = 0; i < myInfo.value.spotIdList.length; i++){
+        spotList.add(temp.where((element) => element.documentId == myInfo.value.spotIdList[i]).first);
+      }
+    }
+    else{
+      spotList.value = temp;
+    }
+    selectedSpotIndex.value = 0;
   }
 
   Future<void> getSpotItemList() async {
@@ -100,7 +112,28 @@ class MembershipManagementController extends GetxController{
 
   Future<void> updateSpotItem() async {
     await SpotItemManagement().updateSpotItem(selectedSpotItem.value);
+    clearController();
+    selectedSpotItem = SpotItem(
+      documentId: '',
+      admission: 0,
+      beforeDiscount: 0,
+      createDate: DateTime.now(),
+      descriptions1: '',
+      descriptions2: '',
+      discountCheck: false.obs,
+      index: 0,
+      isSubscribe: true.obs,
+      locker: 0,
+      monthly: 0,
+      name: '',
+      passTicket: true.obs,
+      pause: 0,
+      price: 0,
+      sportswear: 0,
+      spotDocumentId: '',
+    ).obs;
   }
+
   Future<void> updateSpotItemIndex() async {
     await SpotItemManagement().updateIndex(selectedSpotItemList);
   }
@@ -109,21 +142,21 @@ class MembershipManagementController extends GetxController{
     await SpotItemManagement().addSpotItem(
         SpotItem(
             documentId: '',
-            admission: int.parse(admissionController.text),
-            beforeDiscount: int.parse(beforeDiscountController.text),
+            admission: admissionController.text == '' ? 0 : int.parse(admissionController.text),
+            beforeDiscount: beforeDiscountController.text == '' ? 0 : int.parse(beforeDiscountController.text),
             createDate: DateTime.now(),
             descriptions1: descriptions1Controller.text,
             descriptions2: descriptions2Controller.text,
             discountCheck: selectedSpotItem.value.discountCheck,
             index: selectedSpotItem.value.index,
             isSubscribe: selectedSpotItem.value.isSubscribe,
-            locker: int.parse(lockerController.text),
+            locker: lockerController.text == '' ? 0 : int.parse(lockerController.text),
             monthly: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(monthlyController.text),
             name: nameController.text,
             passTicket: selectedSpotItem.value.passTicket,
             pause: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(pauseController.text),
-            price: int.parse(priceController.text),
-            sportswear: int.parse(sportswearController.text),
+            price: priceController.text == '' ? 0 : int.parse(priceController.text),
+            sportswear: sportswearController.text == '' ? 0 : int.parse(sportswearController.text),
             spotDocumentId: selectedSpot.value.documentId
         ));
     init();

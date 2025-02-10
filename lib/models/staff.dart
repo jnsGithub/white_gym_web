@@ -21,16 +21,19 @@ class Staff {
     required this.isApproved,
   });
 
-  factory Staff.fromJson(Map<String, dynamic> json) {
+  factory Staff.fromJson(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    data['documentId'] = doc.id;
+    data['spotIdList'] = List<String>.from(data['spotIdList']);
     return Staff(
-      documentId: json["documentId"],
-      email: json["email"],
-      name:json["name"],
-      spotIdList:json["spotIdList"],
-      position:json["position"],
-      hp:json["hp"],
-      createDate: (json["createDate"] as Timestamp).toDate(),
-      isApproved: json["isApproved"],
+      documentId: data["documentId"],
+      email: data["email"],
+      name:data["name"],
+      spotIdList:data["spotIdList"],
+      position:data["position"],
+      hp:data["hp"],
+      createDate: (data["createDate"] as Timestamp).toDate(),
+      isApproved: data["isApproved"],
     );
   }
 

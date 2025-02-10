@@ -16,6 +16,7 @@ class Sign{
         'position': position,
         'spotIdList': spotIdList,
         'isApproved': false,
+        'createDate': DateTime.now(),
         'hp': hp,
       });
       return true;
@@ -31,9 +32,8 @@ class Sign{
       DocumentSnapshot snapshot = await db.collection('staff').doc(user.user!.uid).get();
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       print(1);
-      data['documentId'] = snapshot.id;
-      data['spotIdList'] = List<String>.from(data['spotIdList']);
-      myInfo.value = Staff.fromJson(data);
+
+      myInfo.value = Staff.fromJson(snapshot);
       print(2);
       if (data['isApproved'] == false) {
         return false;

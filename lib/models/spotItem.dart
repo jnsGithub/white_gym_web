@@ -43,30 +43,54 @@ class SpotItem {
 
   // JSON 데이터를 Dart 객체로 변환
   factory SpotItem.fromMap(Map<String, dynamic> map) {
-    return SpotItem(
-      documentId: map['documentId'],
-      admission: map['admission'],
-      beforeDiscount: map['beforeDiscount'],
-      createDate: (map['createDate'] as Timestamp).toDate(),
-      descriptions1: map['descriptions1'],
-      descriptions2: map['descriptions2'],
-      discountCheck: (map['discountCheck'] as bool).obs,
-      index: map['index'],
-      isSubscribe: (map['isSubscribe'] as bool).obs,
-      locker: map['locker'],
-      monthly: map['monthly'],
-      name: map['name'],
-      passTicket: (map['passTicket'] as bool).obs,
-      pause: map['pause'],
-      price: map['price'],
-      sportswear: map['sportswear'],
-      spotDocumentId: map['spotDocumentId'],
-    );
+    try {
+      return SpotItem(
+        documentId: map['documentId'],
+        admission: map['admission'],
+        beforeDiscount: map['beforeDiscount'],
+        createDate: (map['createDate'] as Timestamp).toDate(),
+        descriptions1: map['descriptions1'],
+        descriptions2: map['descriptions2'],
+        discountCheck: (map['discountCheck'] as bool).obs,
+        index: map['index'],
+        isSubscribe: (map['isSubscribe'] as bool).obs,
+        locker: map['locker'],
+        monthly: map['monthly'],
+        name: map['name'],
+        passTicket: (map['passTicket'] as bool).obs,
+        pause: map['pause'],
+        price: map['price'],
+        sportswear: map['sportswear'],
+        spotDocumentId: map['spotDocumentId'],
+      );
+    } catch (e) {
+      return SpotItem(
+        documentId: map['documentId'],
+        admission: map['admission'],
+        beforeDiscount: map['beforeDiscount'],
+        createDate: (map['createDate'] as Timestamp).toDate(),
+        descriptions1: map['descriptions1'],
+        descriptions2: map['descriptions2'],
+        discountCheck: (map['discountCheck'] as bool).obs,
+        index: map['index'],
+        isSubscribe: (map['isSubscribe'] as bool).obs,
+        locker: map['locker'],
+        monthly: map['monthly'],
+        name: map['name'],
+        passTicket: (map['passTicket'] as bool).obs,
+        pause: map['pause'],
+        price: map['price'],
+        sportswear: map['sportswear'],
+        spotDocumentId: map['spotDocumentId'],
+      );
+    }
+
   }
 
   // Dart 객체를 JSON으로 변환
   Map<String, dynamic> toMap() {
     return {
+      'documentId': documentId,
       'admission': admission,
       'beforeDiscount': beforeDiscount,
       'createDate': createDate,
@@ -84,6 +108,28 @@ class SpotItem {
       'sportswear': sportswear,
       'spotDocumentId': spotDocumentId,
     };
+  }
+
+  factory SpotItem.empty() {
+    return SpotItem(
+      documentId: '',
+      name: '',
+      descriptions1: '',
+      descriptions2: '',
+      spotDocumentId: '',
+      isSubscribe: false.obs,
+      passTicket: false.obs,
+      discountCheck: false.obs,
+      index: 0,
+      admission: 0,
+      locker: 0,
+      monthly: 0,
+      pause: 0,
+      beforeDiscount: 0,
+      price: 0,
+      sportswear: 0,
+      createDate: DateTime.now(),
+    );
   }
 
   SpotItem copyWith({
@@ -124,5 +170,11 @@ class SpotItem {
       sportswear: sportswear ?? this.sportswear,
       spotDocumentId: spotDocumentId ?? this.spotDocumentId,
     );
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'SpotItem{documentId: $documentId, name: $name, descriptions1: $descriptions1, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate}';
   }
 }

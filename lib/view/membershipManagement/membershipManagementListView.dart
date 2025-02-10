@@ -23,7 +23,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '마스터 계정',
+                        text: myInfo.value.name,
                         style: TextStyle(
                           fontSize: 30,
                           color: gray900,
@@ -57,7 +57,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                     hint: Center(
                       child: Text(
                         textAlign: TextAlign.center,
-                        '${controller.selectedSpot.value.name}점',
+                        '${controller.selectedSpot.value.name}',
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -85,6 +85,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                       print(value);
                       // controller.selectedSpot.value = controller.spotList.firstWhere((element) => element.documentId == value);
                       controller.searchSpotItem(controller.spotList.firstWhere((element) => element.documentId == value));
+                      controller.selectedSpotIndex.value = controller.spotList.indexWhere((element) => element.documentId == value);
                       // if(controller.selectedSpotItemList.isEmpty){
                       //   controller.selectedSpotItem.value.index = 0;
                       // }
@@ -130,6 +131,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                           child: ElevatedButton(
                             onPressed: (){
                               controller.isDetailView.value = true;
+                              controller.isUpdate = false;
                               controller.selectedSpotItem.value.spotDocumentId = controller.selectedSpot.value.documentId;
                             },
                             style: ElevatedButton.styleFrom(
@@ -182,7 +184,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                   Obx(() =>
                       Container(
                         width: 960,
-                        height: 330,
+                        height: 500,
                         child: ReorderableListView.builder(
                           itemCount: controller.selectedSpotItemList.length,
                           itemBuilder: (context, index) {
@@ -209,7 +211,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                                   spacing: 10,
                                   children: [
                                     Text(controller.selectedSpotItemList[index].name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
-                                    Text(controller.selectedSpotItemList[index].descriptions1, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+                                    Text(controller.selectedSpotItemList[index].passTicket.value ? '전 지점 이용 가능' : '${controller.selectedSpot.value.name}만 이용 가능', style: TextStyle(fontSize: 20, color: Color(0xff5D687A), fontWeight: FontWeight.w400),),
                                   ],
                                 ),
                               ),

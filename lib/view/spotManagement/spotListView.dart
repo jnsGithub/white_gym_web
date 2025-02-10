@@ -83,27 +83,28 @@ class SpotListView extends GetView<SpotManagementController> {
                   },),
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                controller.isDetailView.value = true;
-              },
-              child: Container(
-                width: 1080,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Color(0xffEEF3FF),
-                  borderRadius: BorderRadius.circular(10),
+            if(myInfo.value.position == '마스터')
+              GestureDetector(
+                onTap: () {
+                  controller.isDetailView.value = true;
+                },
+                child: Container(
+                  width: 1080,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Color(0xffEEF3FF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 21,
+                    children: [
+                      Icon(Icons.add, color: mainColor, size: 23,),
+                      Text('지점 추가하기', style: TextStyle(fontSize: 23, color: mainColor, fontWeight: FontWeight.w600),),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 21,
-                  children: [
-                    Icon(Icons.add, color: mainColor, size: 23,),
-                    Text('지점 추가하기', style: TextStyle(fontSize: 23, color: mainColor, fontWeight: FontWeight.w600),),
-                  ],
-                ),
-              ),
-            )
+              )
           ],
         ),
       ),

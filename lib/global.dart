@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -32,18 +33,52 @@ Rx<Staff> myInfo = Staff(
 String uid = '';
 // late MyInfo myInfo ;
 int cash = 0;
-// String formatTimestamp(Timestamp timestamp) {
-//   DateTime dateTime = timestamp.toDate();
-//   DateFormat dateFormat = DateFormat('MM.dd (EEE)', 'ko_KR');
-//   return dateFormat.format(dateTime);
-// }
-String formatPhoneNumber(String phoneNumber) {
-  if (phoneNumber.length == 11) {
-    return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7, 11)}';
-  } else {
-    return phoneNumber;
+
+Future<void> getMyInfo(String uid) async {
+  try {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('staff').doc(uid).get();
+    myInfo.value = Staff.fromJson(snapshot);
+  } catch (e) {
+    print('내 정보 가져올때 걸림 : ${e}');
   }
 }
+
+String formatDate(dynamic timestamp) {
+  try {
+    DateTime dateTime;
+
+    if (timestamp is Timestamp) {
+      dateTime = timestamp.toDate();
+    } else if (timestamp is DateTime) {
+      dateTime = timestamp;
+    } else if (timestamp is String) {
+      dateTime = DateTime.tryParse(timestamp) ?? DateTime.now(); // 문자열을 DateTime으로 변환
+    } else {
+      return 'Invalid Date';
+    }
+    if(dateTime.year == 1990){
+      return '-';
+    }
+
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd', 'ko_KR');
+    return dateFormat.format(dateTime);
+  } catch (e) {
+    print(e);
+    return 'Invalid Date';
+  }
+}
+
+String formatPhoneNumber(String input) {
+  final RegExp regex = RegExp(r'(\d{3})(\d{4})(\d{4})');
+  return input.replaceAllMapped(regex, (Match m) => '${m[1]}-${m[2]}-${m[3]}');
+}
+// String formatPhoneNumber(String phoneNumber) {
+//   if (phoneNumber.length == 11) {
+//     return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7, 11)}';
+//   } else {
+//     return phoneNumber;
+//   }
+// }
 
 String formatNumber(int number) {
   final formatter = NumberFormat('#,###');

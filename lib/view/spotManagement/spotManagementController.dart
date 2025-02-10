@@ -3,6 +3,7 @@ import 'dart:html' as html;
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
 
 import 'dart:convert';
@@ -52,7 +53,6 @@ class SpotManagementController extends GetxController {
       selectedAddressController.text = selectedRoadAddress.value;
       selectedJibunAddress.value = data['jibunAddress'] ?? '';
       selectedZonecode.value = data['zoneCode'] ?? '';
-      print(selectedSpot.value.address);
       getLocation();
       print(123);
 
@@ -80,8 +80,21 @@ class SpotManagementController extends GetxController {
   }
 
   Future<void> getSpotList() async {
-    spotList.value = await SpotManagement().getSpotList();
+    final List<Spot> fetchedList = await SpotManagement().getSpotList(); // 데이터 가져오기
+    List<Spot> temp = [];
+
+    if (myInfo.value.position != '마스터') {
+      temp.addAll(
+          fetchedList.where((element) => myInfo.value.spotIdList.contains(element.documentId))
+      );
+    } else {
+      temp = fetchedList;
+    }
+
+    // 한 번만 업데이트하여 불필요한 상태 변경 방지
+    spotList.value = temp;
   }
+
 
   Future<void> updateSpot() async {
     selectedSpot.value.name = selectedNameController.text;
@@ -126,7 +139,7 @@ class SpotManagementController extends GetxController {
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json",
-          'Authorization': 'KakaoAK b3cb1c7aa1e076c60ec8156e4995d055', //TODO: 키 변경 필요
+          'Authorization': 'KakaoAK 508e65d4591c22ae072a16fa9ddf99a6',
         },
       );
 
