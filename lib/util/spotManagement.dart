@@ -15,6 +15,7 @@ class SpotManagement{
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
+        data['devSnList'] = List<String>.from(data['devSnList'] ?? []);
         spotList.add(Spot.fromMap(data));
       }
       return spotList;
@@ -42,6 +43,7 @@ class SpotManagement{
         'lat': spot.lat,
         'lon': spot.lon,
         'imageUrlList': isSet ? await uploadImage(imageUrlList) : FieldValue.arrayUnion(await uploadImage(imageUrlList)),
+        'devSnList': spot.devSnList,
       });
     } catch (e) {
       print(e);

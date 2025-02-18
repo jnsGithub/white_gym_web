@@ -72,16 +72,6 @@ class MainPage extends GetView<MainController> {
                                 );
                               }),
                         ),
-
-                      TextButton(
-                          onPressed: (){
-                            // storage.deleteAll();
-                            // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                            //     builder: (BuildContext context) =>
-                            //         MyHomePage(title: '')), (route) => false);
-                          },
-                          child: const Text('로그아웃',style: TextStyle(color: Colors.white),)
-                      )
                     ],
                   ),
                 ),

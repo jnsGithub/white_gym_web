@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
 import 'package:white_gym_web/view/user/userManagementController.dart';
+import 'package:white_gym_web/view/visitRecordManagement/visitRecordController.dart';
 import 'firebase_options.dart';
 import 'global.dart';
 
@@ -34,7 +35,7 @@ void main() async {
   else{
     isLogin = false;
   }
-
+  Get.put(VisitRecordController());
   Get.put(SpotManagementController());
   Get.put(UserManagementController());
 

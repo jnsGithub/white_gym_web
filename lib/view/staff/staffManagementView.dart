@@ -60,6 +60,9 @@ class StaffManagementView extends GetView<StaffManagementController> {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     border: InputBorder.none,
                   ),
+                  onChanged: (String value) {
+                    controller.searchStaff();
+                  },
                   onSubmitted: (String value) {
                     // search();
                   },
@@ -157,7 +160,7 @@ class StaffManagementView extends GetView<StaffManagementController> {
                                     right: BorderSide(color: gray100, width: 1),
                                     bottom: index == 9 ? BorderSide(color: gray100, width: 1) : index == controller.selectedStaffList.length - 1 ? BorderSide(color: gray100, width: 1) : BorderSide.none,
                                   ),
-                                  borderRadius: index == 9 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : null,
+                                  borderRadius: index == 9  ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : index == controller.selectedStaffList.length - 1 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : null,
                                 ),
                                 child: Obx(() => Row(
                                     children: [
@@ -213,7 +216,7 @@ class StaffManagementView extends GetView<StaffManagementController> {
                                                 await controller.staffManagement.approveStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
                                                 controller.init();
                                               }else{
-                                                controller.deleteApprovedDialog(context, size);
+                                                controller.deleteApprovedDialog(context, size, controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index]);
                                                 // controller.staffList.removeWhere((element) => element.documentId == controller.selectedStaffList[index].documentId);
                                                 // await controller.staffManagement.deleteStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
                                                 // controller.init();

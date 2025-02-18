@@ -9,6 +9,8 @@ import 'package:white_gym_web/util/userDataManagement.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 
 class UserManagementController extends GetxController{
+  RxBool isAddView = false.obs;
+
   TextEditingController searchController = TextEditingController();
 
   TextEditingController memberShipNameController = TextEditingController();
@@ -25,6 +27,9 @@ class UserManagementController extends GetxController{
 
   RxList<Spot> mySpotList = <Spot>[].obs;
 
+  RxInt a = 0.obs;
+  RxInt selectedPage = 1.obs;
+
   RxList<Spot> spotList = <Spot>[].obs;
   Rx<Spot> selectedSpot = Spot(
     documentId: '',
@@ -36,7 +41,10 @@ class UserManagementController extends GetxController{
     lat: 0,
     lon: 0,
     createDate: DateTime.now(),
+    devSnList: [],
   ).obs;
+
+  late UserData addUserData;
 
   @override
   void onInit() {
@@ -48,7 +56,11 @@ class UserManagementController extends GetxController{
   void onClose() {
     super.onClose();
   }
-
+  updateUserDate(UserData userData) async {
+    await userDataManagement.updateUserTicket(userData, false);
+    // init();
+    update();
+  }
   init() async {
     await getUserDataList();
     await getSpotList();
@@ -56,10 +68,15 @@ class UserManagementController extends GetxController{
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
     mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
     mySpotList.insert(0, Spot.empty());
+    a.value = userDataListView.length > 10 ? 10 : userDataListView.length;
+    update();
+    print(userDataListView.length / 10);
+    print((userDataListView.length / 10).ceil());
   }
 
   searchUserList() {
     userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text) && element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
+    a.value = userDataListView.length > 10 ? 10 : userDataListView.length;
   }
 
   Future<void> getUserDataList() async {
@@ -91,7 +108,7 @@ class UserManagementController extends GetxController{
     spotList.value = await spotManagement.getSpotList();
   }
 
-  addUserDialog(BuildContext context, Size size, UserData? userData){
+  addUserDialog(BuildContext context, Size size, UserData? userData, UserManagementController controller){
     late Rx<UserData> user;
     bool readOnly = false;
     if(userData == null) {
@@ -101,6 +118,9 @@ class UserManagementController extends GetxController{
       user = userData.obs;
       readOnly = true;
     }
+    RxList<Spot> spotList = <Spot>[].obs;
+    spotList.assignAll(mySpotList);
+    spotList.removeAt(0);
     TextEditingController nameController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
 
@@ -405,13 +425,15 @@ class UserManagementController extends GetxController{
                       if(userData == null){
                         user.value.name = nameController.text;
                         user.value.phone = tempPhone;
-                        print(user);
-                        print(user.value.ticket.spotItem);
                         userDataManagement.addUserData(user.value, );
                       }
                       else{
-
+                        user.update((val) {
+                          val!.phone = tempPhone;
+                        });
+                        userDataManagement.updateUserData(user.value);
                       }
+                      controller.init();
                       Get.back();
                       },
                   ),

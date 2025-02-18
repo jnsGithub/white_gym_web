@@ -13,7 +13,6 @@ class SpotItemManagement{
         data['documentId'] = doc.id;
         spotItemList.add(SpotItem.fromMap(data));
       }
-      print(spotItemList);
       return spotItemList;
     } catch (e) {
       print('SpotItem 가져올때 걸림 : ${e}');

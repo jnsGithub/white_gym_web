@@ -22,6 +22,7 @@ class MembershipManagementController extends GetxController{
     lat: 0,
     lon: 0,
     createDate: DateTime.now(),
+    devSnList: [],
   ).obs;
   RxList<SpotItem> selectedSpotItemList = <SpotItem>[].obs;
   Rx<SpotItem> selectedSpotItem = SpotItem(
@@ -68,6 +69,7 @@ class MembershipManagementController extends GetxController{
     super.onClose();
   }
 
+
   init() async{
     await getSpotItemList();
     await getSpotList();
@@ -94,7 +96,6 @@ class MembershipManagementController extends GetxController{
 
   Future<void> getSpotList() async {
     List<Spot> temp = await SpotManagement().getSpotList();
-    print('포지션 : ' + myInfo.value.position);
     if(myInfo.value.position != '마스터'){
       for(int i = 0; i < myInfo.value.spotIdList.length; i++){
         spotList.add(temp.where((element) => element.documentId == myInfo.value.spotIdList[i]).first);

@@ -37,15 +37,16 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
     const Tab(text: '지점장'),
   ];
   late TabController tabController;
+
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: myTabs.length);
     super.onInit();
     init();
   }
-  @override
-  void onClose(){
 
+  @override
+  void onClose() {
     super.onClose();
   }
 
@@ -62,35 +63,41 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
     print(selectedStaffList.length);
   }
 
+  void searchStaff() {
+    selectedStaffList.value = staffList.where((element) => element.name.contains(searchController.text) && element.position == myTabs[tabController.index].text).toList();
+    a.value = selectedStaffList.length > 10 ? 10 : selectedStaffList.length;
+  }
+
   Future<void> getUserDataList() async {
     List<Staff> temp = await staffManagement.getStaffList();
     spotList = await spotManagement.getSpotList();
-    if(myInfo.value.position != '마스터'){
-      for(int i = 0; i < myInfo.value.spotIdList.length; i++){
-        staffList.value = temp.where((element) => element.spotIdList.contains(myInfo.value.spotIdList[i])).toList();
+    if (myInfo.value.position != '마스터') {
+      for (int i = 0; i < myInfo.value.spotIdList.length; i++) {
+        staffList.value = temp.where((element) =>
+            element.spotIdList.contains(myInfo.value.spotIdList[i])).toList();
       }
     }
-    else{
+    else {
       staffList.value = temp;
     }
   }
 
-  currentUserChange(value){
-    if(value == 0){
+  currentUserChange(value) {
+    if (value == 0) {
       selectedStaffList.value = approvedList;
-    }else if(value == 1){
+    } else if (value == 1) {
       selectedStaffList.value = trainerList;
-    }else if(value == 2){
+    } else if (value == 2) {
       selectedStaffList.value = infoList;
-    }else if(value == 3){
+    } else if (value == 3) {
       selectedStaffList.value = managerList;
-    }else if(value == 4){
+    } else if (value == 4) {
       selectedStaffList.value = spotOwner;
     }
     a.value = selectedStaffList.length > 10 ? 10 : selectedStaffList.length;
   }
 
-  Widget staffTypeTab(size){
+  Widget staffTypeTab(size) {
     return Container(
       width: size,
       height: 40,
@@ -101,11 +108,12 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
           )
       ),
       child: TabBar(
-        onTap: (value){
+        onTap: (value) {
           currentUserChange(value);
         },
         controller: tabController,
-        tabs: myInfo.value.position != '마스터' ? myTabs.where((element) => element.text != '지점장').toList() : myTabs,
+        tabs: myInfo.value.position != '마스터' ? myTabs.where((element) =>
+        element.text != '지점장').toList() : myTabs,
         labelColor: mainColor,
         unselectedLabelColor: gray300,
         labelStyle: const TextStyle(
@@ -126,25 +134,31 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
     );
   }
 
-  deleteApprovedDialog(BuildContext context, Size size) {
-    showDialog(context: (context), builder: (context){
-      return jns.Dialog(
-          size: size,
-          bottomPadding: 80,
-          topPadding: 80,
-          width: 442,
-          height: 78,
-          radius: 20,
-          title: '해당 직원을 삭제하시겠습니까?',
-          titleFontSize: 20,
-          subTitle: '(삭제 후 되돌릴 수 없습니다.)',
-          subTitleFontSize: 20,
-          subTitleTextColor: Colors.red,
-          onPressedOK: () {
-            Get.back();
+  deleteApprovedDialog(BuildContext context, Size size, Staff selectedStaff) {
+    {
+      showDialog(context: (context), builder: (context) {
+        return jns.Dialog(
+            size: size,
+            bottomPadding: 80,
+            topPadding: 80,
+            width: 442,
+            height: 78,
+            radius: 20,
+            title: '해당 직원을 삭제하시겠습니까?',
+            titleFontSize: 20,
+            subTitle: '(삭제 후 되돌릴 수 없습니다.)',
+            subTitleFontSize: 20,
+            subTitleTextColor: Colors.red,
+            onPressedOK: () async {
+              await staffManagement.deleteStaff(selectedStaff.documentId);
+              Get.back();
+              init();
             },
-          onPressedCancel: () {Get.back();}
-      );
-    });
+            onPressedCancel: () {
+              Get.back();
+            }
+        );
+      });
+    }
   }
 }

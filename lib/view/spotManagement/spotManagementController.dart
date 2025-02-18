@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:html' as html;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
@@ -27,6 +28,7 @@ class SpotManagementController extends GetxController {
       lat: 0,
       lon: 0,
     createDate: DateTime.now(),
+    devSnList: [],
   ).obs;
 
   RxString selectedRoadAddress = ''.obs;
@@ -38,10 +40,13 @@ class SpotManagementController extends GetxController {
   TextEditingController selectedAddressDetailController = TextEditingController();
   TextEditingController selectedDescriptionController = TextEditingController();
 
+
+  RxList<TextEditingController> devSnControllerList = <TextEditingController>[].obs;
+  RxList<Widget> devSnWidgetList = <Widget>[].obs;
+
   @override
   void onInit() {
     super.onInit();
-
     init();
 
     js.context["onJusoSelected"] = (String jsonStr) {
@@ -54,8 +59,6 @@ class SpotManagementController extends GetxController {
       selectedJibunAddress.value = data['jibunAddress'] ?? '';
       selectedZonecode.value = data['zoneCode'] ?? '';
       getLocation();
-      print(123);
-
     };
   }
 
@@ -75,6 +78,7 @@ class SpotManagementController extends GetxController {
     selectedSpot.value.addressDetail = selectedAddressDetailController.text;
     selectedSpot.value.descriptions = selectedDescriptionController.text;
     selectedSpot.value.imageUrlList = imageUrlList.obs;
+    selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
     await SpotManagement().addSpot(selectedSpot.value);
     await getSpotList();
   }
@@ -101,6 +105,7 @@ class SpotManagementController extends GetxController {
     selectedSpot.value.address = selectedAddressController.text;
     selectedSpot.value.addressDetail = selectedAddressDetailController.text;
     selectedSpot.value.descriptions = selectedDescriptionController.text;
+    selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
     await SpotManagement().updateSpot(selectedSpot.value, image, selectedSpot.value.imageUrlList.isEmpty);
     await getSpotList();
   }
@@ -169,6 +174,7 @@ class SpotManagementController extends GetxController {
     selectedAddressDetailController.text = selectedSpot.value.addressDetail;
     selectedDescriptionController.text = selectedSpot.value.descriptions;
     selectedRoadAddress.value = selectedSpot.value.address;
+    devSnControllerList.value = selectedSpot.value.devSnList.map((e) => TextEditingController(text: e)).toList();
     selectedJibunAddress.value = '';
     selectedZonecode.value = '';
   }
@@ -184,6 +190,7 @@ class SpotManagementController extends GetxController {
       lat: 0,
       lon: 0,
       createDate: DateTime.now(),
+      devSnList: [],
     );
     selectedNameController.clear();
     selectedAddressController.clear();
@@ -192,6 +199,26 @@ class SpotManagementController extends GetxController {
     selectedRoadAddress.value = '';
     selectedJibunAddress.value = '';
     selectedZonecode.value = '';
+    devSnControllerList.clear();
+    devSnWidgetList.clear();
     image.clear();
+  }
+
+  Widget textField(TextEditingController controller) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: bg
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: '장비 SN',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:white_gym_web/models/userData.dart';
 
 class UserDataManagement{
@@ -18,6 +19,14 @@ class UserDataManagement{
 
   Future<void> addUserData(UserData userData) async {
     try{
+      final snapshot = await db.collection('user').where('phone', isEqualTo: userData.phone).get();
+      if(snapshot.docs.isNotEmpty){
+        Get.back();
+        if(!Get.isSnackbarOpen){
+          Get.snackbar('이미 등록된 사용자입니다.', '이미 등록된 사용자입니다.');
+        }
+        return;
+      }
       await db.collection('user').doc().set(userData.toJson());
     }
     catch(e){

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
+import 'package:white_gym_web/view/user/userManagementController.dart';
 
 import 'signInController.dart';
 
@@ -96,7 +97,11 @@ class Login extends GetView<LoginController> {
                           return;
                         }
                         if(await controller.sign.signIn(controller.idController.text, controller.passwordController.text)) {
-                        Get.offAllNamed('/mainPage');
+                          var controller1 = Get.find<SpotManagementController>();
+                          var controller2 = Get.find<UserManagementController>();
+                          controller1.init();
+                          controller2.init();
+                          Get.offAllNamed('/mainPage');
                         } else {
                         Get.snackbar('로그인 실패', '아이디와 비밀번호를 확인해주세요.');
                         }
@@ -165,7 +170,9 @@ class Login extends GetView<LoginController> {
                   }
                   if(await controller.sign.signIn(controller.idController.text, controller.passwordController.text)) {
                     var controller1 = Get.find<SpotManagementController>();
+                    var controller2 = Get.find<UserManagementController>();
                     controller1.init();
+                    controller2.init();
                     Get.offAllNamed('/mainPage');
                   } else {
                     Get.snackbar('로그인 실패', '아이디와 비밀번호를 확인해주세요.');

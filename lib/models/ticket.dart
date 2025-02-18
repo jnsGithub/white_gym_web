@@ -3,22 +3,22 @@ import 'package:white_gym_web/models/spotItem.dart';
 
 class Ticket {
   final String documentId;
-  final String userDocumentId;
+  String userDocumentId;
   String spotDocumentId;
   String paymentBranch;
-  final int admission;
-  final int lockerNum;
+  int admission;
+  int lockerNum;
   int pause;
-  final bool locker;
-  final bool sportswear;
+  bool locker;
+  bool sportswear;
   bool status;
   final bool subscribe;
-  final bool passTicket;
+  bool passTicket;
   List<DateTime> pauseStartDate;
   List<DateTime> pauseEndDate;
   DateTime endDate;
   final DateTime createDate;
-  final SpotItem spotItem;
+  SpotItem spotItem;
 
   Ticket({
     required this.documentId,

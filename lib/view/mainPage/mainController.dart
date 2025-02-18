@@ -9,7 +9,10 @@ import 'package:white_gym_web/view/membershipManagement/membershipManagementView
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementView.dart';
 import 'package:white_gym_web/view/staff/staffManagementView.dart';
+import 'package:white_gym_web/view/user/UserView.dart';
+import 'package:white_gym_web/view/user/userManagementController.dart';
 import 'package:white_gym_web/view/user/userManagementView.dart';
+import 'package:white_gym_web/view/visitRecordManagement/visitRecordView.dart';
 
 
 
@@ -25,7 +28,7 @@ class MainController extends GetxController {
     Symbols.shoppingmode,
     Symbols.logout
   ].obs;
-  RxList menuWidget = [UserManagementView(),StaffManagementView(),UserManagementView(),SpotManagementView(), MembershipManagementView(), Scaffold()].obs;
+  RxList menuWidget = [VisitRecordView(),StaffManagementView(),UserView(),SpotManagementView(), MembershipManagementView(), Scaffold()].obs;
 
   //[UserPage(),StorePage(),PaymentPage(),CalculatePage()];
   RxInt menuIndex = 0.obs;
@@ -43,14 +46,14 @@ class MainController extends GetxController {
   void permissionCheck() {
     switch(myInfo.value.position){
       case '매니저':
-        menuItem = ['Main','회원 관리','멤버쉽 관리', '로그아웃'].obs;
+        menuItem = ['Main','회원 관리','이용권 관리', '로그아웃'].obs;
         menuIcon = [
           Symbols.home,
           Symbols.person,
           Symbols.shoppingmode,
           Symbols.logout
         ].obs;
-        menuWidget = [UserManagementView(), UserManagementView(), MembershipManagementView(), Scaffold()].obs;
+        menuWidget = [VisitRecordView(), UserView(), MembershipManagementView(), Scaffold()].obs;
         break;
       case '인포':
         menuItem = ['Main', '회원 관리', '로그아웃'].obs;
@@ -59,7 +62,7 @@ class MainController extends GetxController {
           Symbols.person,
           Symbols.logout
         ].obs;
-        menuWidget = [UserManagementView(), UserManagementView(), Scaffold()].obs;
+        menuWidget = [VisitRecordView(), UserView(), Scaffold()].obs;
         break;
       case '트레이너':
         menuItem = ['Main', '로그아웃'].obs;
@@ -67,7 +70,7 @@ class MainController extends GetxController {
           Symbols.home,
           Symbols.logout
         ].obs;
-        menuWidget = [UserManagementView(), Scaffold()].obs;
+        menuWidget = [VisitRecordView(), Scaffold()].obs;
         break;
     }
   }
@@ -89,7 +92,10 @@ class MainController extends GetxController {
       var controller = Get.find<MembershipManagementController>();
       controller.clearController();
       controller.isDetailView.value = false;
-
+    }
+    else if(menuItem[i] == '회원 관리'){
+      var controller = Get.find<UserManagementController>();
+      controller.isAddView.value = false;
     }
     update();
   }

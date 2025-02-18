@@ -11,6 +11,7 @@ class Spot{
   double lat;
   double lon;
   final DateTime createDate;
+  List<String> devSnList = [];
 
   Spot({
     required this.documentId,
@@ -22,6 +23,7 @@ class Spot{
     required this.lat,
     required this.lon,
     required this.createDate,
+    required this.devSnList
   });
 
   factory Spot.fromMap(Map<String, dynamic> data){
@@ -36,6 +38,7 @@ class Spot{
       lat: data['lat'],
       lon: data['lon'],
       createDate: (data['createDate'] as Timestamp).toDate(),
+      devSnList: data['devSnList']??[],
     );
   }
 
@@ -49,6 +52,7 @@ class Spot{
       'lat': lat,
       'lon': lon,
       'createDate': createDate,
+      'devSnList': devSnList,
     };
   }
 
@@ -62,6 +66,7 @@ class Spot{
     double? lat,
     double? lon,
     DateTime? createDate,
+    List<String>? devSnList
   }) {
     return Spot(
       documentId: documentId ?? this.documentId,
@@ -73,6 +78,7 @@ class Spot{
       lat: lat ?? this.lat,
       lon: lon ?? this.lon,
       createDate: createDate ?? this.createDate,
+      devSnList: devSnList ?? this.devSnList,
     );
   }
 
@@ -87,6 +93,7 @@ class Spot{
       lat: 0,
       lon: 0,
       createDate: DateTime.now(),
+      devSnList: [],
     );
   }
 
