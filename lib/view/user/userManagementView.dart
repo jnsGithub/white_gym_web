@@ -39,7 +39,14 @@ class UserManagementView extends GetView<UserManagementController> {
                 children: [
                   Row(
                     children: [
-                      Text('회원 관리',style: TextStyle(fontSize: 30, color: gray900, fontWeight: FontWeight.w600),),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: myInfo.value.position == '마스터' ? '마스터 계정' : myInfo.value.name, style: TextStyle(fontSize: 30, color: gray900, fontWeight: FontWeight.w700)),
+                            TextSpan(text: ' 님', style: TextStyle(fontSize: 26, color: gray500, fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      ),
                       SizedBox(width: 20,),
                       DropdownButtonHideUnderline(
                           child: DropdownButton2(
@@ -48,7 +55,7 @@ class UserManagementView extends GetView<UserManagementController> {
                               child: Text(e.name, style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                             )).toList(),
                             hint: Text(controller.selectedSpot.value.name, style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
-
+                            iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: gray600,), iconSize: 24),
                             onChanged: (String? value){
                               controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                               controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId)).toList();
@@ -56,24 +63,26 @@ class UserManagementView extends GetView<UserManagementController> {
                               controller.update();
                             },
                             buttonStyleData: ButtonStyleData(
+                              width: 150,
+                              height: 60,
                               decoration: BoxDecoration(
                                 color: bg,
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(16),
                               ),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              height: 40,
-                              width: 150,
+                              padding: EdgeInsets.symmetric(horizontal: 25),
                             ),
                             dropdownStyleData: const DropdownStyleData(
                               decoration: BoxDecoration(
                                   color: bg,
-                                  borderRadius: BorderRadius.all(Radius.circular(8))
+                                  borderRadius: BorderRadius.all(Radius.circular(16))
                               ),
                             ),
                           )
                       ),
                     ],
                   ),
+                  SizedBox(height: 20,),
+                  Text('회원 관리', style: TextStyle(fontSize: 30, color: gray900, fontWeight: FontWeight.w700)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -269,19 +278,12 @@ class UserManagementView extends GetView<UserManagementController> {
                                   else{
                                     int days = 0;
                                     if(user.ticket.endDate.year != 1990){
-                                      days = user.ticket.status ? user.ticket.endDate.difference(DateTime.now()).inDays + 2 : DateTime.now().difference(user.ticket.pauseStartDate.last).inDays + 2;
+                                      days = user.ticket.status ? user.ticket.endDate.difference(DateTime.now()).inDays + 2 : user.ticket.endDate.difference(user.ticket.pauseStartDate.last).inDays + 1;
                                     }
-                                    print('이용일수 : ${days}');
-
-                                    print('ex : ${(controller.userDataListView[num].ticket.spotItem.monthly! * 30)}');
-
-                                    useDayController.text = (days).toString() ;
+                                    useDayController.text = days.toString();
                                     if(DateTime.now().isAfter(user.ticket.endDate)){
                                       useDayController.text = '0';
                                     }
-                                    // else{
-                                    //   endDateController.text = formatDate(user.ticket.endDate);
-                                    // }
                                   }
                                   // RxList<Spot> spotList = controller.spotList.obs;
                                   RxString selectedSpotName = controller.userDataListView[num].ticket.passTicket ? '전체 지점'.obs : controller.userDataListView[num].ticket.paymentBranch.obs;
@@ -299,11 +301,19 @@ class UserManagementView extends GetView<UserManagementController> {
                                         maintainState: false,
                                         tilePadding: EdgeInsets.only(right: 75),
                                         collapsedShape: RoundedRectangleBorder(
-                                          borderRadius: index == 9 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : index == controller.userDataListView.length - 1 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : BorderRadius.zero,
+                                          borderRadius: index == 9
+                                              ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))
+                                              : (index + (controller.selectedPage.value - 1) * 10) == controller.userDataListView.length - 1
+                                              ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))
+                                              : BorderRadius.zero,
                                           side: BorderSide(color: gray100, width: 1),
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: index == 9 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : index == controller.userDataListView.length - 1 ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)) : BorderRadius.zero,
+                                          borderRadius: index == 9
+                                              ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))
+                                              : (index + (controller.selectedPage.value - 1) * 10) == controller.userDataListView.length - 1
+                                              ? BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16))
+                                              : BorderRadius.zero,
                                           side: BorderSide(color: gray100, width: 1),
                                         ),
                                         title: GestureDetector(
@@ -353,7 +363,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                 Container(
                                                   width: itemWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(controller.userDataListView[num].ticket.spotDocumentId == '' ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(controller.userDataListView[num].ticket.spotDocumentId == '' || user.ticket.endDate.isBefore(DateTime.now()) ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: itemFinishWidth,
@@ -376,7 +386,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                           ),
                                         ),
                                         children: [
-                                          controller.userDataListView[num].ticket.endDate.isBefore(DateTime.now()) && !controller.userDataListView[num].ticket.subscribe
+                                          controller.userDataListView[num].ticket.endDate.isBefore(DateTime.now())// && !controller.userDataListView[num].ticket.subscribe
                                               ? Container(
                                               height: 170,
                                               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -433,7 +443,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                     Text(isSubscribe ? '구독 멤버쉽(월 정기 결제) 정보' : '일반 멤버쉽(단건결제) 정보', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                                                     Row(
                                                       children: [
-                                                        ElevatedButton(
+                                                        isSubscribe && !user.ticket.status ? Container() :  ElevatedButton(
                                                           style: ElevatedButton.styleFrom(
                                                             padding: EdgeInsets.zero,
                                                             minimumSize: isSubscribe ? Size(102, 36) : Size(136, 36),
@@ -472,11 +482,12 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                 controller.userDataManagement.updateUserTicket(userData, false);
                                                                 return;
                                                               }
+                                                              saving(context);
                                                               userData.ticket.spotItem.name = memberShipNameController.text;
                                                               userData.ticket.spotItem.price = int.parse(memberShipPriceController.text);
                                                               userData.ticket.admission = int.parse(todayUseCountController.text);
                                                               userData.ticket.pause = int.parse(pauseCountController.text);
-                                                              userData.ticket.passTicket = selectedSpotId.value == '';
+                                                              userData.ticket.passTicket = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점';
                                                               userData.ticket.sportswear = sportswear.value;
                                                               userData.ticket.locker = locker.value;
                                                               userData.ticket.endDate = DateTime.parse(endDateController.text);
@@ -484,14 +495,23 @@ class UserManagementView extends GetView<UserManagementController> {
                                                               userData.ticket.spotItem.locker = !userData.ticket.locker || lockerPriceController.text == '' ? 0 : int.parse(lockerPriceController.text);
                                                               userData.ticket.lockerNum = !locker.value || lockerNumberController.text == '' ? 0 : int.parse(lockerNumberController.text);
                                                               userData.ticket.spotItem.spotDocumentId = controller.selectedSpot.value.documentId;
-                                                              userData.ticket.spotDocumentId = selectedSpotId.value == '' ? userData.ticket.spotDocumentId : selectedSpotId.value;
-                                                              userData.ticket.paymentBranch = selectedSpotId.value == '' ? userData.ticket.paymentBranch : selectedSpotName.value;
-                                                              controller.updateUserDate(userData);
+                                                              userData.ticket.spotDocumentId = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점' ? userData.ticket.spotDocumentId : selectedSpotId.value;
+                                                              userData.ticket.paymentBranch = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'  ? userData.ticket.paymentBranch : selectedSpotName.value;
+                                                              await controller.updateUserDate(userData);
+                                                              Get.back();
                                                               //
                                                               // await controller.userDataManagement.updateUserTicket(userData, false);
                                                               // controller.init();
                                                               // controller.update();
+                                                              if(!Get.isSnackbarOpen) {
+                                                                Get.snackbar(
+                                                                    '저정 완료',
+                                                                    '저장이 완료되었습니다.');
+                                                              }
                                                             } catch(e){
+                                                              if(!Get.isSnackbarOpen){
+                                                                Get.snackbar('저정 실패', '잠시 후 다시 시도해주세요.');
+                                                              }
                                                               print(e);
                                                             }
                                                           },
@@ -706,33 +726,34 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                                SizedBox(
-                                                                  width: 107,
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: [
-                                                                      Text('번호', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600)),
-                                                                      Container(
-                                                                        width: 53,
-                                                                        height: 28,
-                                                                        decoration: BoxDecoration(
-                                                                          color: Colors.white,
-                                                                          borderRadius: BorderRadius.circular(8),
-                                                                          border: Border.all(color: gray300),
-                                                                        ),
-                                                                        child: TextField(
-                                                                          textAlign: TextAlign.right,
-                                                                          controller: lockerNumberController,
-                                                                          decoration: InputDecoration(
-                                                                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
-                                                                            border: InputBorder.none,
+                                                                Obx(() => locker.value ? SizedBox(
+                                                                    width: 107,
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Text('번호', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600)),
+                                                                        Container(
+                                                                          width: 53,
+                                                                          height: 28,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.white,
+                                                                            borderRadius: BorderRadius.circular(8),
+                                                                            border: Border.all(color: gray300),
+                                                                          ),
+                                                                          child: TextField(
+                                                                            textAlign: TextAlign.right,
+                                                                            controller: lockerNumberController,
+                                                                            decoration: InputDecoration(
+                                                                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
+                                                                              border: InputBorder.none,
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                      Text('번', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
-                                                                    ],
-                                                                  ),
-                                                                )
+                                                                        Text('번', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
+                                                                      ],
+                                                                    ),
+                                                                  ) : Container(),
+                                                                ),
                                                               ],
                                                             ),
                                                           ),
@@ -802,6 +823,7 @@ class UserManagementView extends GetView<UserManagementController> {
                 ),
                 child: TextField(
                   textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 14, color: gray900, fontWeight: FontWeight.w600),
                   readOnly: isSubscribe,
                   controller: controller,
                   onChanged: onChanged == null ? null : (String value){
@@ -809,7 +831,7 @@ class UserManagementView extends GetView<UserManagementController> {
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: -18),
+                        horizontal: 10, vertical: -15),
                     border: InputBorder.none,
                   ),
                 ),

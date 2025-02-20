@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/staff.dart';
 
@@ -57,6 +58,7 @@ class Sign{
       print(myInfo.toString());
       print(2);
       if (data['isApproved'] == false) {
+        Get.snackbar('로그인 에러', '승인 대기중인 계정입니다.');
         return false;
       }
 
@@ -75,11 +77,13 @@ class Sign{
     }
   }
 
-  Future<void> findPassword(String email) async {
+  Future<bool> findPassword(String email) async {
     try {
       await auth.sendPasswordResetEmail(email: email);
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 }

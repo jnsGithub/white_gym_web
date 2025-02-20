@@ -12,7 +12,7 @@ class Ticket {
   bool locker;
   bool sportswear;
   bool status;
-  final bool subscribe;
+  bool subscribe;
   bool passTicket;
   List<DateTime> pauseStartDate;
   List<DateTime> pauseEndDate;

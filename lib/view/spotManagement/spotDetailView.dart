@@ -333,6 +333,7 @@ class SpotDetailView extends GetView<SpotManagementController> {
                     Get.snackbar('저장 오류', '지점 상세 주소를 제외한 모든 항목을 입력해주세요');
                     return;
                   }
+                  saving(context);
                   // List<String> imageUrlList = await controller.uploadImage();
                   if(controller.isUpdate){
                     print('update');
@@ -346,13 +347,7 @@ class SpotDetailView extends GetView<SpotManagementController> {
                     controller.init();
                     controller.isDetailView.value = false;
                   }
-                  // controller.selectedSpot.value = Spot(
-                  //     documentId: '',
-                  //     name: controller.selectedNameController.text,
-                  //     address: controller.selectedAddressController.text,
-                  //     addressDetail: controller.selectedAddressDetailController.text,
-                  //     descriptions: controller.selectedDescriptionController.text,
-                  //     imageUrlList: imageUrlList.obs, lat: , lon: 0);
+                  Get.back();
 
                 }
             ),

@@ -422,6 +422,11 @@ class UserManagementController extends GetxController{
                     width: 94,
                     height: 40,
                     onPressed: () async {
+                      if(nameController.text.isEmpty || phoneController.text.isEmpty || user.value.ticket.spotDocumentId.isEmpty){
+                        Get.snackbar('회원 추가 실패', '모든 항목을 입력해주세요.');
+                        return;
+                      }
+                      saving(context);
                       if(userData == null){
                         user.value.name = nameController.text;
                         user.value.phone = tempPhone;
@@ -435,6 +440,12 @@ class UserManagementController extends GetxController{
                       }
                       controller.init();
                       Get.back();
+                      Get.back();
+                      if(!Get.isSnackbarOpen) {
+                        Get.snackbar(
+                            '저정 완료',
+                            '저장이 완료되었습니다.');
+                      }
                       },
                   ),
                 ],
@@ -454,16 +465,36 @@ class UserManagementController extends GetxController{
           width: 442,
           radius: 20,
           height: 78,
-          title: userData.ticket.subscribe ? '구독권을 해지하시겠습니까?' : '해당 회원의 이용권을\n일시정지 하시겠습니까?',
+          title: userData.ticket.subscribe ? '구독권을 해지하시겠습니까?' : userData.ticket.status ? '해당 회원의 이용권을\n일시정지 하시겠습니까?' : '해당 회원의 이용권을\n재개 하시겠습니까?',
           titleFontSize: 20,
           subTitle: userData.ticket.subscribe ? '(구독 해지 후 되돌릴 수 없습니다.)' : null,
           subTitleTextColor: Colors.red,
-          onPressedOK: (){
-            if(userData.ticket.subscribe){
-
-            }else{
-
+          onPressedOK: () async {
+            DateTime Date = DateTime.now();
+            if(userData.ticket.status) {
+              if (userData.ticket.subscribe) {
+                userData.ticket.status = false;
+                userData.ticket.subscribe = true;
+                print(123123);
+                await userDataManagement.updateUserTicket(userData, false);
+              } else {
+                userData.ticket.status = false;
+                userData.ticket.pauseStartDate.add(DateTime(Date.year, Date.month, Date.day, 0, 0, 0));
+                userData.ticket.pauseEndDate.add(DateTime(Date.year, Date.month, Date.day + 29, 0, 0, 0));
+                await userDataManagement.updateUserTicket(userData, true);
+              }
             }
+            else if(!userData.ticket.subscribe && !userData.ticket.status){
+              userData.ticket.status = true;
+              print('-----------------------');
+              print(DateTime(Date.year, Date.month, Date.day , 0, 0, 0).difference(DateTime(Date.year, Date.month, Date.day, 0, 0, 0)).inDays);
+              print(userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day + 1, 0, 0, 0).difference(Date).inDays)));
+              print(userData.ticket.pauseStartDate.last);
+              userData.ticket.endDate = userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays));
+              await userDataManagement.updateUserTicket(userData, false);
+            }
+            init();
+            Get.back();
           },
           onPressedCancel: (){Get.back();},
           size: size

@@ -14,8 +14,12 @@ class AddMembershipView extends GetView<UserManagementController> {
   @override
   Widget build(BuildContext context) {
     UserData selectedUser = controller.addUserData.copyWith();
-    Ticket selectedTicket = selectedUser.ticket;
-    SpotItem selectedSpotItem = selectedTicket.spotItem;
+    Ticket selectedTicket = Ticket.empty();// selectedUser.ticket;
+    SpotItem selectedSpotItem = SpotItem.empty();//selectedTicket.spotItem;
+    selectedTicket.status = true;
+    selectedTicket.paymentBranch = selectedUser.ticket.paymentBranch;
+    selectedTicket.userDocumentId = selectedUser.documentId;
+    selectedTicket.spotDocumentId = selectedUser.ticket.spotDocumentId;
 
     TextEditingController nameController = TextEditingController();
     TextEditingController descriptions1Controller = TextEditingController();
@@ -108,7 +112,7 @@ class AddMembershipView extends GetView<UserManagementController> {
                                   ComponentTextField(95, '숫자만 입력', monthlyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                     onChanged: (text){
                                       selectedSpotItem.monthly = int.parse(text);
-                                      selectedTicket.endDate = DateTime.now().add(Duration(days: 30 * int.parse(text)));
+                                      selectedTicket.endDate = DateTime.now().add(Duration(days: 30 * int.parse(text) - 1));
                                     },
                                   ),
                                   Text('개월', style: childStyle,),
@@ -158,13 +162,16 @@ class AddMembershipView extends GetView<UserManagementController> {
                             children: [
                               Checkbox(
                                   activeColor: mainColor,
-                                  value: selectedSpotItem.passTicket.value,
+                                  value: !selectedSpotItem.passTicket.value,
                                   onChanged: (bool){
                                     selectedSpotItem.passTicket.value = !selectedSpotItem.passTicket.value;
+                                    selectedTicket.passTicket = !selectedSpotItem.passTicket.value;
+                                    print(selectedTicket.passTicket);
                                   }),
                               GestureDetector(
                                   onTap: (){
                                     selectedSpotItem.passTicket.value = !selectedSpotItem.passTicket.value;
+                                    selectedTicket.passTicket = !selectedSpotItem.passTicket.value;
                                   },
                                   child: Text('전체 지점 이용가능', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),))
                             ],
@@ -174,13 +181,16 @@ class AddMembershipView extends GetView<UserManagementController> {
                             children: [
                               Checkbox(
                                   activeColor: mainColor,
-                                  value: !selectedSpotItem.passTicket.value,
+                                  value: selectedSpotItem.passTicket.value,
                                   onChanged: (bool){
                                     selectedSpotItem.passTicket.value = !selectedSpotItem.passTicket.value;
+                                    selectedTicket.passTicket = !selectedSpotItem.passTicket.value;
+                                    print(selectedTicket.passTicket);
                                   }),
                               GestureDetector(
                                   onTap: (){
                                     selectedSpotItem.passTicket.value = !selectedSpotItem.passTicket.value;
+                                    selectedTicket.passTicket = !selectedSpotItem.passTicket.value;
                                   },
                                   child: Text('해당 지점만 이용 가능', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),))
                             ],
@@ -204,7 +214,7 @@ class AddMembershipView extends GetView<UserManagementController> {
                                       ComponentTextField(95, '숫자만 입력', lockerController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                         onChanged: (text){
                                           selectedSpotItem.locker = int.parse(text);
-                                          selectedTicket.locker = text != '0';
+                                          selectedTicket.locker = text != '0' && text != '';
                                         },
                                       ),
                                       Text('원', style: childStyle,),
@@ -221,7 +231,7 @@ class AddMembershipView extends GetView<UserManagementController> {
                                       ComponentTextField(95, '숫자만 입력', sportswearController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                         onChanged: (text){
                                           selectedSpotItem.sportswear = int.parse(text);
-                                          selectedTicket.sportswear = text != '0';
+                                          selectedTicket.sportswear = text != '0' && text != '';
                                         },
                                       ),
                                       Text('원', style: childStyle,),
@@ -260,6 +270,7 @@ class AddMembershipView extends GetView<UserManagementController> {
                                     selectedSpotItem.discountCheck.value = !selectedSpotItem.discountCheck.value;
                                     if(selectedSpotItem.discountCheck.value == false){
                                       selectedSpotItem.beforeDiscount = 0;
+                                      beforeDiscountController.text = '';
                                     }
                                   }),
                               GestureDetector(
@@ -267,11 +278,15 @@ class AddMembershipView extends GetView<UserManagementController> {
                                     selectedSpotItem.discountCheck.value = !selectedSpotItem.discountCheck.value;
                                     if(selectedSpotItem.discountCheck.value == false){
                                       selectedSpotItem.beforeDiscount = 0;
+                                      beforeDiscountController.text = '';
                                     }
                                   },
                                   child: Text('할인 전 가격' , style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500),)),
                               ComponentTextField(128, '숫자만 입력', beforeDiscountController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
                                 onChanged: (text){
+                                  if(!selectedSpotItem.discountCheck.value){
+                                    beforeDiscountController.text = '';
+                                  }
                                   selectedSpotItem.beforeDiscount = int.parse(text);
                                 },
                               ),
@@ -318,31 +333,32 @@ class AddMembershipView extends GetView<UserManagementController> {
                 ),
               ),
               jns.ConfirmButton(text: '저장', radius: 8, fontSize:26, fontWeight: FontWeight.w600, color: mainColor, width: 205, height: 60, onPressed: () async {
-                if(nameController.text.isEmpty){
-                  Get.snackbar('멤버쉽 상품 이름을 입력해주세요.', '멤버쉽 상품 이름을 입력해주세요.');
+                bool isReady = nameController.text.isNotEmpty
+                    && admissionController.text.isNotEmpty
+                    && priceController.text.isNotEmpty
+                    && monthlyController.text.isNotEmpty
+                    && pauseController.text.isNotEmpty;
+                print(
+                    'name: ${nameController.text.isNotEmpty}, '
+                        'admission: ${admissionController.text.isNotEmpty}, '
+                        'price: ${priceController.text.isNotEmpty}, '
+                        'monthly: ${monthlyController.text.isNotEmpty}, '
+                        'pause: ${pauseController.text.isNotEmpty}');
+
+                if(!isReady){
+                  Get.snackbar('회원 이용권 등록 실패', '멤버쉽 상세설명, 기타서비스, 이벤트 여부를 제외한 모든 항목을 입력해주세요.');
                   return;
                 }
+                saving(context);
                 selectedSpotItem.spotDocumentId = 'custom';
                 selectedTicket.userDocumentId = selectedUser.documentId;
                 selectedTicket.spotItem = selectedSpotItem;
                 selectedTicket.status = true;
                 selectedUser.ticket = selectedTicket;
-                print(selectedUser);
-                print('------------------------------');
-                print(selectedTicket);
-                print('------------------------------');
-                print(selectedSpotItem);
-                // controller.userDataManagement.updateUserTicket(selectedUser, false);
-                // if(isUpdate){
-                //   await controller.updateSpotItem();
-                // }
-                // else{
-                //   await controller.AddSpotItem();
-                // }
-                // await controller.getSpotList();
-                // await controller.getSpotItemList();
-                // controller.init();
-                // controller.isAddView.value = false;
+                await controller.userDataManagement.updateUserTicket(selectedUser, false);
+                controller.isAddView.value = false;
+                controller.init();
+                Get.back();
               })
             ],
           ),

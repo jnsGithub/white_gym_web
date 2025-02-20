@@ -14,6 +14,7 @@ class SignUpController extends GetxController {
   List<String> positionList = ['트레이너', '인포', '매니저', '지점장'].obs;
   RxInt selectedTye = 0.obs;
   RxString selectedItem = '소속지점'.obs;
+  RxString selectedItems = '소속지점'.obs;
   List<String> selectedSpotIdList = [];
 
   RxList<Spot> items = <Spot>[].obs;

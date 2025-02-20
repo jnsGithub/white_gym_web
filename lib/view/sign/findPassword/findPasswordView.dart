@@ -71,8 +71,18 @@ class FindPasswordView extends GetView<FindPasswordController> {
                   text: '메일 발송',
                   width: size.width,
                   height: 64,
-                  onPressed: (){
-                    Get.back();
+                  onPressed: () async {
+                    if(await controller.sign.findPassword(controller.emailController.text)){
+                      Get.offAllNamed('/signIn');
+                      if(!Get.isSnackbarOpen){
+                        Get.snackbar('비밀번호 재설정 메일 발송', '메일을 확인해주세요.', backgroundColor: mainColor, colorText: Colors.white);
+                      }
+                    }
+                    else{
+                      if(!Get.isSnackbarOpen){
+                        Get.snackbar('비밀번호 재설정 메일 발송 실패', '메일 발송에 실패했습니다. 이메일을 확인해주세요.', backgroundColor: mainColor, colorText: Colors.white);
+                      }
+                    }
                   })
             ],
           ),

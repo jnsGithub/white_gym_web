@@ -102,13 +102,13 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
       width: size,
       height: 40,
       decoration: const BoxDecoration(
-
           border: Border(
             bottom: BorderSide(color: gray100),
           )
       ),
       child: TabBar(
         onTap: (value) {
+          selectedPageNumber.value = 1;
           currentUserChange(value);
         },
         controller: tabController,

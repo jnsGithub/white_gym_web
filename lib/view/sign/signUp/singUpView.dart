@@ -95,17 +95,28 @@ class SignUpView extends GetView<SignUpController> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             )).toList(),
-                            hint: Text(controller.selectedItem.value, style: TextStyle(fontSize: size.width * 0.0104, fontWeight: FontWeight.w500, color: gray700),),
+                            hint: Text(controller.selectedTye.value == 3 ? controller.selectedItems.value : controller.selectedItem.value, style: TextStyle(fontSize: size.width * 0.0104, fontWeight: FontWeight.w500, color: gray700),),
                             onChanged: (String? value) {
+                              print(value);
                               if(controller.selectedTye.value == 3){
-                                if(controller.selectedItem.value.contains(value!)){
-                                  controller.selectedItem.value = controller.selectedItem.value.replaceAll(value, '');
+                                if(controller.selectedItems.contains('소속지점')){
+                                  controller.selectedItems.value = controller.selectedItems.value.replaceAll('소속지점', '');
+                                }
+                                if(controller.selectedItems.value.contains(value!)){
+                                  controller.selectedItems.value = controller.selectedItems.value.replaceAll(value, '');
                                   controller.selectedSpotIdList.remove(controller.items.where((element) => element.name == value).first.documentId);
                                 }
                                 else{
-                                  controller.selectedItem.value = controller.selectedItem.value + value;
+                                  controller.selectedItems.value = controller.selectedItems.value + value;
                                   controller.selectedSpotIdList.add(controller.items.where((element) => element.name == value).first.documentId);
                                 }
+                                controller.selectedItems.value = controller.selectedItems.value.replaceAllMapped(RegExp(r'점(?!,)'), (match) => '점,');
+
+                                // 2️⃣ 쉼표(`,`)가 연속되면 하나만 남기기
+                                controller.selectedItems.value = controller.selectedItems.value.replaceAll(RegExp(r',\s*,+'), ',');
+
+                                // 3️⃣ 맨 앞과 맨 뒤에 쉼표(`,`)가 있으면 제거
+                                controller.selectedItems.value = controller.selectedItems.value.replaceAll(RegExp(r'^,|,$'), '').trim();
                               }
                               else {
                                 controller.selectedItem(value!);

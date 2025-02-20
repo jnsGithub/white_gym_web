@@ -175,7 +175,9 @@ class Login extends GetView<LoginController> {
                     controller2.init();
                     Get.offAllNamed('/mainPage');
                   } else {
-                    Get.snackbar('로그인 실패', '아이디와 비밀번호를 확인해주세요.');
+                    if(!Get.isSnackbarOpen){
+                      Get.snackbar('로그인 실패', '아이디와 비밀번호를 확인해주세요.');
+                    }
                   }
                   // Get.toNamed('/mainPage');
                   // login(context);

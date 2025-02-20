@@ -23,7 +23,7 @@ class UserDataManagement{
       if(snapshot.docs.isNotEmpty){
         Get.back();
         if(!Get.isSnackbarOpen){
-          Get.snackbar('이미 등록된 사용자입니다.', '이미 등록된 사용자입니다.');
+          Get.snackbar('회원 추가 에러', '이미 등록된 전화번호입니다.');
         }
         return;
       }
