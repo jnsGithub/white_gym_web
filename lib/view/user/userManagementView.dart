@@ -6,6 +6,7 @@ import 'package:jns_package/jns_package.dart' as jns;
 import 'package:number_pagination/number_pagination.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
+import 'package:white_gym_web/models/ticket.dart';
 import 'package:white_gym_web/models/userData.dart';
 import 'package:white_gym_web/util/toExcel.dart';
 import 'package:white_gym_web/view/user/userManagementController.dart';
@@ -26,7 +27,6 @@ class UserManagementView extends GetView<UserManagementController> {
     double moreWidth = 98;
 
     Size size = MediaQuery.of(context).size;
-    Get.lazyPut(() => UserManagementController());
     return Scaffold(
       body: GetBuilder<UserManagementController>(
         builder: (controller) {
@@ -56,7 +56,9 @@ class UserManagementView extends GetView<UserManagementController> {
                             )).toList(),
                             hint: Text(controller.selectedSpot.value.name, style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                             iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined, color: gray600,), iconSize: 24),
-                            onChanged: (String? value){
+                            onChanged: controller.mySpotList.length == 1
+                                ? null
+                                : (String? value){
                               controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                               controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId)).toList();
                               controller.a.value = controller.userDataListView.length > 10 ? 10 : controller.userDataListView.length;
@@ -257,23 +259,30 @@ class UserManagementView extends GetView<UserManagementController> {
                                   TextEditingController lockerNumberController = TextEditingController();
 
                                   int num = (controller.selectedPage.value - 1) * 10 + index;
+                                  UserData user = controller.userDataListView[num].copyWith();
 
-                                  UserData user = controller.userDataListView[num];
-                                  memberShipNameController.text = controller.userDataListView[num].ticket.spotItem.name;
-                                  memberShipPriceController.text = controller.userDataListView[num].ticket.spotItem.price.toString();
-                                  useDayController.text = formatDate(controller.userDataListView[num].ticket.createDate);
-                                  endDateController.text = formatDate(controller.userDataListView[num].ticket.endDate);
-                                  todayUseCountController.text = controller.userDataListView[num].ticket.admission.toString();
-                                  pauseCountController.text = controller.userDataListView[num].ticket.pause.toString();
+                                  RxBool isStatus = user.ticket.endDate.isBefore(DateTime.now()).obs;
+                                  if(isStatus.value){
+                                    user.ticket = Ticket.empty();
+                                    user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
+                                    user.ticket.spotDocumentId = controller.userDataListView[num].ticket.spotDocumentId;
+                                  }
+
+                                  memberShipNameController.text = user.ticket.spotItem.name;
+                                  memberShipPriceController.text = user.ticket.spotItem.price.toString();
+                                  useDayController.text = formatDate(user.ticket.createDate);
+                                  endDateController.text = formatDate(user.ticket.endDate);
+                                  todayUseCountController.text = user.ticket.admission.toString();
+                                  pauseCountController.text = user.ticket.pause.toString();
                                   sportswearPriceController.text = '';
                                   lockerPriceController.text = '';
                                   lockerNumberController.text = '';
 
 
-                                  bool isSubscribe = controller.userDataListView[num].ticket.subscribe;
+                                  bool isSubscribe = user.ticket.subscribe;
 
                                   if(isSubscribe){
-                                    pauseCountController.text = controller.userDataListView[num].ticket.passTicket ? '전체 지점' : controller.userDataListView[num].ticket.paymentBranch;
+                                    pauseCountController.text = user.ticket.passTicket ? '전체 지점' : user.ticket.paymentBranch;
                                   }
                                   else{
                                     int days = 0;
@@ -285,18 +294,21 @@ class UserManagementView extends GetView<UserManagementController> {
                                       useDayController.text = '0';
                                     }
                                   }
-                                  // RxList<Spot> spotList = controller.spotList.obs;
-                                  RxString selectedSpotName = controller.userDataListView[num].ticket.passTicket ? '전체 지점'.obs : controller.userDataListView[num].ticket.paymentBranch.obs;
-                                  RxString selectedSpotId = controller.userDataListView[num].ticket.spotDocumentId.obs;
-                                  RxBool sportswear = controller.userDataListView[num].ticket.sportswear.obs;
-                                  RxBool locker = controller.userDataListView[num].ticket.locker.obs;
+
+                                  RxString selectedSpotName = user.ticket.passTicket ? '전체 지점'.obs : user.ticket.paymentBranch.obs;
+                                  RxString selectedSpotId = user.ticket.spotDocumentId.obs;
+
+                                  RxBool sportswear = user.ticket.sportswear.obs;
+                                  RxBool locker = user.ticket.locker.obs;
+
                                   if(sportswear.value){
-                                    sportswearPriceController.text = controller.userDataListView[num].ticket.spotItem.sportswear.toString();
+                                    sportswearPriceController.text = user.ticket.spotItem.sportswear.toString();
                                   }
                                   if(locker.value){
-                                    lockerPriceController.text = controller.userDataListView[num].ticket.spotItem.locker.toString();
-                                    lockerNumberController.text = controller.userDataListView[num].ticket.lockerNum.toString();
+                                    lockerPriceController.text = user.ticket.spotItem.locker.toString();
+                                    lockerNumberController.text = user.ticket.lockerNum.toString();
                                   }
+
                                   return ExpansionTile(
                                         maintainState: false,
                                         tilePadding: EdgeInsets.only(right: 75),
@@ -318,7 +330,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                         ),
                                         title: GestureDetector(
                                           onTap: (){
-                                            controller.addUserDialog(context, size, controller.userDataListView[num], controller);
+                                            controller.addUserDialog(context, size, user, controller);
                                           },
                                           child: Container(
                                             height: 59,
@@ -336,44 +348,44 @@ class UserManagementView extends GetView<UserManagementController> {
                                                 Container(
                                                   width: spotWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(controller.userDataListView[num].ticket.paymentBranch == '' ? '-' : controller.userDataListView[num].ticket.paymentBranch, style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(user.ticket.paymentBranch == '' ? '-' : user.ticket.paymentBranch, style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: nameWidth,
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    controller.userDataListView[num].name,
+                                                    user.name,
                                                     style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: sexWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(controller.userDataListView[num].gender == 0 ? '남자' : '여자', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(user.gender == 0 ? '남자' : '여자', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: hpWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(formatPhoneNumber(controller.userDataListView[num].phone) , style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(formatPhoneNumber(user.phone) , style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: createdDateWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(formatDate(controller.userDataListView[num].createDate), style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(formatDate(user.createDate), style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: itemWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(controller.userDataListView[num].ticket.spotDocumentId == '' || user.ticket.endDate.isBefore(DateTime.now()) ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(user.ticket.spotDocumentId == '' || user.ticket.endDate.isBefore(DateTime.now()) ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: itemFinishWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(formatDate(controller.userDataListView[num].ticket.endDate), style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(formatDate(user.ticket.endDate), style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 Container(
                                                   width: marketingWidth,
                                                   alignment: Alignment.center,
-                                                  child: Text(controller.userDataListView[num].smsAlarm ? 'O' : 'X', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
+                                                  child: Text(user.smsAlarm ? 'O' : 'X', style: TextStyle(fontSize: 16, color: gray900, fontWeight: FontWeight.w600),),
                                                 ),
                                                 // Container(
                                                 //     width: moreWidth,
@@ -386,7 +398,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                           ),
                                         ),
                                         children: [
-                                          controller.userDataListView[num].ticket.endDate.isBefore(DateTime.now())// && !controller.userDataListView[num].ticket.subscribe
+                                          Obx(() => isStatus.value// && !controller.userDataListView[num].ticket.subscribe
                                               ? Container(
                                               height: 170,
                                               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -401,8 +413,9 @@ class UserManagementView extends GetView<UserManagementController> {
                                               child: Center(
                                                   child: GestureDetector(
                                                     onTap: (){
-                                                      controller.addUserData = controller.userDataListView[num];
-                                                      controller.isAddView.value = true;
+                                                      isStatus.value = !isStatus.value;
+                                                      // controller.addUserData = user;
+                                                      // controller.isAddView.value = true;
                                                     },
                                                     child: Container(
                                                         width: 245,
@@ -443,7 +456,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                     Text(isSubscribe ? '구독 멤버쉽(월 정기 결제) 정보' : '일반 멤버쉽(단건결제) 정보', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                                                     Row(
                                                       children: [
-                                                        isSubscribe && !user.ticket.status ? Container() :  ElevatedButton(
+                                                        isSubscribe && !user.ticket.status || user.ticket.endDate.isBefore(DateTime.now()) ? Container() :  ElevatedButton(
                                                           style: ElevatedButton.styleFrom(
                                                             padding: EdgeInsets.zero,
                                                             minimumSize: isSubscribe ? Size(102, 36) : Size(136, 36),
@@ -451,20 +464,26 @@ class UserManagementView extends GetView<UserManagementController> {
                                                             backgroundColor: Colors.white,
                                                             shape: RoundedRectangleBorder(
                                                               borderRadius: BorderRadius.circular(8),
-                                                              side: BorderSide(color: isSubscribe ? Colors.red : controller.userDataListView[num].ticket.status ? mainColor : Colors.red),
+                                                              side: BorderSide(color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red),
                                                             ),
                                                           ),
                                                           onPressed: (){
-                                                            controller.pauseAndCancelDialog(context, controller.userDataListView[num], size);
+                                                            if(!isSubscribe && user.ticket.pause < 1 && user.ticket.status){
+                                                              if(!Get.isSnackbarOpen){
+                                                                Get.snackbar('일시 정지 불가', '일시 정지 가능 횟수가 없습니다.');
+                                                              }
+                                                              return;
+                                                            }
+                                                            controller.pauseAndCancelDialog(context, user, size);
                                                           },
                                                           child: Row(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               if(!isSubscribe)
-                                                                Icon(controller.userDataListView[num].ticket.status ? Icons.pause : Icons.play_arrow, color: isSubscribe ? Colors.red : controller.userDataListView[num].ticket.status ? mainColor : Colors.red,),
+                                                                Icon(user.ticket.status ? Icons.pause : Icons.play_arrow, color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red,),
                                                               if(!isSubscribe)
                                                                 SizedBox(width: 9,),
-                                                              Text(isSubscribe ? '구독 해지' : controller.userDataListView[num].ticket.status ? '이용권 일시 정지' : '일시 정지 해제', style: TextStyle(fontSize: 14, color: isSubscribe ? Colors.red : controller.userDataListView[num].ticket.status ? mainColor : Colors.red, fontWeight: FontWeight.w500),),
+                                                              Text(isSubscribe ? '구독 해지' : user.ticket.status ? '이용권 일시 정지' : '일시 정지 해제', style: TextStyle(fontSize: 14, color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red, fontWeight: FontWeight.w500),),
                                                             ],
                                                           ),
                                                         ),
@@ -472,7 +491,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                         jns.ConfirmButton(
                                                           onPressed: () async { // TODO: 저장버튼 구현해야함.
                                                             try{
-                                                              UserData userData = controller.userDataListView[num].copyWith();
+                                                              UserData userData = user.copyWith();
 
                                                               print(userData.documentId);
                                                               print('-----------------------------------------');
@@ -483,6 +502,14 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                 return;
                                                               }
                                                               saving(context);
+                                                              print(user.ticket.status);
+                                                              print(isStatus.value);
+                                                              if(!isStatus.value && user.ticket.endDate.isBefore(DateTime.now())){
+                                                                print(user.ticket.status);
+                                                                userData.ticket.status = !isStatus.value;
+                                                                print(user.ticket.status);
+                                                              }
+
                                                               userData.ticket.spotItem.name = memberShipNameController.text;
                                                               userData.ticket.spotItem.price = int.parse(memberShipPriceController.text);
                                                               userData.ticket.admission = int.parse(todayUseCountController.text);
@@ -509,6 +536,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                     '저장이 완료되었습니다.');
                                                               }
                                                             } catch(e){
+                                                              Get.back();
                                                               if(!Get.isSnackbarOpen){
                                                                 Get.snackbar('저정 실패', '잠시 후 다시 시도해주세요.');
                                                               }
@@ -636,14 +664,14 @@ class UserManagementView extends GetView<UserManagementController> {
                                                               children: [
                                                                 Text('회원복', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600)),
                                                                 Obx(() => Checkbox(
-                                                                  activeColor: controller.userDataListView[num].ticket.subscribe ? gray500 : mainColor,
+                                                                  activeColor: user.ticket.subscribe ? gray500 : mainColor,
                                                                   value: sportswear.value,
                                                                   onChanged: (bool? value) {
-                                                                    if(controller.userDataListView[num].ticket.subscribe){
+                                                                    if(user.ticket.subscribe){
                                                                       return;
                                                                     }
                                                                     if(value!){
-                                                                      sportswearPriceController.text = controller.userDataListView[num].ticket.spotItem.sportswear.toString();
+                                                                      sportswearPriceController.text = user.ticket.spotItem.sportswear.toString();
                                                                     }
                                                                     else{
                                                                       sportswearPriceController.text = '';
@@ -656,14 +684,14 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                   width: 80,
                                                                   height: 28,
                                                                   decoration: BoxDecoration(
-                                                                    color: controller.userDataListView[num].ticket.subscribe ? gray200 : Colors.white,
+                                                                    color: user.ticket.subscribe ? gray200 : Colors.white,
                                                                     borderRadius: BorderRadius.circular(8),
                                                                     border: Border.all(color: gray300),
                                                                   ),
                                                                   child: TextField(
                                                                     textAlign: TextAlign.right,
                                                                     controller: sportswearPriceController,
-                                                                    readOnly: controller.userDataListView[num].ticket.subscribe,
+                                                                    readOnly: user.ticket.subscribe,
                                                                     decoration: InputDecoration(
                                                                       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
                                                                       border: InputBorder.none,
@@ -686,15 +714,15 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                     children: [
                                                                       Container(width: 42, child: Text('락커', textAlign: TextAlign.right, style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))),
                                                                       Obx(() => Checkbox(
-                                                                        activeColor: controller.userDataListView[num].ticket.subscribe ? gray500 : mainColor,
+                                                                        activeColor: user.ticket.subscribe ? gray500 : mainColor,
                                                                         value: locker.value,
                                                                         onChanged: (bool? value) {
-                                                                          if(controller.userDataListView[num].ticket.subscribe){
+                                                                          if(user.ticket.subscribe){
                                                                             return;
                                                                           }
                                                                           if(value!){
-                                                                            lockerPriceController.text = controller.userDataListView[num].ticket.spotItem.locker.toString();
-                                                                            lockerNumberController.text = controller.userDataListView[num].ticket.lockerNum.toString();
+                                                                            lockerPriceController.text = user.ticket.spotItem.locker.toString();
+                                                                            lockerNumberController.text = user.ticket.lockerNum.toString();
                                                                           }
                                                                           else{
                                                                             lockerPriceController.text = '';
@@ -708,14 +736,14 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                         width: 80,
                                                                         height: 28,
                                                                         decoration: BoxDecoration(
-                                                                          color: controller.userDataListView[num].ticket.subscribe ? gray200 : Colors.white,
+                                                                          color: user.ticket.subscribe ? gray200 : Colors.white,
                                                                           borderRadius: BorderRadius.circular(8),
                                                                           border: Border.all(color: gray300),
                                                                         ),
                                                                         child: TextField(
                                                                           textAlign: TextAlign.right,
                                                                           controller: lockerPriceController,
-                                                                          readOnly: controller.userDataListView[num].ticket.subscribe,
+                                                                          readOnly: user.ticket.subscribe,
                                                                           decoration: InputDecoration(
                                                                             contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
                                                                             border: InputBorder.none,
@@ -727,32 +755,32 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                   ),
                                                                 ),
                                                                 Obx(() => locker.value ? SizedBox(
-                                                                    width: 107,
-                                                                    child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Text('번호', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600)),
-                                                                        Container(
-                                                                          width: 53,
-                                                                          height: 28,
-                                                                          decoration: BoxDecoration(
-                                                                            color: Colors.white,
-                                                                            borderRadius: BorderRadius.circular(8),
-                                                                            border: Border.all(color: gray300),
-                                                                          ),
-                                                                          child: TextField(
-                                                                            textAlign: TextAlign.right,
-                                                                            controller: lockerNumberController,
-                                                                            decoration: InputDecoration(
-                                                                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
-                                                                              border: InputBorder.none,
-                                                                            ),
+                                                                  width: 107,
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                      Text('번호', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600)),
+                                                                      Container(
+                                                                        width: 53,
+                                                                        height: 28,
+                                                                        decoration: BoxDecoration(
+                                                                          color: Colors.white,
+                                                                          borderRadius: BorderRadius.circular(8),
+                                                                          border: Border.all(color: gray300),
+                                                                        ),
+                                                                        child: TextField(
+                                                                          textAlign: TextAlign.right,
+                                                                          controller: lockerNumberController,
+                                                                          decoration: InputDecoration(
+                                                                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: -18),
+                                                                            border: InputBorder.none,
                                                                           ),
                                                                         ),
-                                                                        Text('번', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
-                                                                      ],
-                                                                    ),
-                                                                  ) : Container(),
+                                                                      ),
+                                                                      Text('번', style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
+                                                                    ],
+                                                                  ),
+                                                                ) : Container(),
                                                                 ),
                                                               ],
                                                             ),
@@ -765,6 +793,8 @@ class UserManagementView extends GetView<UserManagementController> {
                                               ],
                                             ),
                                           ),
+                                          )
+
                                         ],
                                       );
 
@@ -776,6 +806,7 @@ class UserManagementView extends GetView<UserManagementController> {
                               //To optimize further, use a package that supports partial updates instead of setState (e.g. riverpod)
                               controller.selectedPage.value = pageNumber;
                               controller.a.value = controller.userDataListView.length - ((pageNumber-1) * 10) > 10 ? 10 : controller.userDataListView.length - ((pageNumber-1) * 10);
+                              controller.update();
                             },
                             nextPageIcon: Icon(Icons.keyboard_arrow_right, color: Colors.black,),
                             previousPageIcon: Icon(Icons.keyboard_arrow_left, color: Colors.black,),

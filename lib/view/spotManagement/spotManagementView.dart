@@ -10,7 +10,6 @@ class SpotManagementView extends GetView<SpotManagementController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // Get.lazyPut(() => SpotManagementController());
     return Obx(() =>
       controller.isDetailView.value ? SpotDetailView() : SpotListView()
     );

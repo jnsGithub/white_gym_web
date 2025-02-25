@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
+import 'package:white_gym_web/view/sign/signIn/signInController.dart';
 import 'package:white_gym_web/view/sign/signUp/signUpController.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -138,9 +139,10 @@ class SignUpView extends GetView<SignUpController> {
                       color: mainColor,
                         radius: 10,
                         text: '가입하기',
-                        fontSize: size.width * 0.0125,
+                        fontSize: size.width * 0.01,
+                        fontWeight: FontWeight.w600,
                         width: size.width,
-                        height: 50,
+                        height: 60,
                         onPressed: () async { // TODO: saving버그 수정해야함
                           saving(context);
                           if(controller.selectedSpotIdList.isEmpty){
@@ -226,7 +228,7 @@ class SignUpView extends GetView<SignUpController> {
               if(controller.selectedSpotIdList.isNotEmpty){
                 controller.selectedSpotIdList.clear();
               }
-              controller.selectedItem.value = controller.items[0].name;
+              // controller.selectedItem.value = controller.items[0].name;
             }
           },
         ),

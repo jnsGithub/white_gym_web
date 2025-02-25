@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
+import 'package:white_gym_web/models/spot.dart';
+import 'package:white_gym_web/view/mainPage/mainController.dart';
+import 'package:white_gym_web/view/membershipManagement/membershipManagementController.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
+import 'package:white_gym_web/view/staff/staffManagementController.dart';
 import 'package:white_gym_web/view/user/userManagementController.dart';
+import 'package:white_gym_web/view/visitRecordManagement/visitRecordController.dart';
 
 import 'signInController.dart';
 
@@ -97,11 +102,19 @@ class Login extends GetView<LoginController> {
                           return;
                         }
                         if(await controller.sign.signIn(controller.idController.text, controller.passwordController.text)) {
+                          Get.offAllNamed('/mainPage');
+                          var mainController = Get.find<MainController>();
                           var controller1 = Get.find<SpotManagementController>();
                           var controller2 = Get.find<UserManagementController>();
+                          var controller3 = Get.find<VisitRecordController>();
+                          var controller4 = Get.find<MembershipManagementController>();
+                          var controller5 = Get.find<StaffManagementController>();
+                          controller1.selectedSpot.value = Spot.empty();
+                          controller2.selectedSpot.value = Spot.empty();
+                          controller3.selectedSpot.value = Spot.empty();
                           controller1.init();
                           controller2.init();
-                          Get.offAllNamed('/mainPage');
+                          controller3.init();
                         } else {
                         Get.snackbar('로그인 실패', '아이디와 비밀번호를 확인해주세요.');
                         }
@@ -171,8 +184,13 @@ class Login extends GetView<LoginController> {
                   if(await controller.sign.signIn(controller.idController.text, controller.passwordController.text)) {
                     var controller1 = Get.find<SpotManagementController>();
                     var controller2 = Get.find<UserManagementController>();
+                    var controller3 = Get.find<VisitRecordController>();
+                    controller1.selectedSpot.value = Spot.empty();
+                    controller2.selectedSpot.value = Spot.empty();
+                    controller3.selectedSpot.value = Spot.empty();
                     controller1.init();
                     controller2.init();
+                    controller3.init();
                     Get.offAllNamed('/mainPage');
                   } else {
                     if(!Get.isSnackbarOpen){

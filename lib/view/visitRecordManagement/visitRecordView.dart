@@ -14,7 +14,6 @@ class VisitRecordView extends GetView<VisitRecordController> {
   Widget build(BuildContext context) {
     DateTime afterOneYear = DateTime.now().add(Duration(days: 365));
     DateTime today = DateTime.now();
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 60, top: 50),
@@ -43,9 +42,9 @@ class VisitRecordView extends GetView<VisitRecordController> {
                               child: Text(e.name, style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                             )).toList(),
                             hint: Text(controller.selectedSpot.value.name, style: TextStyle(fontSize: 26, color: gray900, fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
-                            // customButton: Icon(Icons.keyboard_arrow_down_outlined, color: gray900,),
-              
-                            onChanged: (String? value){
+                            onChanged: controller.spotList.length == 1
+                                ? null
+                                : (String? value){
                               controller.selectedSpot.value = controller.spotList.firstWhere((element) => element.documentId == value);
                               print(value);
                               controller.selectedPage.value = 1;
@@ -124,7 +123,7 @@ class VisitRecordView extends GetView<VisitRecordController> {
                         }
                       }
               
-                      print('-------------------------');
+                      // print('-------------------------');
                       // for(int i = 0; i < temp.length; i++) {
                       //   print('temp[$i]: ${temp[i]?.data()['createDate'].toDate()}');
                       // }

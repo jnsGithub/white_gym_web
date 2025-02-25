@@ -58,20 +58,26 @@ class UserManagementController extends GetxController{
   }
   updateUserDate(UserData userData) async {
     await userDataManagement.updateUserTicket(userData, false);
-    // init();
+    init();
     update();
   }
+
   init() async {
     await getUserDataList();
     await getSpotList();
 
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
     mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
-    mySpotList.insert(0, Spot.empty());
+    if(mySpotList.length > 1){
+      print('이건가');
+      print(mySpotList.length);
+      mySpotList.insert(0, Spot.empty());
+    }
+    else{
+      selectedSpot.value = mySpotList[0];
+    }
     a.value = userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
-    print(userDataListView.length / 10);
-    print((userDataListView.length / 10).ceil());
   }
 
   searchUserList() {
@@ -111,6 +117,7 @@ class UserManagementController extends GetxController{
   addUserDialog(BuildContext context, Size size, UserData? userData, UserManagementController controller){
     late Rx<UserData> user;
     bool readOnly = false;
+    Rx<Spot> selectedSpot = Spot.empty().obs;
     if(userData == null) {
       user = UserData.empty().obs;
     }
@@ -118,9 +125,14 @@ class UserManagementController extends GetxController{
       user = userData.obs;
       readOnly = true;
     }
+    print(readOnly);
     RxList<Spot> spotList = <Spot>[].obs;
     spotList.assignAll(mySpotList);
-    spotList.removeAt(0);
+    if(spotList.length > 1){
+      spotList.removeAt(0);
+    }
+    selectedSpot.value = spotList[0];
+    // spotList.removeAt(0);
     TextEditingController nameController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
 
@@ -184,7 +196,7 @@ class UserManagementController extends GetxController{
                       hint: Center(
                         child: Text(
                           textAlign: TextAlign.center,
-                          '${user.value.ticket.paymentBranch}',
+                          '${selectedSpot.value.name}',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,
@@ -212,11 +224,11 @@ class UserManagementController extends GetxController{
                       onChanged: readOnly ? null : (String? value) {
                         print(value);
                         if (value != null) {
-                          final selectedSpot = spotList.firstWhere((element) => element.documentId == value);
+                          selectedSpot.value = spotList.firstWhere((element) => element.documentId == value);
 
                           user.update((val) {
-                            val?.ticket.spotDocumentId = selectedSpot.documentId;
-                            val?.ticket.paymentBranch = selectedSpot.name;
+                            val?.ticket.spotDocumentId = selectedSpot.value.documentId;
+                            val?.ticket.paymentBranch = selectedSpot.value.name;
                           });
 
                           print(user.value.ticket.paymentBranch); // 변경된 값 출력
@@ -426,20 +438,22 @@ class UserManagementController extends GetxController{
                         Get.snackbar('회원 추가 실패', '모든 항목을 입력해주세요.');
                         return;
                       }
-                      saving(context);
                       if(userData == null){
                         user.value.name = nameController.text;
                         user.value.phone = tempPhone;
-                        userDataManagement.addUserData(user.value, );
+                        if(!await userDataManagement.addUserData(user.value)){
+                          return;
+                        }
                       }
                       else{
                         user.update((val) {
                           val!.phone = tempPhone;
                         });
-                        userDataManagement.updateUserData(user.value);
+                        if(!await userDataManagement.updateUserData(user.value)){
+                          return;
+                        }
                       }
                       controller.init();
-                      Get.back();
                       Get.back();
                       if(!Get.isSnackbarOpen) {
                         Get.snackbar(
@@ -495,6 +509,7 @@ class UserManagementController extends GetxController{
             }
             init();
             Get.back();
+            update();
           },
           onPressedCancel: (){Get.back();},
           size: size

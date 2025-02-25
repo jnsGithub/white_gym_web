@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
+import 'package:white_gym_web/models/staff.dart';
 import 'package:white_gym_web/util/sign.dart';
 import 'package:white_gym_web/view/membershipManagement/membershipManagementController.dart';
 import 'package:white_gym_web/view/membershipManagement/membershipManagementView.dart';
+import 'package:white_gym_web/view/sign/signIn/signInController.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementView.dart';
 import 'package:white_gym_web/view/staff/staffManagementView.dart';
@@ -101,6 +103,16 @@ class MainController extends GetxController {
   }
 
   signOut() async {
+    myInfo = Staff(
+      documentId: '',
+      name: '',
+      email: '',
+      position: '',
+      hp: '',
+      spotIdList: [],
+      createDate: DateTime.now(),
+      isApproved: false,
+    ).obs;
     await sign.signOut();
   }
 }

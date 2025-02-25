@@ -23,6 +23,8 @@ class VisitRecordController extends GetxController {
   }
 
   init() async {
+    print('init');
+    // selectedSpot = Spot.empty().obs;
     List<Spot> temp = await SpotManagement().getSpotList();
     List<Spot> temp2 = [];
     if(myInfo.value.position != '마스터'){
@@ -34,7 +36,7 @@ class VisitRecordController extends GetxController {
       temp2 = temp;
     }
     spotList.value = temp2;
-    if(myInfo.value.position == '마스터' || myInfo.value.position == '지점장'){
+    if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
       spotList.insert(0, Spot.empty());
     }
     else{

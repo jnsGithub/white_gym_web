@@ -12,7 +12,6 @@ class MembershipManagementView extends GetView<MembershipManagementController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => MembershipManagementController());
     return Obx(() => controller.isDetailView.value ? MembershipManagementDetailView() : MembershipManagementListView());
   }
 }

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:white_gym_web/util/spotItemManagement.dart';
 import 'package:white_gym_web/view/findAddress.dart';
 import 'package:white_gym_web/view/mainPage/mainPage.dart';
+import 'package:white_gym_web/view/membershipManagement/membershipManagementController.dart';
 import 'package:white_gym_web/view/sign/findPassword/findPasswordView.dart';
 import 'package:white_gym_web/view/sign/signIn/signInView.dart';
 import 'package:white_gym_web/view/sign/signUp/singUpView.dart';
@@ -14,10 +16,12 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:white_gym_web/view/spotManagement/spotManagementController.dart';
+import 'package:white_gym_web/view/staff/staffManagementController.dart';
 import 'package:white_gym_web/view/user/userManagementController.dart';
 import 'package:white_gym_web/view/visitRecordManagement/visitRecordController.dart';
 import 'firebase_options.dart';
 import 'global.dart';
+import 'view/mainPage/mainController.dart';
 
 bool isLogin = false;
 
@@ -27,7 +31,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   if(FirebaseAuth.instance.currentUser != null){
     await getMyInfo(FirebaseAuth.instance.currentUser!.uid);
     isLogin = true;
@@ -35,9 +38,6 @@ void main() async {
   else{
     isLogin = false;
   }
-  Get.put(VisitRecordController());
-  Get.put(SpotManagementController());
-  Get.put(UserManagementController());
 
   runApp(const MyApp());
 }
@@ -49,6 +49,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      initialBinding: BindingsBuilder(() {
+        Get.lazyPut(() => MainController(), fenix: true);
+        Get.lazyPut(() => SpotManagementController(), fenix: true);
+        Get.lazyPut(() => VisitRecordController(), fenix: true);
+        Get.lazyPut(() => UserManagementController(), fenix: true);
+        Get.lazyPut(() => MembershipManagementController(), fenix: true);
+        Get.lazyPut(() => StaffManagementController(), fenix: true);
+      }),
       scrollBehavior: MyCustomScrollBehavior(),
       locale: const Locale('ko', 'KR'),
       color: Colors.white,

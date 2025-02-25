@@ -23,7 +23,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: myInfo.value.name,
+                        text: myInfo.value.position == '마스터' ? '마스터 계정' : myInfo.value.name,
                         style: TextStyle(
                           fontSize: 30,
                           color: gray900,
@@ -81,7 +81,9 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                       ),
                     )).toList(),
                     // value: value,
-                    onChanged: (String? value) {
+                    onChanged: controller.spotList.length == 1
+                        ? null
+                        : (String? value) {
                       print(value);
                       // controller.selectedSpot.value = controller.spotList.firstWhere((element) => element.documentId == value);
                       controller.searchSpotItem(controller.spotList.firstWhere((element) => element.documentId == value));

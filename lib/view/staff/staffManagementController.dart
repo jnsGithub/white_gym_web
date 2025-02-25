@@ -58,7 +58,24 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
     infoList.value = staffList.where((element) => element.isApproved == true && element.position == '인포').toList();
     managerList.value = staffList.where((element) => element.isApproved == true && element.position == '매니저').toList();
     spotOwner.value = staffList.where((element) => element.isApproved == true && element.position == '지점장').toList();
-    selectedStaffList.value = approvedList;
+    switch (tabController.index) {
+      case 0:
+        selectedStaffList.value = approvedList;
+        break;
+      case 1:
+        selectedStaffList.value = trainerList;
+        break;
+      case 2:
+        selectedStaffList.value = infoList;
+        break;
+      case 3:
+        selectedStaffList.value = managerList;
+        break;
+      case 4:
+        selectedStaffList.value = spotOwner;
+        break;
+    }
+    // selectedStaffList.value = approvedList;
     a.value = selectedStaffList.length > 10 ? 10 : selectedStaffList.length;
     print(selectedStaffList.length);
   }
@@ -151,8 +168,8 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
             subTitleTextColor: Colors.red,
             onPressedOK: () async {
               await staffManagement.deleteStaff(selectedStaff.documentId);
-              Get.back();
               init();
+              Get.back();
             },
             onPressedCancel: () {
               Get.back();

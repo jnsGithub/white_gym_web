@@ -15,7 +15,6 @@ class MainPage extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Get.lazyPut(() => MainController());
     return Obx(() => Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
