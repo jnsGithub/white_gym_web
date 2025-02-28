@@ -20,7 +20,7 @@ class MainPage extends GetView<MainController> {
         body: SingleChildScrollView(
           child:
 
-          Container(
+          SizedBox(
             width: size.width,
             height: size.height,
             child: Row(

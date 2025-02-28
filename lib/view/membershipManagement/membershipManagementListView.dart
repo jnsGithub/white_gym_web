@@ -57,7 +57,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                     hint: Center(
                       child: Text(
                         textAlign: TextAlign.center,
-                        '${controller.selectedSpot.value.name}',
+                        controller.selectedSpot.value.name,
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -184,7 +184,7 @@ class MembershipManagementListView extends GetView<MembershipManagementControlle
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Obx(() =>
-                      Container(
+                      SizedBox(
                         width: 960,
                         height: 500,
                         child: ReorderableListView.builder(

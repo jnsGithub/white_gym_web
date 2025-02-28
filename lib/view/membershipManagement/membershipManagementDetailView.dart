@@ -28,7 +28,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Obx(() => ComponentColumn('멤버쉽 유형',
+                    Obx(() => componentColumn('멤버쉽 유형',
                       Row(
                         spacing: 45,
                         children: [
@@ -38,7 +38,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               Checkbox(
                                   activeColor: mainColor,
                                   value: controller.selectedSpotItem.value.isSubscribe.value,
-                                  onChanged: (bool){
+                                  onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
                                     // controller.clearController();
                                   }),
@@ -56,7 +56,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               Checkbox(
                                   activeColor: mainColor,
                                   value: !controller.selectedSpotItem.value.isSubscribe.value,
-                                  onChanged: (bool){
+                                  onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
                                     // controller.clearController(true);
                                   }),
@@ -73,8 +73,8 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                       ),
                     ),),
                     Container(height: 1, color: gray200,),
-                    ComponentColumn('멤버쉽 상품 이름',
-                      Container(
+                    componentColumn('멤버쉽 상품 이름',
+                      SizedBox(
                         width: 880,
                         child: TextField(
                           controller: controller.nameController,
@@ -94,7 +94,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                       ),
                     ),
                     Container(height: 1, color: gray200,),
-                    ComponentColumn('멤버쉽 상세 설명',
+                    componentColumn('멤버쉽 상세 설명',
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           // spacing: 40,
@@ -103,7 +103,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               spacing: 14,
                               children: [
                                 Text('상세 설명1:', style: childStyle,),
-                                ComponentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions1Controller, childStyle, 20, TextAlign.start, maxLength: 18,
+                                componentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions1Controller, childStyle, 20, TextAlign.start, maxLength: 18,
                                   onChanged: (text){
                                     controller.selectedSpotItem.value.descriptions1 = text;
                                   },
@@ -114,7 +114,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               spacing: 14,
                               children: [
                                 Text('상세 설명2:', style: childStyle,),
-                                ComponentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions2Controller, childStyle, 20, TextAlign.start, maxLength: 18,
+                                componentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions2Controller, childStyle, 20, TextAlign.start, maxLength: 18,
                                   onChanged: (text){
                                     controller.selectedSpotItem.value.descriptions2 = text;
                                   },
@@ -125,14 +125,14 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                         )
                     ),
                     Container(height: 1, color: gray200,),
-                    ComponentColumn('멤버쉽 옵션 설정',
+                    componentColumn('멤버쉽 옵션 설정',
                         Obx(() => Column(
                           children: [
                             if(!controller.selectedSpotItem.value.isSubscribe.value)
                               Row(
                                 children: [
                                   Text('이용권 개월 수', style: childStyle,),
-                                  ComponentTextField(95, '숫자만 입력', controller.monthlyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
+                                  componentTextField(95, '숫자만 입력', controller.monthlyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                     onChanged: (text){
                                       controller.selectedSpotItem.value.monthly = int.parse(text);
                                     },
@@ -147,7 +147,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                   Row(
                                     children: [
                                       Text('이용권 일시정지 가능 횟수', style: childStyle,),
-                                      ComponentTextField(95, '숫자만 입력', controller.pauseController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
+                                      componentTextField(95, '숫자만 입력', controller.pauseController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                         onChanged: (text){
                                           controller.selectedSpotItem.value.pause = int.parse(text);
                                         },
@@ -158,7 +158,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                 Row(
                                   children: [
                                     Text('일일 입장 가능 횟수', style: childStyle,),
-                                    ComponentTextField(95, '숫자만 입력', controller.admissionController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
+                                    componentTextField(95, '숫자만 입력', controller.admissionController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                       onChanged: (text){
                                         controller.selectedSpotItem.value.admission = int.parse(text);
                                       },
@@ -173,7 +173,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                         ),
                         )),
                     Container(height: 1, color: gray200,),
-                    Obx(() => ComponentColumn('이용 가능 지점',
+                    Obx(() => componentColumn('이용 가능 지점',
                       Row(
                         spacing: 45,
                         children: [
@@ -183,7 +183,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               Checkbox(
                                   activeColor: mainColor,
                                   value: controller.selectedSpotItem.value.passTicket.value,
-                                  onChanged: (bool){
+                                  onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.passTicket.value = !controller.selectedSpotItem.value.passTicket.value;
                                   }),
                               GestureDetector(
@@ -199,7 +199,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               Checkbox(
                                   activeColor: mainColor,
                                   value: !controller.selectedSpotItem.value.passTicket.value,
-                                  onChanged: (bool){
+                                  onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.passTicket.value = !controller.selectedSpotItem.value.passTicket.value;
                                   }),
                               GestureDetector(
@@ -214,8 +214,8 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                       ),
                     ),),
                     Container(height: 1, color: gray200,),
-                    ComponentColumn('기타 서비스',
-                        Obx(() => Container(
+                    componentColumn('기타 서비스',
+                        Obx(() => SizedBox(
                             width: 270,
                             child: Column(
                               children: [
@@ -225,7 +225,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                     Text('개인 락커 비용${controller.selectedSpotItem.value.isSubscribe.value ? '(월)' : ''} ', style: childStyle,),
                                     Row(
                                       children: [
-                                        ComponentTextField(95, '숫자만 입력', controller.lockerController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
+                                        componentTextField(95, '숫자만 입력', controller.lockerController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                           onChanged: (text){
                                             controller.selectedSpotItem.value.locker = int.parse(text);
                                           },
@@ -241,7 +241,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                     Text('회원복 비용${controller.selectedSpotItem.value.isSubscribe.value ? '(월)' : ''}', style: childStyle,),
                                     Row(
                                       children: [
-                                        ComponentTextField(95, '숫자만 입력', controller.sportswearController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
+                                        componentTextField(95, '숫자만 입력', controller.sportswearController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                           onChanged: (text){
                                             controller.selectedSpotItem.value.sportswear = int.parse(text);
                                           },
@@ -278,7 +278,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                               Checkbox(
                                   activeColor: mainColor,
                                   value: controller.selectedSpotItem.value.discountCheck.value,
-                                  onChanged: (bool){
+                                  onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.discountCheck.value = !controller.selectedSpotItem.value.discountCheck.value;
                                     if(controller.selectedSpotItem.value.discountCheck.value == false){
                                       controller.selectedSpotItem.value.beforeDiscount = 0;
@@ -292,7 +292,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                     }
                                   },
                                   child: Text('할인 전 가격' , style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500),)),
-                              ComponentTextField(128, '숫자만 입력', controller.beforeDiscountController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
+                              componentTextField(128, '숫자만 입력', controller.beforeDiscountController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
                                 onChanged: (text){
                                   controller.selectedSpotItem.value.beforeDiscount = int.parse(text);
                                 },
@@ -323,7 +323,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                           Obx(() => Row(
                             children: [
                               Text(controller.selectedSpotItem.value.isSubscribe.value ? '멤버쉽 요금(월)' : '멤버쉽 요금', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500),),
-                              ComponentTextField(128, '숫자만 입력', controller.priceController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
+                              componentTextField(128, '숫자만 입력', controller.priceController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
                                 onChanged: (text){
                                   controller.selectedSpotItem.value.price = int.parse(text);
                                 },
@@ -348,7 +348,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                   await controller.updateSpotItem();
                 }
                 else{
-                  await controller.AddSpotItem();
+                  await controller.addSpotItem();
                 }
                 // await controller.getSpotList();
                 // await controller.getSpotItemList();
@@ -365,8 +365,8 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
   TextStyle titleStyle = TextStyle(fontSize: 24, color: gray700, fontWeight: FontWeight.w600);
   TextStyle childStyle = TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500);
 
-  Widget ComponentTextField (double width, String hintText, TextEditingController controller, TextStyle style, double fontsize, TextAlign textAlign, {int? maxLength, TextInputType? keyboardType, Function(String)? onChanged}) {
-    return Container(
+  Widget componentTextField (double width, String hintText, TextEditingController controller, TextStyle style, double fontsize, TextAlign textAlign, {int? maxLength, TextInputType? keyboardType, Function(String)? onChanged}) {
+    return SizedBox(
       width: width,
       child: TextField(
         textAlign: textAlign,
@@ -393,7 +393,7 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
     );
   }
 
-  Widget ComponentColumn(String text, Widget widget) {
+  Widget componentColumn(String text, Widget widget) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       child: Column(

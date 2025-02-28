@@ -118,20 +118,26 @@ class UserManagementController extends GetxController{
     late Rx<UserData> user;
     bool readOnly = false;
     Rx<Spot> selectedSpot = Spot.empty().obs;
+    print(readOnly);
+    RxList<Spot> spotList = <Spot>[].obs;
+    spotList.assignAll(mySpotList);
+
+    if(spotList.length > 1){
+      spotList.removeAt(0);
+    }
+
+    selectedSpot.value = spotList[0];
+
     if(userData == null) {
       user = UserData.empty().obs;
+      user.value.ticket.paymentBranch = selectedSpot.value.name;
+      user.value.ticket.spotDocumentId = selectedSpot.value.documentId;
     }
     else{
       user = userData.obs;
       readOnly = true;
     }
-    print(readOnly);
-    RxList<Spot> spotList = <Spot>[].obs;
-    spotList.assignAll(mySpotList);
-    if(spotList.length > 1){
-      spotList.removeAt(0);
-    }
-    selectedSpot.value = spotList[0];
+
     // spotList.removeAt(0);
     TextEditingController nameController = TextEditingController();
     TextEditingController phoneController = TextEditingController();

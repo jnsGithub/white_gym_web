@@ -40,6 +40,7 @@ class MainController extends GetxController {
     super.onInit();
     permissionCheck();
   }
+
   @override
   void onClose(){
     super.onClose();

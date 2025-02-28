@@ -16,15 +16,21 @@ class StaffManagementView extends GetView<StaffManagementController> {
 
   @override
   Widget build(BuildContext context) {
-    double staffTypeWidth = 200;
-    double spotWidth = 200;
-    double nameWidth = 150;
-    double emailWidth = 260;
-    double phoneWidth = 250;
-    double createdWidth = 200;
-    double approvedWidth = 159;
-
     Size size = MediaQuery.of(context).size;
+    double staffTypeWidth = size.width * 0.1042;
+    double spotWidth = size.width * 0.1042;
+    double nameWidth = size.width * 0.0781;
+    double emailWidth = size.width * 0.1354;
+    double phoneWidth = size.width * 0.1302;
+    double createdWidth = size.width * 0.1042;
+    double approvedWidth = size.width * 0.0828;
+    // double staffTypeWidth = 200;
+    // double spotWidth = 200;
+    // double nameWidth = 150;
+    // double emailWidth = 260;
+    // double phoneWidth = 250;
+    // double createdWidth = 200;
+    // double approvedWidth = 159;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -212,7 +218,7 @@ class StaffManagementView extends GetView<StaffManagementController> {
                                 ),
                                 Container(
                                     width: approvedWidth,
-                                    padding: const EdgeInsets.symmetric(horizontal: 46, vertical: 14.5),
+                                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.024, vertical: 14.5),
                                     alignment: Alignment.center,
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom( // TODO: 버튼 스타일 수정해야함.
@@ -233,7 +239,7 @@ class StaffManagementView extends GetView<StaffManagementController> {
                                             // await controller.staffManagement.deleteStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
                                             // controller.init();
                                           }
-                                        }, child: Text(controller.tabController.index == 0 ? '승인' : '삭제', style: TextStyle(fontSize: 13, color: controller.tabController.index == 0 ? mainColor : Color(0xffFF3C3C), fontWeight: FontWeight.w500),))
+                                        }, child: Text(controller.tabController.index == 0 ? '승인' : '삭제', style: TextStyle(fontSize: size.width * 0.0068, color: controller.tabController.index == 0 ? mainColor : Color(0xffFF3C3C), fontWeight: FontWeight.w500),))
                                 ),
                               ],
                             ),

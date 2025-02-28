@@ -139,7 +139,7 @@ class MembershipManagementController extends GetxController{
     await SpotItemManagement().updateIndex(selectedSpotItemList);
   }
 
-  Future<void> AddSpotItem() async {
+  Future<void> addSpotItem() async {
     await SpotItemManagement().addSpotItem(
         SpotItem(
             documentId: '',

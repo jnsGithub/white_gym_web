@@ -62,7 +62,7 @@ class ToExcel{
         TextCellValue(formatPhoneNumber(row.phone)),
         TextCellValue('${row.createDate.toDate().year}-${row.createDate.toDate().month}-${row.createDate.toDate().day}'),
         TextCellValue(row.ticket.subscribe ? '구독 멤버쉽' : '일반 멤버쉽'),
-        TextCellValue('${row.ticket.endDate.year}-${row.ticket.endDate.month}-${row.ticket.endDate.day}'),
+        TextCellValue(row.ticket.endDate.year == 1990 ? '-' : '${row.ticket.endDate.year}-${row.ticket.endDate.month}-${row.ticket.endDate.day}'),
         TextCellValue(row.smsAlarm ? 'O' : 'X')
       ];
       sheet.appendRow(rowData);
