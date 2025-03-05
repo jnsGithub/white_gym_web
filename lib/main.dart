@@ -9,6 +9,7 @@ import 'package:white_gym_web/view/findAddress.dart';
 import 'package:white_gym_web/view/mainPage/mainPage.dart';
 import 'package:white_gym_web/view/membershipManagement/membershipManagementController.dart';
 import 'package:white_gym_web/view/sign/findPassword/findPasswordView.dart';
+import 'package:white_gym_web/view/sign/signIn/signInController.dart';
 import 'package:white_gym_web/view/sign/signIn/signInView.dart';
 import 'package:white_gym_web/view/sign/signUp/singUpView.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -22,22 +23,31 @@ import 'package:white_gym_web/view/visitRecordManagement/visitRecordController.d
 import 'firebase_options.dart';
 import 'global.dart';
 import 'view/mainPage/mainController.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 bool isLogin = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // setUrlStrategy(PathUrlStrategy());
   await initializeDateFormatting('ko_KR', null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  if(FirebaseAuth.instance.currentUser != null){
-    await getMyInfo(FirebaseAuth.instance.currentUser!.uid);
+  User? user = await FirebaseAuth.instance.authStateChanges().first;
+  if (user != null) {
+    await getMyInfo(user.uid);
     isLogin = true;
-  }
-  else{
+  } else {
     isLogin = false;
   }
+  // if(FirebaseAuth.instance.currentUser != null){
+  //   await getMyInfo(FirebaseAuth.instance.currentUser!.uid);
+  //   isLogin = true;
+  // }
+  // else{
+  //   isLogin = false;
+  // }
 
   runApp(const MyApp());
 }
@@ -50,6 +60,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialBinding: BindingsBuilder(() {
+        Get.lazyPut(() => LoginController());
         Get.lazyPut(() => MainController(), fenix: true);
         Get.lazyPut(() => SpotManagementController(), fenix: true);
         Get.lazyPut(() => VisitRecordController(), fenix: true);
@@ -77,7 +88,7 @@ class MyApp extends StatelessWidget {
               ), elevation: 0
           )
       ),
-      initialRoute:'/signIn',
+      initialRoute: isLogin ? '/mainPage' : '/signIn',
       getPages: [
         GetPage(name: '/signIn', page: () => const Login()),
         GetPage(name: '/mainPage', page: () => const MainPage()),

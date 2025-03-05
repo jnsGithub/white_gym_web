@@ -111,7 +111,7 @@ class SpotManagementController extends GetxController {
   }
 
   Future<List<String>> uploadImage() async {
-    return await SpotManagement().uploadImage(image);
+    return await SpotManagement().uploadSpotImage(image);
   }
 
   RxList<Uint8List?> image = <Uint8List?>[].obs;

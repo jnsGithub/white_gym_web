@@ -52,11 +52,9 @@ class Sign{
       UserCredential user =  await auth.signInWithEmailAndPassword(email: email, password: password);
       DocumentSnapshot snapshot = await db.collection('staff').doc(user.user!.uid).get();
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      print(1);
 
       myInfo.value = Staff.fromJson(snapshot);
       print(myInfo.toString());
-      print(2);
       if (data['isApproved'] == false) {
         Get.snackbar('로그인 에러', '승인 대기중인 계정입니다.');
         return false;

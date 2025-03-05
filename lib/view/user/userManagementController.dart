@@ -69,14 +69,13 @@ class UserManagementController extends GetxController{
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
     mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
     if(mySpotList.length > 1){
-      print('이건가');
       print(mySpotList.length);
       mySpotList.insert(0, Spot.empty());
     }
     else{
       selectedSpot.value = mySpotList[0];
     }
-    a.value = userDataListView.length > 10 ? 10 : userDataListView.length;
+    a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
   }
 

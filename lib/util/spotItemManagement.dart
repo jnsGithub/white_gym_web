@@ -36,7 +36,7 @@ class SpotItemManagement{
     }
   }
 
-  Future<void> updateIndex(List<SpotItem> list) async {
+  Future<void> updateSpotItemIndex(List<SpotItem> list) async {
     try {
       int index = 0;
       for (SpotItem spotItem in list) {

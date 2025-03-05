@@ -93,7 +93,7 @@ class MainController extends GetxController {
     }
     else if(menuItem[i] == '이용권 관리'){
       var controller = Get.find<MembershipManagementController>();
-      controller.clearController();
+      controller.clearTextEditingController();
       controller.isDetailView.value = false;
     }
     else if(menuItem[i] == '회원 관리'){

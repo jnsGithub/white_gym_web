@@ -42,7 +42,7 @@ class SpotManagement{
         'descriptions': spot.descriptions,
         'lat': spot.lat,
         'lon': spot.lon,
-        'imageUrlList': isSet ? await uploadImage(imageUrlList) : FieldValue.arrayUnion(await uploadImage(imageUrlList)),
+        'imageUrlList': isSet ? await uploadSpotImage(imageUrlList) : FieldValue.arrayUnion(await uploadSpotImage(imageUrlList)),
         'devSnList': spot.devSnList,
       });
     } catch (e) {
@@ -50,7 +50,7 @@ class SpotManagement{
     }
   }
 
-  Future<List<String>> uploadImage(List<Uint8List?> imageUrlList) async {
+  Future<List<String>> uploadSpotImage(List<Uint8List?> imageUrlList) async {
     List<String> uploadedImageUrlList = [];
     try {
       for (Uint8List? image in imageUrlList) {

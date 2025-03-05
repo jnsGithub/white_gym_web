@@ -23,7 +23,6 @@ class VisitRecordController extends GetxController {
   }
 
   init() async {
-    print('init');
     // selectedSpot = Spot.empty().obs;
     List<Spot> temp = await SpotManagement().getSpotList();
     List<Spot> temp2 = [];

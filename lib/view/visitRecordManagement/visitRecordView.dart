@@ -92,10 +92,14 @@ class VisitRecordView extends GetView<VisitRecordController> {
                       int monthUserCount = 0;
               
                       for (int i = 0; i < data.length; i++) {
-                        if (data[i]['createDate'].toDate().day == today.day) {
+                        if (data[i]['createDate'].toDate().day == today.day && data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
                           todayUserCount++;
+                          print('오늘 유저 카운트 : ${todayUserCount}');
+                          print(today.day);
+                          print((data[i]['createDate'] as Timestamp).toDate().hour);
+                          print(data[i]['userName']);
                         }
-                        if (data[i]['createDate'].toDate().month == today.month) {
+                        if (data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
                           monthUserCount++;
                         }
                       }

@@ -185,6 +185,7 @@ class UserManagementView extends GetView<UserManagementController> {
                             color: gray500,
                             onPressed: (){
                               controller.init();
+                              // controller.selectedPage.value = 1;
                             },
                           )
                         ],
@@ -468,18 +469,28 @@ class UserManagementView extends GetView<UserManagementController> {
                                                 Text(isSubscribe ? '구독 멤버쉽(월 정기 결제) 정보' : '일반 멤버쉽(단건결제) 정보', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w600),),
                                                 Row(
                                                   children: [
-                                                    isSubscribe && !user.ticket.status || user.ticket.endDate.isBefore(DateTime.now()) ? Container() :  ElevatedButton(
+                                                    // isSubscribe && !user.ticket.status || user.ticket.endDate.isBefore(DateTime.now()) ? Container() :
+                                                    ElevatedButton(
                                                       style: ElevatedButton.styleFrom(
                                                         padding: EdgeInsets.zero,
                                                         minimumSize: isSubscribe ? Size(102, 36) : Size(136, 36),
                                                         maximumSize: isSubscribe ? Size(102, 36) : Size(136, 36),
-                                                        backgroundColor: Colors.white,
+                                                        backgroundColor: isSubscribe && !user.ticket.status ? gray200 : Colors.white,
                                                         shape: RoundedRectangleBorder(
                                                           borderRadius: BorderRadius.circular(8),
-                                                          side: BorderSide(color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red),
+                                                          side: BorderSide(color: isSubscribe && user.ticket.status
+                                                              ? Colors.red
+                                                              : isSubscribe && !user.ticket.status
+                                                              ? gray500
+                                                              : !user.ticket.status
+                                                              ? mainColor : Colors.red),
                                                         ),
                                                       ),
                                                       onPressed: (){
+                                                        if(isSubscribe && !user.ticket.status){
+                                                          print(123);
+                                                          return;
+                                                        }
                                                         if(!isSubscribe && user.ticket.pause < 1 && user.ticket.status){
                                                           if(!Get.isSnackbarOpen){
                                                             Get.snackbar('일시 정지 불가', '일시 정지 가능 횟수가 없습니다.');
@@ -495,7 +506,20 @@ class UserManagementView extends GetView<UserManagementController> {
                                                             Icon(user.ticket.status ? Icons.pause : Icons.play_arrow, color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red,),
                                                           if(!isSubscribe)
                                                             SizedBox(width: 9,),
-                                                          Text(isSubscribe ? '구독 해지' : user.ticket.status ? '이용권 일시 정지' : '일시 정지 해제', style: TextStyle(fontSize: 14, color: isSubscribe ? Colors.red : !user.ticket.status ? mainColor : Colors.red, fontWeight: FontWeight.w500),),
+                                                          Text(isSubscribe && user.ticket.status
+                                                              ? '구독 해지'
+                                                              : isSubscribe && !user.ticket.status
+                                                              ? '구독 해지 완료'
+                                                              : user.ticket.status
+                                                              ? '이용권 일시 정지'
+                                                              : '일시 정지 해제',
+                                                            style: TextStyle(fontSize: 14, color: isSubscribe && user.ticket.status
+                                                                ? Colors.red                                  // 구독 활성화 상태 컬러
+                                                                : isSubscribe && !user.ticket.status
+                                                                ? gray500                                     // 구독 비활성화 상태 컬러
+                                                                : !user.ticket.status
+                                                                ? mainColor                                   // 비구독권 비활성화 상태 컬러
+                                                                : Colors.red, fontWeight: FontWeight.w500),), // 비구독권 활성화 상태 컬러
                                                         ],
                                                       ),
                                                     ),

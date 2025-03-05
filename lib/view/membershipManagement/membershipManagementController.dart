@@ -76,7 +76,7 @@ class MembershipManagementController extends GetxController{
     searchSpotItem(spotList[selectedSpotIndex.value]);
   }
 
-  clearController(){
+  clearTextEditingController(){
     nameController.clear();
     descriptions1Controller.clear();
     descriptions2Controller.clear();
@@ -113,7 +113,7 @@ class MembershipManagementController extends GetxController{
 
   Future<void> updateSpotItem() async {
     await SpotItemManagement().updateSpotItem(selectedSpotItem.value);
-    clearController();
+    clearTextEditingController();
     selectedSpotItem = SpotItem(
       documentId: '',
       admission: 0,
@@ -136,7 +136,7 @@ class MembershipManagementController extends GetxController{
   }
 
   Future<void> updateSpotItemIndex() async {
-    await SpotItemManagement().updateIndex(selectedSpotItemList);
+    await SpotItemManagement().updateSpotItemIndex(selectedSpotItemList);
   }
 
   Future<void> addSpotItem() async {
@@ -161,7 +161,7 @@ class MembershipManagementController extends GetxController{
             spotDocumentId: selectedSpot.value.documentId
         ));
     init();
-    clearController();
+    clearTextEditingController();
     selectedSpotItem = SpotItem(
       documentId: '',
       admission: 0,

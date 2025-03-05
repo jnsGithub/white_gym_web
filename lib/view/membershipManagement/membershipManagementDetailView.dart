@@ -40,12 +40,10 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                   value: controller.selectedSpotItem.value.isSubscribe.value,
                                   onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
-                                    // controller.clearController();
                                   }),
                               GestureDetector(
                                   onTap: (){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
-                                    // controller.clearController();
                                   },
                                   child: Text('구독형 멤버쉽(장기 결제)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),))
                             ],
@@ -58,12 +56,10 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                                   value: !controller.selectedSpotItem.value.isSubscribe.value,
                                   onChanged: (bool? bool){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
-                                    // controller.clearController(true);
                                   }),
                               GestureDetector(
                                   onTap: (){
                                     controller.selectedSpotItem.value.isSubscribe.value = !controller.selectedSpotItem.value.isSubscribe.value;
-                                    // controller.clearController();
                                   },
                                   child: Text('일반 멤버쉽(단건 결제)', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),))
                             ],
@@ -87,8 +83,6 @@ class MembershipManagementDetailView extends GetView<MembershipManagementControl
                             hintText: '20글자 이내로 작성해주세요.',
                             hintStyle: TextStyle(fontSize: 18, color: gray300, fontWeight: FontWeight.w400),
                             counter: SizedBox(),
-                            // contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                            // border: InputBorder.none,
                           ),
                         ),
                       ),
