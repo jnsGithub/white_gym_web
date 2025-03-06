@@ -234,6 +234,7 @@ class Login extends GetView<LoginController> {
           ),
         ),
       ),
+      floatingActionButton: Text('v1.0.0', style: TextStyle(color: gray500, fontSize: 12),),
     );
   }
 }

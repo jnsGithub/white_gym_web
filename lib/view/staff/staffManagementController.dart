@@ -90,7 +90,7 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
     spotList = await spotManagement.getSpotList();
     if (myInfo.value.position != '마스터') {
       for (int i = 0; i < myInfo.value.spotIdList.length; i++) {
-        staffList.value = temp.where((element) =>
+        staffList.value += temp.where((element) =>
             element.spotIdList.contains(myInfo.value.spotIdList[i])).toList();
       }
     }

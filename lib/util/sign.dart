@@ -27,6 +27,7 @@ class Sign{
       final emailSnapshot = await db.collection('staff').where('email', isEqualTo: email).get();
       if (emailSnapshot.docs.isEmpty && e.toString().contains('email-already-in-use')) {
         UserCredential user =  await auth.signInWithEmailAndPassword(email: email, password: password);
+        user.user!.updatePassword(password);
         await db.collection('staff').doc(user.user!.uid).set({
           'email': email,
           'name': name,

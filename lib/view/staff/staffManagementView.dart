@@ -87,6 +87,7 @@ class StaffManagementView extends GetView<StaffManagementController> {
                         IconButton(
                           icon: Icon(Icons.refresh),
                           onPressed: (){
+                            controller.staffList.clear();
                             controller.init();
                           },
                           color: gray500,),

@@ -373,7 +373,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                             Container(
                                               width: sexWidth,
                                               alignment: Alignment.center,
-                                              child: Text(user.gender == 0 ? '남자' : '여자', style: TextStyle(fontSize: tranSize(16), color: gray900, fontWeight: FontWeight.w600),),
+                                              child: Text(user.gender == 1 ? '남자' : '여자', style: TextStyle(fontSize: tranSize(16), color: gray900, fontWeight: FontWeight.w600),),
                                             ),
                                             Container(
                                               width: hpWidth,
