@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -11,7 +12,7 @@ class SpotManagement{
   Future<List<Spot>> getSpotList() async {
     List<Spot> spotList = [];
     try {
-      QuerySnapshot snapshot = await db.collection('spot').get();
+      QuerySnapshot snapshot = await spotDB.get();
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
@@ -27,7 +28,7 @@ class SpotManagement{
 
   Future<void> addSpot(Spot spot) async {
     try {
-      await db.collection('spot').add(spot.toMap());
+      await spotDB.add(spot.toMap());
     } catch (e) {
       print(e);
     }
@@ -35,7 +36,7 @@ class SpotManagement{
 
   Future<void> updateSpot(Spot spot, List<Uint8List?> imageUrlList, bool isSet) async {
     try {
-      await db.collection('spot').doc(spot.documentId).update({
+      await spotDB.doc(spot.documentId).update({
         'name': spot.name,
         'address': spot.address,
         'addressDetail': spot.addressDetail,

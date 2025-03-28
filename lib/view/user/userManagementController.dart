@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
@@ -7,6 +8,7 @@ import 'package:white_gym_web/models/userData.dart';
 import 'package:white_gym_web/util/spotManagement.dart';
 import 'package:white_gym_web/util/userDataManagement.dart';
 import 'package:jns_package/jns_package.dart' as jns;
+import 'dart:async';
 
 class UserManagementController extends GetxController{
   RxBool isAddView = false.obs;
@@ -49,13 +51,13 @@ class UserManagementController extends GetxController{
   @override
   void onInit() {
     super.onInit();
-    init();
+    init();//unawaited(init());
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   super.onClose();
+  // }
   updateUserDate(UserData userData) async {
     await userDataManagement.updateUserTicket(userData, false);
     init();
@@ -65,37 +67,51 @@ class UserManagementController extends GetxController{
   init() async {
     await getUserDataList();
     await getSpotList();
-
-    userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
+    userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();// && element.ticket.paymentBranch != '').toList();
     mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
     if(mySpotList.length > 1){
-      print(mySpotList.length);
       mySpotList.insert(0, Spot.empty());
+      if(myInfo.value.position != '마스터'){
+        spotList.insert(0, Spot.empty());
+      }
     }
     else{
       selectedSpot.value = mySpotList[0];
+      spotList.insert(0, Spot.empty());
     }
     a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
   }
 
   searchUserList() {
-    userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text) && element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
-    a.value = userDataListView.length > 10 ? 10 : userDataListView.length;
+    try{
+      selectedPage.value = 1;
+      if(searchController.text.isEmpty){
+        userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
+      }
+      else{
+        userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text)).toList();// && element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
+      }
+      a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
+      update();
+    } catch(e){
+      print(e);
+    }
   }
 
   Future<void> getUserDataList() async {
-    List<UserData> temp = await userDataManagement.getUserDataList();
-    List<UserData> temp2 = [];
-    if(myInfo.value.position != '마스터') {
-      for(var i in myInfo.value.spotIdList){
-        temp2 = temp2 + temp.where((element) => element.ticket.spotDocumentId == i).toList();
-      }
-    }
-    else{
-      temp2 = temp;
-    }
-    userDataList.value = temp2;
+    userDataList.value = await userDataManagement.getUserDataList();
+    // List<UserData> temp = await userDataManagement.getUserDataList();
+    // List<UserData> temp2 = [];
+    // if(myInfo.value.position != '마스터') {
+    //   for(var i in myInfo.value.spotIdList){
+    //     temp2 = temp2 + temp.where((element) => element.ticket.spotDocumentId == i).toList();
+    //   }
+    // }
+    // else{
+    //   temp2 = temp;
+    // }
+    // userDataList.value = temp2;
   }
 
   int useDayCalculation(UserData userData) {
@@ -131,6 +147,7 @@ class UserManagementController extends GetxController{
       user = UserData.empty().obs;
       user.value.ticket.paymentBranch = selectedSpot.value.name;
       user.value.ticket.spotDocumentId = selectedSpot.value.documentId;
+      user.value.gender = 1;
     }
     else{
       user = userData.obs;
@@ -143,7 +160,7 @@ class UserManagementController extends GetxController{
 
     nameController.text = user.value.name;
     phoneController.text = user.value.phone;
-    String tempPhone = '';
+    String tempPhone = user.value.phone;
 
     TextStyle titleTextStyle = TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.w700);
     TextStyle subTitleTextStyle = TextStyle(fontSize: 17, color: gray600, fontWeight: FontWeight.w500);
@@ -201,7 +218,7 @@ class UserManagementController extends GetxController{
                       hint: Center(
                         child: Text(
                           textAlign: TextAlign.center,
-                          '${selectedSpot.value.name}',
+                          '${userData == null ? selectedSpot.value.name : user.value.ticket.paymentBranch}',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,
@@ -277,6 +294,11 @@ class UserManagementController extends GetxController{
                     child: TextField(
                       readOnly: readOnly,
                       controller: nameController,
+                      onChanged: (value){
+                        if(value.contains(' ')){
+                          nameController.text = value.replaceAll(' ', '');
+                        }
+                      },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -310,6 +332,10 @@ class UserManagementController extends GetxController{
                           ),
                           child: TextField(
                             controller: phoneController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
@@ -338,7 +364,7 @@ class UserManagementController extends GetxController{
                         isExpanded: true,
                         hint: Text(
                           textAlign: TextAlign.left,
-                          user.value.gender == 0 ? '남성' : '여성',
+                          user.value.gender == 1 ? '남성' : '여성',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,
@@ -346,17 +372,18 @@ class UserManagementController extends GetxController{
                           ),
                         ),
                         items: [
-                          DropdownMenuItem(child: Text('남성'), value: 0,),
-                          DropdownMenuItem(child: Text('여성'), value: 1,),
+                          DropdownMenuItem(child: Text('남성'), value: 1,),
+                          DropdownMenuItem(child: Text('여성'), value: 0,),
                         ],
-                        onChanged: readOnly ? null : (value){
+                        onChanged: (value){
+                          print(value);
                           user.update((val) {
-                            val!.gender = value! as int;
+                            val!.gender = value!;
                           });
                         },
                         buttonStyleData: ButtonStyleData(
                           decoration: BoxDecoration(
-                            color: readOnly ? gray200 : bg,
+                            color: bg,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -439,7 +466,7 @@ class UserManagementController extends GetxController{
                     width: 94,
                     height: 40,
                     onPressed: () async {
-                      if(nameController.text.isEmpty || phoneController.text.isEmpty || user.value.ticket.spotDocumentId.isEmpty){
+                      if(nameController.text.isEmpty || phoneController.text.isEmpty){
                         Get.snackbar('회원 추가 실패', '모든 항목을 입력해주세요.');
                         return;
                       }

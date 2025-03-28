@@ -12,7 +12,7 @@ class SignUpController extends GetxController {
   TextEditingController hpController = TextEditingController();
 
   List<String> positionList = ['트레이너', '인포', '매니저', '지점장'].obs;
-  RxInt selectedTye = 0.obs;
+  RxInt selectedType = 0.obs;
   RxString selectedItem = '소속지점'.obs;
   RxString selectedItems = '소속지점'.obs;
   List<String> selectedSpotIdList = [];

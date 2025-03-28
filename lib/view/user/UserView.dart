@@ -9,6 +9,6 @@ class UserView extends GetView<UserManagementController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => controller.isAddView.value ? AddMembershipView() : UserManagementView());
+    return UserManagementView();
   }
 }

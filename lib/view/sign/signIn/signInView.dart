@@ -22,7 +22,6 @@ class Login extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Get.lazyPut(() => LoginController());
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -181,6 +180,8 @@ class Login extends GetView<LoginController> {
               ),
               GestureDetector(
                 onTap: () async {
+                  // controller.sign.test();
+                  // return;
                   if(controller.idController.text == '' || controller.passwordController.text == '') {
                     Get.snackbar('로그인 실패', '아이디와 비밀번호를 입력해주세요.');
                     return;
@@ -234,7 +235,7 @@ class Login extends GetView<LoginController> {
           ),
         ),
       ),
-      floatingActionButton: Text('v1.0.0', style: TextStyle(color: gray500, fontSize: 12),),
+      floatingActionButton: Text(version, style: TextStyle(color: gray500, fontSize: 12),),
     );
   }
 }

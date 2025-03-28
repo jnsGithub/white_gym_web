@@ -18,9 +18,7 @@ class MainPage extends GetView<MainController> {
     return Obx(() => Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
-          child:
-
-          SizedBox(
+          child: SizedBox(
             width: size.width,
             height: size.height,
             child: Row(

@@ -97,8 +97,8 @@ class MainController extends GetxController {
       controller.isDetailView.value = false;
     }
     else if(menuItem[i] == '회원 관리'){
-      var controller = Get.find<UserManagementController>();
-      controller.isAddView.value = false;
+      // var controller = Get.find<UserManagementController>();
+      // controller.isAddView.value = false;
     }
     update();
   }

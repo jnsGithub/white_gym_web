@@ -72,7 +72,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                 ? null
                                 : (String? value){
                               controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
-                              controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId)).toList();
+                              controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
 
                               controller.selectedPage.value = 1;
                               controller.a.value = controller.userDataListView.length > 10 ? 10 : controller.userDataListView.length;
@@ -129,7 +129,7 @@ class UserManagementView extends GetView<UserManagementController> {
                           ),
                           onChanged: (String value) async {
                             controller.searchUserList();
-                            controller.update();
+                            // controller.update();
                           },
                         ),
                       ),
@@ -170,8 +170,11 @@ class UserManagementView extends GetView<UserManagementController> {
                                 ),
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                               ),
-                              onPressed: (){
-                                ToExcel().toExcel(controller.userDataListView, controller.selectedSpot.value.name);
+                              onPressed: () async {
+                                saving(context);
+                                await Future.delayed(Duration(seconds: 2), (){
+                                  ToExcel().toExcel(controller.userDataListView, controller.selectedSpot.value.name);
+                                });
                               },
                               child: Row(
                                 children: [
@@ -324,6 +327,7 @@ class UserManagementView extends GetView<UserManagementController> {
 
                               return ExpansionTile(
                                     maintainState: false,
+
                                     tilePadding: EdgeInsets.only(right: size.width * 0.0391),
                                     collapsedShape: RoundedRectangleBorder(
                                       borderRadius: index == 9
@@ -546,6 +550,16 @@ class UserManagementView extends GetView<UserManagementController> {
                                                             print(user.ticket.status);
                                                           }
 
+                                                          if(userData.ticket.userDocumentId == ''){
+                                                            userData.ticket.userDocumentId = userData.documentId;
+                                                          }
+                                                          if(userData.ticket.spotDocumentId == '' && controller.selectedSpot.value.documentId != ''){
+                                                            userData.ticket.spotDocumentId = controller.selectedSpot.value.documentId;
+                                                          }
+                                                          if(userData.ticket.paymentBranch == '' && controller.selectedSpot.value.documentId != ''){
+                                                            userData.ticket.paymentBranch = controller.selectedSpot.value.name;
+                                                          }
+
                                                           userData.ticket.spotItem.name = memberShipNameController.text;
                                                           userData.ticket.spotItem.price = int.parse(memberShipPriceController.text);
                                                           userData.ticket.admission = int.parse(todayUseCountController.text);
@@ -563,6 +577,8 @@ class UserManagementView extends GetView<UserManagementController> {
                                                           await controller.updateUserDate(userData);
                                                           controller.update();
                                                           Get.back();
+
+
                                                           //
                                                           // await controller.userDataManagement.updateUserTicket(userData, false);
                                                           // controller.init();
@@ -572,6 +588,12 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                 '저정 완료',
                                                                 '저장이 완료되었습니다.');
                                                           }
+                                                          await Future.delayed(Duration(seconds: 2), (){
+                                                            if(Navigator.of(context).canPop()){
+                                                              print('다이얼로그 뜸');
+                                                              Get.back();
+                                                            }
+                                                          });
                                                         } catch(e){
                                                           Get.back();
                                                           if(!Get.isSnackbarOpen){
@@ -668,6 +690,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                                                 )).toList(),
                                                                 // value: value,
                                                                 onChanged: (String? value) {
+                                                                  print(controller.spotList[0].toString());
                                                                   selectedSpotId.value = value!;
                                                                   selectedSpotName.value = controller.spotList.firstWhere((element) => element.documentId == value).name;
                                                                 },

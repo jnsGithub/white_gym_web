@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spotItem.dart';
 
 class SpotItemManagement{
@@ -7,7 +8,7 @@ class SpotItemManagement{
   Future<List<SpotItem>> getSpotItemList() async {
     List<SpotItem> spotItemList = [];
     try {
-      QuerySnapshot snapshot = await db.collection('spotItem').orderBy('index', descending: false).get();
+      QuerySnapshot snapshot = await spotItemDB.orderBy('index', descending: false).get();
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
@@ -22,7 +23,7 @@ class SpotItemManagement{
 
   Future<void> addSpotItem(SpotItem spotItem) async {
     try {
-      await db.collection('spotItem').add(spotItem.toMap());
+      await spotItemDB.add(spotItem.toMap());
     } catch (e) {
       print('SpotItem 추가할때 걸림 : ${e}');
     }
@@ -30,7 +31,7 @@ class SpotItemManagement{
 
   Future<void> updateSpotItem(SpotItem spotItem) async {
     try {
-      await db.collection('spotItem').doc(spotItem.documentId).update(spotItem.toMap());
+      await spotItemDB.doc(spotItem.documentId).update(spotItem.toMap());
     } catch (e) {
       print('SpotItem 업데이트할때 걸림 : ${e}');
     }
@@ -40,7 +41,7 @@ class SpotItemManagement{
     try {
       int index = 0;
       for (SpotItem spotItem in list) {
-        await db.collection('spotItem').doc(spotItem.documentId).update({'index': index});
+        await spotItemDB.doc(spotItem.documentId).update({'index': index});
         index++;
       }
     } catch (e) {

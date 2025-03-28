@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/spot.dart';
 import 'package:white_gym_web/util/spotManagement.dart';
+import 'package:meta/meta.dart';
+import 'dart:async';
 
 class VisitRecordController extends GetxController {
   RxInt selectedPage = 1.obs;
@@ -10,6 +13,8 @@ class VisitRecordController extends GetxController {
   SpotManagement spot = SpotManagement();
   RxList<Spot> spotList = <Spot>[Spot.empty()].obs;
   Rx<Spot> selectedSpot = Spot.empty().obs;
+
+  RxList test = <List>[].obs;
 
   @override
   void onInit() {

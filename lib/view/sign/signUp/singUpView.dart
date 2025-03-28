@@ -96,10 +96,10 @@ class SignUpView extends GetView<SignUpController> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             )).toList(),
-                            hint: Text(controller.selectedTye.value == 3 ? controller.selectedItems.value : controller.selectedItem.value, style: TextStyle(fontSize: size.width * 0.0104, fontWeight: FontWeight.w500, color: gray700),),
+                            hint: Text(controller.selectedType.value == 3 ? controller.selectedItems.value : controller.selectedItem.value, style: TextStyle(fontSize: size.width * 0.0104, fontWeight: FontWeight.w500, color: gray700),),
                             onChanged: (String? value) {
                               print(value);
-                              if(controller.selectedTye.value == 3){
+                              if(controller.selectedType.value == 3){
                                 if(controller.selectedItems.contains('소속지점')){
                                   controller.selectedItems.value = controller.selectedItems.value.replaceAll('소속지점', '');
                                 }
@@ -111,6 +111,8 @@ class SignUpView extends GetView<SignUpController> {
                                   controller.selectedItems.value = controller.selectedItems.value + value;
                                   controller.selectedSpotIdList.add(controller.items.where((element) => element.name == value).first.documentId);
                                 }
+
+                                // 1️⃣ 쉼표(`,`) 뒤에 공백이 없으면 추가
                                 controller.selectedItems.value = controller.selectedItems.value.replaceAllMapped(RegExp(r'점(?!,)'), (match) => '점,');
 
                                 // 2️⃣ 쉼표(`,`)가 연속되면 하나만 남기기
@@ -182,7 +184,7 @@ class SignUpView extends GetView<SignUpController> {
                             }
                             return;
                           }
-                          if(await controller.sign.signUp(controller.emailController.text, controller.passwordController.text, controller.nameController.text, controller.positionList[controller.selectedTye.value], controller.selectedSpotIdList, controller.hpController.text)){
+                          if(await controller.sign.signUp(controller.emailController.text, controller.passwordController.text, controller.nameController.text, controller.positionList[controller.selectedType.value], controller.selectedSpotIdList, controller.hpController.text)){
                             Get.offAllNamed('/signIn');
                             Get.snackbar('회원가입 성공', '승인이 완료되면 로그인 할 수 있습니다.');
                           }
@@ -221,15 +223,26 @@ class SignUpView extends GetView<SignUpController> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           splashRadius: 10,
           side: BorderSide.none,
-          value: index == controller.selectedTye.value,
+          value: index == controller.selectedType.value,
           onChanged: (value) {
-            controller.selectedTye.value = index;
-            if(controller.selectedTye.value != 3){
-              if(controller.selectedSpotIdList.isNotEmpty){
+            controller.selectedType.value = index;
+            if(controller.selectedType.value != 3){
+              if(controller.selectedSpotIdList.isNotEmpty && controller.selectedSpotIdList.length == 1){
+                String temp = controller.selectedSpotIdList[0];
                 controller.selectedSpotIdList.clear();
+                controller.selectedSpotIdList.add(temp);
+              }
+              else{
+                controller.selectedSpotIdList.clear();
+                controller.selectedItem.value = '소속지점';
               }
               // controller.selectedItem.value = controller.items[0].name;
             }
+            else{
+              controller.selectedSpotIdList.clear();
+              controller.selectedItems.value = '소속지점';
+            }
+            print(controller.selectedSpotIdList);
           },
         ),
         Text(type, style: TextStyle(fontSize: size.width * 0.0104, fontWeight: FontWeight.w500, color: gray700), maxLines: 1,),

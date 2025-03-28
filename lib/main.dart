@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialBinding: BindingsBuilder(() {
-        Get.lazyPut(() => LoginController());
+        Get.lazyPut(() => LoginController(), fenix: true);
         Get.lazyPut(() => MainController(), fenix: true);
         Get.lazyPut(() => SpotManagementController(), fenix: true);
         Get.lazyPut(() => VisitRecordController(), fenix: true);

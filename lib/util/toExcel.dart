@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:excel/excel.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:white_gym_web/global.dart';
 import 'package:white_gym_web/models/userData.dart';
@@ -16,6 +17,7 @@ class ToExcel{
     TextCellValue('가입 일자'),
     TextCellValue('멤버쉽 이용권'),
     TextCellValue('멤버쉽 종료일'),
+    TextCellValue('사물함 번호'),
     TextCellValue('마케팅 정보 수신동의 여부')];
 
   toExcel(List<UserData> list, String spotName) async {
@@ -41,10 +43,14 @@ class ToExcel{
       sheet.setColumnWidth(3, 30);
       await saveExcel(spotName);
       print('엑셀 파일 생성 완료');
+      Get.back();
     } catch(e){
       print(e);
+      Get.back();
+      if(!Get.isSnackbarOpen){
+        Get.snackbar('엑셀 파일 생성 실패', '다시 시도해주세요');
+      }
     }
-
   }
 
   void addHeaderAndData(List<UserData> list) {
@@ -60,9 +66,10 @@ class ToExcel{
         TextCellValue(row.name),
         TextCellValue(row.gender == 0 ? '남자' : '여자'),
         TextCellValue(formatPhoneNumber(row.phone)),
-        TextCellValue('${row.createDate.toDate().year}-${row.createDate.toDate().month}-${row.createDate.toDate().day}'),
-        TextCellValue(row.ticket.subscribe ? '구독 멤버쉽' : '일반 멤버쉽'),
-        TextCellValue(row.ticket.endDate.year == 1990 ? '-' : '${row.ticket.endDate.year}-${row.ticket.endDate.month}-${row.ticket.endDate.day}'),
+        TextCellValue(formatDate(row.ticket.createDate)),
+        TextCellValue(row.ticket.spotDocumentId == '' || row.ticket.endDate.isBefore(DateTime.now()) ? '-' : row.ticket.subscribe ? '구독 멤버쉽' : '일반 멤버쉽'),
+        TextCellValue(formatDate(row.ticket.endDate)),
+        TextCellValue(row.ticket.locker ? row.ticket.lockerNum.toString() : '-'),
         TextCellValue(row.smsAlarm ? 'O' : 'X')
       ];
       sheet.appendRow(rowData);

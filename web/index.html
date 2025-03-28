@@ -31,10 +31,11 @@
 
   <title>white_gym_web</title>
   <link rel="manifest" href="manifest.json">
-  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script>
-    window.flutterWebRenderer = "canvaskit";
+    // window.flutterWebRenderer = "canvaskit";
+    window.flutterWebRenderer = "skwasm";
   </script>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <!-- (2) 다음 우편번호 팝업을 띄우는 JS 함수 정의 -->
   <script>
     function openDaumPostcode(callbackName) {

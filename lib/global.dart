@@ -19,6 +19,16 @@ const gray300 = Color(0xffAEAEB2);
 const gray100 = Color(0xffE5E5EA);
 const gray200 = Color(0xffD4D4D4);
 
+String version = 'v1.0.9';
+
+CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user');
+CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff');
+CollectionReference<Map<String, dynamic>> spotDB = FirebaseFirestore.instance.collection('spot');
+CollectionReference<Map<String, dynamic>> spotItemDB = FirebaseFirestore.instance.collection('spotItem');
+CollectionReference<Map<String, dynamic>> visitHistoryDB = FirebaseFirestore.instance.collection('visitHistory');
+
+
+
 Rx<Staff> myInfo = Staff(
   documentId: '',
   name: '',
