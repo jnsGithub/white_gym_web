@@ -90,32 +90,4 @@ class Sign{
       return false;
     }
   }
-
-  // Future<void> resetSex() async {
-  //   print('resetSex');
-  //   try{
-  //    var snapshot = await db.collection('user').where('createDate', isLessThan: DateTime(2025,03,07,23,59)).where('createDate', isGreaterThan: DateTime(2025,03,06,15,53)).orderBy('createDate', descending: true).get();
-  //     print(snapshot.docs[0].data()['name']);
-  //     print(snapshot.docs[snapshot.docs.length-1].data()['name']);
-  //
-  //     int i = 0;
-  //     print(snapshot.docs.length);
-  //     for(var doc in snapshot.docs){
-  //       if(doc.data()['gender'] == 0){
-  //         await db.collection('user').doc(doc.id).update({
-  //           'gender': 1
-  //         });
-  //       }
-  //       else{
-  //         await db.collection('user').doc(doc.id).update({
-  //           'gender': 0
-  //         });
-  //       }
-  //       print('${snapshot.docs.length}개중 ${i}번째 완료');
-  //     }
-  //     print('resetSex done');
-  //   } catch(e){
-  //     print('resetSex error : ${e}');
-  //   }
-  // }
 }

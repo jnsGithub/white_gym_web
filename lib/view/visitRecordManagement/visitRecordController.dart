@@ -18,8 +18,10 @@ class VisitRecordController extends GetxController {
 
   @override
   void onInit() {
+    // saving(Get.context!);
     super.onInit();
     init();
+    // Get.back();
   }
 
   @override

@@ -75,7 +75,13 @@ class VisitRecordView extends GetView<VisitRecordController> {
                   ),
                   SizedBox(height: 50),
                   StreamBuilder(
-                    stream: visitHistoryDB
+                    stream: controller.selectedSpot.value.documentId != ''
+                        ? visitHistoryDB
+                        .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
+                        .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
+                        .orderBy('createDate', descending: true)//.limit(1000)
+                        .snapshots()
+                        : visitHistoryDB
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
                         .orderBy('createDate', descending: true)//.limit(1000)
                         .snapshots(),
@@ -86,6 +92,7 @@ class VisitRecordView extends GetView<VisitRecordController> {
                         // .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
+                        print(controller.selectedSpot.value.documentId != '');
                         return Center(child: CircularProgressIndicator());
                       }
                       // List data = controller.test;
@@ -103,43 +110,43 @@ class VisitRecordView extends GetView<VisitRecordController> {
 
                       int todayUserCount = 0;
                       int monthUserCount = 0;
-              
-                      for (int i = 0; i < data.length; i++) {
-                        if (data[i]['createDate'].toDate().day == today.day && data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
-                          todayUserCount++;
-                          // print('오늘 유저 카운트 : ${todayUserCount}');
-                          // print(today.day);
-                          // print((data[i]['createDate'] as Timestamp).toDate().hour);
-                          // print(data[i]['userName']);
-                        }
-                        if (data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
-                          monthUserCount++;
-                        }
-                      }
-              
+
+                      // for (int i = 0; i < data.length; i++) {
+                      //   if (data[i]['createDate'].toDate().day == today.day && data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
+                      //     todayUserCount++;
+                      //     // print('오늘 유저 카운트 : ${todayUserCount}');
+                      //     // print(today.day);
+                      //     // print((data[i]['createDate'] as Timestamp).toDate().hour);
+                      //     // print(data[i]['userName']);
+                      //   }
+                      //   if (data[i]['createDate'].toDate().month == today.month && data[i]['createDate'].toDate().year == today.year) {
+                      //     monthUserCount++;
+                      //   }
+                      // }
+
                       int crossAxisCount = 2; // ✅ 가로 2줄 (세로 10줄)
                       int rowCount = 10; // ✅ 세로 10개
                       int totalItems = 20; // ✅ 항상 20개의 그리드 유지
-              
+
                       List<dynamic> temp = List.filled(totalItems, null); // ✅ 빈 데이터로 초기화
-              
+
                       // ✅ 페이지의 시작 인덱스 (i의 범위 조정)
                       int startIndex = 20 * (controller.selectedPage.value - 1);
                       int endIndex = startIndex + totalItems > data.length ? data.length : startIndex + totalItems;
-              
+
                       // ✅ `i`를 0부터 다시 시작하도록 보정
                       for (int i = 0; i < totalItems; i++) {
                         int realIndex = startIndex + i;  // 🚀 실제 데이터의 인덱스 보정
-              
+
                         if (realIndex < endIndex) {  // 🚀 데이터 개수 범위 내에서만 실행
                           int row = i % rowCount;  // ✅ 항상 0~9 유지
                           int column = i ~/ rowCount;  // ✅ 항상 0~1 유지
                           int newIndex = row * crossAxisCount + column;  // ✅ 세로 우선 정렬
-              
+
                           temp[newIndex] = data[realIndex];  // 🚀 insert() 대신 직접 할당
                         }
                       }
-              
+
                       // print('-------------------------');
                       // for(int i = 0; i < temp.length; i++) {
                       //   print('temp[$i]: ${temp[i]?.data()['createDate'].toDate()}');
@@ -170,8 +177,24 @@ class VisitRecordView extends GetView<VisitRecordController> {
                                       Row(
                                         spacing: 30,
                                         children: [
-                                          Text('월 ${monthUserCount}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
-                                          Text('오늘 ${todayUserCount}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
+                                          StreamBuilder(
+                                            stream: visitHistoryDB
+                                                .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, 1))
+                                                .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month + 1, 0))
+                                                .count().get().asStream(),
+                                            builder: (_, snapshot) {
+                                              return Text('월 ${snapshot.data!.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
+                                            }
+                                          ),
+                                          StreamBuilder(
+                                              stream: visitHistoryDB
+                                                  .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0))
+                                                  .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 0, -1))
+                                                  .count().get().asStream(),
+                                              builder: (_, snapshot) {
+                                                return Text('일 ${snapshot.data!.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
+                                              }
+                                          )
                                         ],
                                       ),
                                     ],
@@ -188,11 +211,11 @@ class VisitRecordView extends GetView<VisitRecordController> {
                                     ),
                                     itemBuilder: (context, index) {
                                       var visitData = temp[index]; // ✅ 페이지 번호에 따라 인덱스 계산
-              
+
                                       if (visitData == null) {
                                         return Container(); // 빈 칸은 SizedBox로 표시
                                       }
-              
+
                                       return Container(
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),

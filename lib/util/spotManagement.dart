@@ -51,6 +51,7 @@ class SpotManagement{
     }
   }
 
+
   Future<List<String>> uploadSpotImage(List<Uint8List?> imageUrlList) async {
     List<String> uploadedImageUrlList = [];
     try {

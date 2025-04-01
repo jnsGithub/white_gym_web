@@ -65,6 +65,8 @@ class MyApp extends StatelessWidget {
         Get.lazyPut(() => SpotManagementController(), fenix: true);
         Get.lazyPut(() => VisitRecordController(), fenix: true);
         Get.lazyPut(() => UserManagementController(), fenix: true);
+        // Get.putAsync<VisitRecordController>(() async => VisitRecordController().init());
+        // Get.put(() => UserManagementController());
         Get.lazyPut(() => MembershipManagementController(), fenix: true);
         Get.lazyPut(() => StaffManagementController(), fenix: true);
       }),
@@ -91,7 +93,14 @@ class MyApp extends StatelessWidget {
       initialRoute: isLogin ? '/mainPage' : '/signIn',
       getPages: [
         GetPage(name: '/signIn', page: () => const Login()),
-        GetPage(name: '/mainPage', page: () => const MainPage()),
+        GetPage(name: '/mainPage', page: () => const MainPage(),
+            // bindings: [
+            //   BindingsBuilder(() =>
+            //   [
+            //     Get.putAsync(() async => UserManagementController()),
+            //   ]),
+            // ]
+        ),
         GetPage(name: '/signUp', page: () => const SignUpView()),
         GetPage(name: '/findPassword', page: () => const FindPasswordView()),
         GetPage(name: '/test', page: () => const MyWebAddressPage()),

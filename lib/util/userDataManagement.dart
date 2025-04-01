@@ -52,6 +52,15 @@ class UserDataManagement{
       return [];
     }
   }
+  Future<int> getAllUsersLength() async {
+    try{
+      return await userDB.where('ticket.spotDocumentId', whereIn: myInfo.value.position == '마스터' ? null : myInfo.value.spotIdList).count().get().then((value) => value.count!);
+    }
+    catch(e){
+      print(e);
+      return 0;
+    }
+  }
 
   Future<bool> addUserData(UserData userData) async {
     try{
@@ -113,6 +122,35 @@ class UserDataManagement{
       });
     }
     catch(e){
+      print(e);
+    }
+  }
+
+  int count = 0;
+  var a;
+  Future<void> getDummyUserData() async {
+    try{
+      List<UserData> userDataList = [];
+      final snapshot = await db.collection('user').get();
+      for(var i in snapshot.docs){
+        // if(i.data()['phone'].toString().length > 2){
+        //   print(i.data()['phone']);
+        // }
+        // print(i.data()['phone'].toString().substring(0, 3));
+        a = i.id;
+        if(i.data()['phone'].toString() != '' && i.data()['phone'].toString().length > 3 && i.data()['phone'].toString().substring(0, 3).contains('99')){
+          // await db.collection('user').doc(i.id).delete();
+          print(i.data()['phone']);
+          count++;
+        }
+      }
+      print(count);
+      count = 0;
+    }
+    catch(e){
+      print(a);
+      print(count);
+      count = 0;
       print(e);
     }
   }

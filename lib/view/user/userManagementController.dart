@@ -65,8 +65,29 @@ class UserManagementController extends GetxController{
   }
 
   init() async {
+    print('전체유저 조회');
+    print(await userDataManagement.getAllUsersLength());
     await getUserDataList();
     await getSpotList();
+
+    userListSort();
+    // userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();// && element.ticket.paymentBranch != '').toList();
+    // mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
+    // if(mySpotList.length > 1){
+    //   mySpotList.insert(0, Spot.empty());
+    //   if(myInfo.value.position != '마스터'){
+    //     spotList.insert(0, Spot.empty());
+    //   }
+    // }
+    // else{
+    //   selectedSpot.value = mySpotList[0];
+    //   spotList.insert(0, Spot.empty());
+    // }
+    // a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
+    // update();
+  }
+
+  userListSort() {
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();// && element.ticket.paymentBranch != '').toList();
     mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
     if(mySpotList.length > 1){
@@ -79,7 +100,8 @@ class UserManagementController extends GetxController{
       selectedSpot.value = mySpotList[0];
       spotList.insert(0, Spot.empty());
     }
-    a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
+    a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);
+    //userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
   }
 
@@ -485,7 +507,9 @@ class UserManagementController extends GetxController{
                           return;
                         }
                       }
-                      controller.init();
+                      userDataList.insert(0, user.value);
+                      userListSort();
+                      // controller.init();
                       Get.back();
                       if(!Get.isSnackbarOpen) {
                         Get.snackbar(
