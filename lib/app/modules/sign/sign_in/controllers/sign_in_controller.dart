@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:white_gym_web/app/data/service/sign.dart';
-import 'package:white_gym_web/app/data/service/user_data_management.dart';
+import 'package:white_gym_web/app/data/service/user_data.dart';
 
 
 

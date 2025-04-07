@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/modules/sign/signUp/controllers/sign_up_controller.dart';
+import 'package:white_gym_web/app/modules/sign/sign_up/controllers/sign_up_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
 import 'package:auto_size_text/auto_size_text.dart';

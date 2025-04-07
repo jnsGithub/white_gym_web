@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:white_gym_web/models/spot_item.dart';
+import 'package:white_gym_web/app/data/models/spot_item.dart';
 
 class Ticket {
   final String documentId;

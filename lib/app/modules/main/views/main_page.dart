@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/app/modules/main/bindings/main_binding.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 
 
@@ -11,11 +13,12 @@ import '../controllers/main_controller.dart';
 
 class MainPage extends GetView<MainController> {
   final Widget child;
-  const MainPage ({required this.child});
+  const MainPage({required this.child});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    MainBinding().dependencies();
     return Obx(() => Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -35,7 +38,6 @@ class MainPage extends GetView<MainController> {
                       const SizedBox(
                         height: 200,
                       ),
-                      TextButton(onPressed: (){Get.toNamed('/mainPage/testPage');}, child: Text('test')),
                       SizedBox(
                         width: 300,
                         height: 300,

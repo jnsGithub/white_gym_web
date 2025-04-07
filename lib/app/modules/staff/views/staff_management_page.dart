@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:white_gym_web/app/data/util/format_data.dart';
+import 'package:white_gym_web/app/modules/staff/controllers/staff_management_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/models/staff.dart';
-import 'package:white_gym_web/view/staff/staff_management_controller.dart';
 import 'package:number_pagination/number_pagination.dart';
 
 

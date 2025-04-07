@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/models/spot.dart';
+import 'package:white_gym_web/app/data/models/spot.dart';
 
 class SpotItem {
   final String documentId;

@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:white_gym_web/global.dart';
-import 'package:white_gym_web/models/user_data.dart';
+import 'package:white_gym_web/app/data/util/format_data.dart';
+import 'package:white_gym_web/global/global.dart';
+import 'package:white_gym_web/app/data/models/user_data.dart';
 
 class ToExcel{
   late Excel excel;

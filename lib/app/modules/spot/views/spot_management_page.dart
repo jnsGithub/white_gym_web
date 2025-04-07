@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/modules/spotManagement/controllers/spot_management_controller.dart';
+import 'package:white_gym_web/app/modules/spot/controllers/spot_management_controller.dart';
 
 import 'spot_detail_page.dart';
 import 'spot_list_page.dart';

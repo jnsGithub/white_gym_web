@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:white_gym_web/models/ticket.dart';
+import 'package:white_gym_web/app/data/models/ticket.dart';
 
 class UserData {
   final String documentId;

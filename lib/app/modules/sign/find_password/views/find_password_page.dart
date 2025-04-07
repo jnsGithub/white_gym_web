@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/modules/sign/findPassword/controllers/find_password_controller.dart';
+import 'package:white_gym_web/app/modules/sign/find_password/controllers/find_password_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 
@@ -10,7 +11,6 @@ class FindPasswordPage extends GetView<FindPasswordController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Get.lazyPut(() => FindPasswordController());
     return Scaffold(
       body: Center(
         child: Container(

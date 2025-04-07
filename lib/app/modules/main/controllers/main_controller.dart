@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:white_gym_web/app/data/models/staff.dart';
 import 'package:white_gym_web/app/data/service/sign.dart';
-import 'package:white_gym_web/app/modules/membershipManagement/views/membership_management_page.dart';
-import 'package:white_gym_web/app/modules/spotManagement/controllers/spot_management_controller.dart';
-import 'package:white_gym_web/app/modules/spotManagement/views/spot_management_page.dart';
+import 'package:white_gym_web/app/modules/membership/controllers/membership_management_controller.dart';
+import 'package:white_gym_web/app/modules/membership/views/membership_management_page.dart';
+import 'package:white_gym_web/app/modules/spot/controllers/spot_management_controller.dart';
+import 'package:white_gym_web/app/modules/spot/views/spot_management_page.dart';
 import 'package:white_gym_web/app/modules/staff/views/staff_management_page.dart';
 import 'package:white_gym_web/app/modules/user/views/user_management_page.dart';
-import 'package:white_gym_web/app/modules/visitRecordManagement/views/visit_record_page.dart';
+import 'package:white_gym_web/app/modules/visit_record/views/visit_record_page.dart';
+import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
 
@@ -74,38 +76,38 @@ class MainController extends GetxController {
     }
   }
 
-  changeMenu(i) {
+  changeMenu(i) async {
     if(menuItem[i] == '로그아웃'){
       signOut();
-      Get.offAllNamed('/signIn');
+      Get.offAllNamed(Routes.SIGN_IN_PAGE);
       menuIndex.value = 0;
       return;
     }
     menuIndex.value = i;
 
     if(menuItem[i] == '지점 관리'){
-      Get.toNamed('/spotManagement');
+      await Get.toNamed(Routes.SPOT_PAGE);
       var controller = Get.find<SpotManagementController>();
       controller.clearSelectedSpot();
       controller.isDetailView.value = false;
       controller.isUpdate = false;
     }
     else if(menuItem[i] == '이용권 관리'){
-      Get.toNamed('/membershipManagement');
-      // var controller = Get.find<MembershipManagementController>();
-      // controller.clearTextEditingController();
-      // controller.isDetailView.value = false;
+      await Get.toNamed(Routes.MEMBERSHIP_PAGE);
+      var controller = Get.find<MembershipManagementController>();
+      controller.clearTextEditingController();
+      controller.isDetailView.value = false;
     }
     else if(menuItem[i] == '회원 관리'){
-      Get.toNamed('/userManagement');
+      await Get.toNamed(Routes.USER_PAGE);
       // var controller = Get.find<UserManagementController>();
       // controller.isAddView.value = false;
     }
     else if(menuItem[i] == 'Main'){
-      Get.toNamed('/mainPage');
+      await Get.toNamed(Routes.MAIN_HOME_PAGE);
     }
     else if(menuItem[i] == '직원 관리'){
-      Get.toNamed('/staffManagement');
+      await Get.toNamed(Routes.STAFF_PAGE);
       // var controller = Get.find<StaffManagementController>();
       // controller.clearTextEditingController();
       // controller.isDetailView.value = false;

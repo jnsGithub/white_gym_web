@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/app/routes/app_routes.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -97,7 +99,7 @@ class SignInPage extends GetView<LoginController> {
                           return;
                         }
                         if(await controller.sign.signIn(controller.idController.text, controller.passwordController.text)) {
-                          Get.offAllNamed('/mainPage');
+                          Get.offAllNamed(Routes.MAIN_HOME_PAGE, predicate: ModalRoute.withName(Routes.MAIN_HOME_PAGE));
                           // var mainController = Get.find<MainController>();
                           // var controller1 = Get.find<SpotManagementController>();
                           // var controller2 = Get.find<UserManagementController>();
@@ -138,7 +140,7 @@ class SignInPage extends GetView<LoginController> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed('/signUp');
+                      Get.toNamed(Routes.SIGN_UP_PAGE);
                     },
                     child: Text('회원가입', style: TextStyle(
                         fontSize: 15,
@@ -159,7 +161,7 @@ class SignInPage extends GetView<LoginController> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed('/findPassword');
+                      Get.toNamed(Routes.FIND_PW_PAGE);
                     },
                     child: const Text('비밀번호 찾기', style: TextStyle(
                         fontSize: 15,

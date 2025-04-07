@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/modules/spotManagement/controllers/spot_management_controller.dart';
+import 'package:white_gym_web/app/modules/spot/controllers/spot_management_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 
@@ -10,7 +11,6 @@ class SpotListPage extends GetView<SpotManagementController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // Get.lazyPut(() => SpotManagementController());
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(left: 110, top: 60),

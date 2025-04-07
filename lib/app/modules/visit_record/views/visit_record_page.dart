@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:number_pagination/number_pagination.dart';
-import 'package:white_gym_web/app/modules/visitRecordManagement/controllers/visit_record_controller.dart';
+import 'package:white_gym_web/app/modules/visit_record/controllers/visit_record_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

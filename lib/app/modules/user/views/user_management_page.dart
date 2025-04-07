@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 import 'package:number_pagination/number_pagination.dart';
+import 'package:white_gym_web/app/data/util/format_data.dart';
+import 'package:white_gym_web/app/modules/user/controllers/user_management_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
 import 'package:white_gym_web/app/data/models/ticket.dart';
 import 'package:white_gym_web/app/data/models/user_data.dart';
 import 'package:white_gym_web/app/data/util/to_excel.dart';
-import 'package:white_gym_web/view/user/user_management_controller.dart';
 
 class UserManagementPage extends GetView<UserManagementController> {
   const UserManagementPage({super.key});
@@ -39,8 +41,6 @@ class UserManagementPage extends GetView<UserManagementController> {
     // double itemFinishWidth = 190;
     // double marketingWidth = 150;
     // double moreWidth = 98;
-    // Get.put(UserManagementController());
-    // Get.find<UserManagementController>();
     return Scaffold(
       body: GetBuilder<UserManagementController>(
         builder: (controller) {

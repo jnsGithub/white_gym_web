@@ -1,7 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/modules/membershipManagement/controllers/membership_management_controller.dart';
+import 'package:white_gym_web/app/modules/membership/controllers/membership_management_controller.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 

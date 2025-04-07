@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:white_gym_web/app/data/models/staff.dart';
+import 'package:white_gym_web/app/data/service/spot.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
-import 'package:white_gym_web/models/staff.dart';
-import 'package:white_gym_web/util/spot_management.dart';
-import 'package:white_gym_web/app/data/service/staff_management.dart';
+import 'package:white_gym_web/app/data/service/staff.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 
 

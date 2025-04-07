@@ -2,11 +2,12 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/app/data/service/spot.dart';
+import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
 import 'package:white_gym_web/app/data/models/user_data.dart';
-import 'package:white_gym_web/util/spot_management.dart';
-import 'package:white_gym_web/app/data/service/user_data_management.dart';
+import 'package:white_gym_web/app/data/service/user_data.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 import 'dart:async';
 
