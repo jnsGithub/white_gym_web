@@ -170,8 +170,8 @@ class VisitRecordView extends GetView<VisitRecordController> {
                                       Row(
                                         spacing: 30,
                                         children: [
-                                          Text('월 ${monthUserCount}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
-                                          Text('오늘 ${todayUserCount}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
+                                          Text('월 $monthUserCount명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
+                                          Text('오늘 $todayUserCount명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500)),
                                         ],
                                       ),
                                     ],
