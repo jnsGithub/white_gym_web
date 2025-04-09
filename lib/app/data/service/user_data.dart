@@ -100,6 +100,7 @@ class UserDataManagement{
       print('snapshot.docs.length : ${snapshot.docs.length}');
       for(var doc in snapshot.docs){
         print(doc.id);
+        print(doc.data()['name']);
       }
       print('userDataList.length : ${userDataList.length}');
       return temp;
@@ -179,15 +180,15 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await db.collection('payment').get();
+      final snapshot = await db.collection('user').get();
       for(var i in snapshot.docs){
         // if(i.data()['phone'].toString().length > 2){
         //   print(i.data()['phone']);
         // }
         // print(i.data()['phone'].toString().substring(0, 3));
         a = i.id;
-        if(i.data()['phone'].toString() != '' && i.data()['userPhone'].toString().length > 3 && i.data()['userPhone'].toString().substring(0, 4).contains('99')){
-          print('${i.data()['userPhone']} - ${i.data()['userName']}');
+        if(i.data()['phone'].toString() != '' && i.data()['phone'].toString().length > 3 && i.data()['phone'].toString().substring(0, 4).contains('99')){
+          print('${i.data()['phone']} - ${i.data()['name']}');
           count++;
         }
       }

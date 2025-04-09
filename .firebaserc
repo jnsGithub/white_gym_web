@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "white-gym"
-  }
+  },
+  "targets": {
+    "white-gym": {
+      "hosting": {
+        "beta": [
+          "beta-948cd"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

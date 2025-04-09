@@ -31,12 +31,31 @@ class MainController extends GetxController {
   RxList menuWidget = [VisitRecordPage(),StaffManagementPage(),UserManagementPage(),SpotManagementPage(), MembershipManagementPage(), Scaffold()].obs;
 
   //[UserPage(),StorePage(),PaymentPage(),CalculatePage()];
-  RxInt menuIndex = 0.obs;
+  int menuIndex = 0;
 
   @override
   void onInit() {
     super.onInit();
     permissionCheck();
+    switch(Get.currentRoute){
+      case Routes.MAIN_HOME_PAGE:
+        menuIndex = 0;
+        break;
+      case Routes.STAFF_PAGE:
+        menuIndex = 1;
+        break;
+      case Routes.USER_PAGE:
+        menuIndex = 2;
+        break;
+      case Routes.SPOT_PAGE:
+        menuIndex = 3;
+        break;
+      case Routes.MEMBERSHIP_PAGE:
+        menuIndex = 4;
+        break;
+      default:
+        menuIndex = 0;
+    }
   }
 
   @override
@@ -80,10 +99,10 @@ class MainController extends GetxController {
     if(menuItem[i] == '로그아웃'){
       signOut();
       Get.offAllNamed(Routes.SIGN_IN_PAGE);
-      menuIndex.value = 0;
+      menuIndex = 0;
       return;
     }
-    menuIndex.value = i;
+    menuIndex = i;
 
     if(menuItem[i] == '지점 관리'){
       await Get.toNamed(Routes.SPOT_PAGE);

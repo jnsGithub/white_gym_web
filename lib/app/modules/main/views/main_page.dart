@@ -19,7 +19,7 @@ class MainPage extends GetView<MainController> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     MainBinding().dependencies();
-    return Obx(() => Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: SizedBox(
@@ -54,15 +54,15 @@ class MainPage extends GetView<MainController> {
                                       height: 52,
                                       padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 24),
                                       decoration: BoxDecoration(
-                                          color: controller.menuIndex.value == index ? mainColor : null,
+                                          color: controller.menuIndex == index ? mainColor : null,
                                       ),
                                       child: Row(
                                         spacing: 14,
                                         children: [
-                                          Icon(controller.menuIcon[index], color: controller.menuIndex.value == index ? Colors.white : gray300, fill: 1, size: 24,),
+                                          Icon(controller.menuIcon[index], color: controller.menuIndex == index ? Colors.white : gray300, fill: 1, size: 24,),
                                           Text('${controller.menuItem[index]}',style:
                                           TextStyle(
-                                              color: controller.menuIndex.value == index ? Colors.white : null,
+                                              color: controller.menuIndex == index ? Colors.white : null,
                                               fontSize: 22,
                                               fontWeight: FontWeight.w600
                                           ),),
@@ -84,7 +84,6 @@ class MainPage extends GetView<MainController> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

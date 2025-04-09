@@ -80,11 +80,11 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                         ? visitHistoryDB
                         .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(10)
+                        .orderBy('createDate', descending: true).limit(100)
                         .snapshots()
                         : visitHistoryDB
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(10)
+                        .orderBy('createDate', descending: true).limit(100)
                         .snapshots(),
                         // : visitHistoryDB
                         // .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
@@ -180,20 +180,23 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                                         children: [
                                           StreamBuilder(
                                             stream: visitHistoryDB
+                                                .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                                                 .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, 1))
                                                 .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month + 1, 0))
                                                 .count().get().asStream(),
                                             builder: (_, snapshot) {
-                                              return Text('월 ${snapshot.data!.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
+                                              print(controller.selectedSpot.value.documentId);
+                                              return Text('월 ${snapshot.data?.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
                                             }
                                           ),
                                           StreamBuilder(
                                               stream: visitHistoryDB
+                                                  .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                                                   .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0))
                                                   .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 0, -1))
                                                   .count().get().asStream(),
                                               builder: (_, snapshot) {
-                                                return Text('일 ${snapshot.data!.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
+                                                return Text('일 ${snapshot.data?.count}명', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500));
                                               }
                                           )
                                         ],
