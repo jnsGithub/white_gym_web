@@ -19,7 +19,7 @@ const gray300 = Color(0xffAEAEB2);
 const gray100 = Color(0xffE5E5EA);
 const gray200 = Color(0xffD4D4D4);
 
-String version = 'v1.0.10';
+String version = 'v1.0.11';
 
 CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user');
 CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff');

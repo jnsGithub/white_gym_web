@@ -277,7 +277,7 @@ class UserManagementView extends GetView<UserManagementController> {
                               int num = (controller.selectedPage.value - 1) * 10 + index;
                               UserData user = controller.userDataListView[num].copyWith();
 
-                              RxBool isStatus = user.ticket.endDate.isBefore(DateTime.now()).obs;
+                              RxBool isStatus = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
                               if(isStatus.value){
                                 user.ticket = Ticket.empty();
                                 user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
@@ -392,7 +392,7 @@ class UserManagementView extends GetView<UserManagementController> {
                                             Container(
                                               width: itemWidth,
                                               alignment: Alignment.center,
-                                              child: Text(user.ticket.spotDocumentId == '' || user.ticket.endDate.isBefore(DateTime.now()) ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: tranSize(16), color: gray900, fontWeight: FontWeight.w600),),
+                                              child: Text(user.ticket.spotDocumentId == '' || user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))) ? '-' : isSubscribe ? '구독 멤버쉽' : '일반 멤버쉽', style: TextStyle(fontSize: tranSize(16), color: gray900, fontWeight: FontWeight.w600),),
                                             ),
                                             Container(
                                               width: itemFinishWidth,
