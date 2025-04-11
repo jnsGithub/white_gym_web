@@ -80,11 +80,11 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                         ? visitHistoryDB
                         .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(100)
+                        .orderBy('createDate', descending: true).limit(1000)
                         .snapshots()
                         : visitHistoryDB
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(100)
+                        .orderBy('createDate', descending: true).limit(1000)
                         .snapshots(),
                         // : visitHistoryDB
                         // .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
@@ -179,7 +179,12 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                                         spacing: 30,
                                         children: [
                                           StreamBuilder(
-                                            stream: visitHistoryDB
+                                            stream: controller.selectedSpot.value.documentId == ''
+                                                ?  visitHistoryDB
+                                                .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, 1))
+                                                .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month + 1, 0))
+                                                .count().get().asStream()
+                                                : visitHistoryDB
                                                 .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                                                 .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, 1))
                                                 .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month + 1, 0))
@@ -190,7 +195,12 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                                             }
                                           ),
                                           StreamBuilder(
-                                              stream: visitHistoryDB
+                                              stream:controller.selectedSpot.value.documentId == ''
+                                                  ?  visitHistoryDB
+                                                  .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0))
+                                                  .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 0, -1))
+                                                  .count().get().asStream()
+                                                  : visitHistoryDB
                                                   .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                                                   .where('createDate', isGreaterThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0))
                                                   .where('createDate', isLessThan: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1, 0, -1))

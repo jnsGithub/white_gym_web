@@ -180,17 +180,18 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await db.collection('user').get();
+      final snapshot = await db.collection('user').where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: true).where('ticket.subscribe', isEqualTo: false).get();
       for(var i in snapshot.docs){
         // if(i.data()['phone'].toString().length > 2){
         //   print(i.data()['phone']);
         // }
         // print(i.data()['phone'].toString().substring(0, 3));
+        print(i.data()['name']);
         a = i.id;
-        if(i.data()['phone'].toString() != '' && i.data()['phone'].toString().length > 3 && i.data()['phone'].toString().substring(0, 4).contains('99')){
-          print('${i.data()['phone']} - ${i.data()['name']}');
+        // if(i.data()['phone'].toString() != '' && i.data()['phone'].toString().length > 3 && i.data()['phone'].toString().substring(0, 4).contains('99')){
+        //   print('${i.data()['phone']} - ${i.data()['name']}');
           count++;
-        }
+        // }
       }
       print(count);
       count = 0;
