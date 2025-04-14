@@ -565,6 +565,7 @@ class UserManagementController extends GetxController{
               print(userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day + 1, 0, 0, 0).difference(Date).inDays)));
               print(userData.ticket.pauseStartDate.last);
               userData.ticket.endDate = userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays));
+              print(userData.ticket.endDate);
               await userDataManagement.updateUserTicket(userData, false);
             }
             init();

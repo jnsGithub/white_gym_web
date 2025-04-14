@@ -203,4 +203,25 @@ class UserDataManagement{
       print(e);
     }
   }
+
+  Future<List<UserData>> getUser(UserData lastUser) async {
+    try{
+      final snapshot = await db.collection('user')
+          .orderBy('createDate', descending: true)
+          .startAfterDocument(await db.collection('user').doc(lastUser.documentId).get())
+          .limit(11)
+          .get();
+
+      List<UserData> userList = [];
+      snapshot.docs.removeAt(0);
+      for(var i in snapshot.docs){
+        userList.add(UserData.fromJson(i));
+      }
+      return userList;
+    }
+    catch(e){
+      print(e);
+      return [];
+    }
+  }
 }
