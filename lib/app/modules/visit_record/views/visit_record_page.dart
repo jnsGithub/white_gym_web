@@ -93,7 +93,6 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                         // .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        print(controller.selectedSpot.value.documentId != '');
                         return Center(child: CircularProgressIndicator());
                       }
                       // List data = controller.test;

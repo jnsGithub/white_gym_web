@@ -62,8 +62,8 @@ class UserManagementController extends GetxController{
   }
 
 
-  updateUserDate(UserData userData) async {
-    await userDataManagement.updateUserTicket(userData, false);
+  updateUserDate(UserData userData, UserData beforeUserData) async {
+    await userDataManagement.updateUserTicket(userData, false, beforeUserData: beforeUserData);
     init();
     update();
   }
@@ -564,6 +564,7 @@ class UserManagementController extends GetxController{
               print(DateTime(Date.year, Date.month, Date.day , 0, 0, 0).difference(DateTime(Date.year, Date.month, Date.day, 0, 0, 0)).inDays);
               print(userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day + 1, 0, 0, 0).difference(Date).inDays)));
               print(userData.ticket.pauseStartDate.last);
+              userData.ticket.pauseEndDate.last = DateTime.now();
               userData.ticket.endDate = userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays));
               print(userData.ticket.endDate);
               await userDataManagement.updateUserTicket(userData, false);

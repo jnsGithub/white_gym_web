@@ -161,11 +161,21 @@ class UserDataManagement{
     }
   }
 
-  Future<void> updateUserTicket(UserData userData, bool isPause) async {
+  Future<void> updateUserTicket(UserData userData, bool isPause,{bool isStatusFalse = false, UserData? beforeUserData}) async {
     try{
       if(isPause){
         userData.ticket.pause -= 1;
+        if(beforeUserData != null){
+          beforeUserData.ticket.pause += 1;
+        }
       }
+      await db.collection('adminModifyHistory').doc().set({
+        'userDocumentId': userData.documentId,
+        'adminDocumentId': myInfo.value.documentId,
+        'beforeTicket': beforeUserData?.ticket.toJson(),
+        'afterTicket': userData.ticket.toJson(),
+        'createDate': DateTime.now(),
+      });
       await userDB.doc(userData.documentId).update({
         'ticket': userData.ticket.toJson(),
       });
@@ -180,7 +190,7 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await db.collection('user').where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: true).where('ticket.subscribe', isEqualTo: false).get();
+      final snapshot = await db.collection('user').where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: false).where('ticket.subscribe', isEqualTo: true).get();
       for(var i in snapshot.docs){
         // if(i.data()['phone'].toString().length > 2){
         //   print(i.data()['phone']);

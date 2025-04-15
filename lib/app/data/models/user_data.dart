@@ -104,7 +104,7 @@ class UserData {
       name: name ?? this.name,
       phone: phone ?? this.phone,
       birth: birth ?? this.birth,
-      ticket: ticket ?? this.ticket,
+      ticket: ticket ?? this.ticket.copyWith(),
       storeDocumentId: storeDocumentId ?? this.storeDocumentId,
       paymentCard: paymentCard ?? this.paymentCard,
       fcmToken: fcmToken ?? this.fcmToken,

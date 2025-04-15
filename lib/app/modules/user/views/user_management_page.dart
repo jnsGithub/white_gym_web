@@ -278,10 +278,17 @@ class UserManagementPage extends GetView<UserManagementController> {
                               TextEditingController lockerNumberController = TextEditingController();
 
                               int num = (controller.selectedPage.value - 1) * 10 + index;
-                              UserData user = controller.userDataListView[num].copyWith();
 
-                              RxBool isStatus = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
-                              if(isStatus.value){
+                              UserData user = controller.userDataListView[num].copyWith();
+                              UserData temp = controller.userDataListView[num].copyWith();
+
+                              RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
+
+                              if(user.ticket.pauseEndDate.isNotEmpty){
+                                isStatusFalse = (isStatusFalse.value && user.ticket.pauseEndDate.last.isBefore(DateTime.now().add(Duration(days: -1)))).obs;
+                              }
+
+                              if(isStatusFalse.value){
                                 user.ticket = Ticket.empty();
                                 user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
                                 user.ticket.spotDocumentId = controller.userDataListView[num].ticket.spotDocumentId;
@@ -418,7 +425,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                       ),
                                     ),
                                     children: [
-                                      Obx(() => isStatus.value// && !controller.userDataListView[num].ticket.subscribe
+                                      Obx(() => isStatusFalse.value// && !controller.userDataListView[num].ticket.subscribe
                                           ? Container(
                                           height: 170,
                                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -433,7 +440,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                           child: Center(
                                               child: GestureDetector(
                                                 onTap: (){
-                                                  isStatus.value = !isStatus.value;
+                                                  isStatusFalse.value = !isStatusFalse.value;
                                                   // controller.addUserData = user;
                                                   // controller.isAddView.value = true;
                                                 },
@@ -536,7 +543,6 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                         try{
                                                           UserData userData = user.copyWith();
 
-                                                          print(userData.documentId);
                                                           print('-----------------------------------------');
                                                           // userData.ticket = controller.userDataListView[num].ticket;
                                                           if(userData.ticket.subscribe){
@@ -546,10 +552,10 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                           }
                                                           saving(context);
                                                           print(user.ticket.status);
-                                                          print(isStatus.value);
-                                                          if(!isStatus.value && user.ticket.endDate.isBefore(DateTime.now())){
+                                                          print(isStatusFalse.value);
+                                                          if(!isStatusFalse.value && user.ticket.endDate.isBefore(DateTime.now())){
                                                             print(user.ticket.status);
-                                                            userData.ticket.status = !isStatus.value;
+                                                            userData.ticket.status = !isStatusFalse.value;
                                                             print(user.ticket.status);
                                                           }
 
@@ -577,7 +583,8 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                           userData.ticket.spotItem.spotDocumentId = controller.selectedSpot.value.documentId;
                                                           userData.ticket.spotDocumentId = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점' ? userData.ticket.spotDocumentId : selectedSpotId.value;
                                                           userData.ticket.paymentBranch = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'  ? userData.ticket.paymentBranch : selectedSpotName.value;
-                                                          await controller.updateUserDate(userData);
+                                                          // await controller.updateUserDate(userData);
+                                                          await controller.updateUserDate(userData, temp);
                                                           controller.update();
                                                           Get.back();
 
