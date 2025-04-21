@@ -85,11 +85,7 @@ class UserDataManagement{
     }
   }
 
-<<<<<<< HEAD
   Future<int> getAllUsersLength(Spot selectedSpot) async {
-=======
-  Future<int> getAllUsersLength() async {
->>>>>>> 76defc7 (Test DB 적용 버전)
     try{
       List<String>? sort = [];
       if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
@@ -351,7 +347,6 @@ class UserDataManagement{
   }
 
 
-<<<<<<< HEAD
 // Future<void> setTestDB() async{
 //   QuerySnapshot userSnapshot = await db.collection('user').limit(1000).get();
 //   QuerySnapshot spotSnapshot = await db.collection('spot').get();
@@ -421,7 +416,6 @@ class UserDataManagement{
 //
 //
 // }
-=======
   // Future<void> setTestDB() async{
   //   QuerySnapshot userSnapshot = await db.collection('user').limit(1000).get();
   //   QuerySnapshot spotSnapshot = await db.collection('spot').get();
@@ -491,5 +485,4 @@ class UserDataManagement{
   //
   //
   // }
->>>>>>> 76defc7 (Test DB 적용 버전)
 }

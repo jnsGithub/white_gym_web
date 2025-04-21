@@ -91,10 +91,7 @@ class UserManagementController extends GetxController{
     a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
         ? maxListCount.value
         : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);
-<<<<<<< HEAD
-=======
     //userDataListView.length > 10 ? 10 : userDataListView.length;
->>>>>>> 76defc7 (Test DB 적용 버전)
     update();
   }
 
@@ -109,11 +106,7 @@ class UserManagementController extends GetxController{
       }
       a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
           ? maxListCount.value
-<<<<<<< HEAD
           : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);
-=======
-          : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);//userDataListView.length > 10 ? 10 : userDataListView.length;
->>>>>>> 76defc7 (Test DB 적용 버전)
       update();
     } catch(e){
       print(e);
@@ -121,19 +114,11 @@ class UserManagementController extends GetxController{
   }
 
   Future<void> getUserDataList() async {
-<<<<<<< HEAD
     userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
 
     maxUserCount = await userDataManagement.getAllUsersLength(selectedSpot.value);
     print('maxUserCount: $maxUserCount');
-=======
-    // userDataList.value = await userDataManagement.getUserDataList();
-    userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
-    userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
-
-    maxUserCount = await userDataManagement.getAllUsersLength();
->>>>>>> 76defc7 (Test DB 적용 버전)
   }
 
   int useDayCalculation(UserData userData) {
