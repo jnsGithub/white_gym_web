@@ -12,6 +12,7 @@ CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.c
 CollectionReference<Map<String, dynamic>> spotDB = FirebaseFirestore.instance.collection('spot');
 CollectionReference<Map<String, dynamic>> spotItemDB = FirebaseFirestore.instance.collection('spotItem');
 CollectionReference<Map<String, dynamic>> visitHistoryDB = FirebaseFirestore.instance.collection('visitHistory');
+CollectionReference<Map<String, dynamic>> adminHistoryDB = FirebaseFirestore.instance.collection('adminModifyHistory');
 
 
 

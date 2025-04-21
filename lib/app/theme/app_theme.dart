@@ -17,3 +17,21 @@ final ThemeData appTheme = ThemeData(
         ), elevation: 0
     )
 );
+
+final ThemeData darkTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+    useMaterial3: false,
+    fontFamily: 'Pretendard',
+    scaffoldBackgroundColor: Colors.black,
+    appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.black,
+        titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w400
+        ), elevation: 0
+    )
+);

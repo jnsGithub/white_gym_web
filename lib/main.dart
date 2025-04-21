@@ -52,8 +52,10 @@ class MyApp extends StatelessWidget {
       locale: const Locale('ko', 'KR'),
       color: Colors.white,
       theme: appTheme,
+      darkTheme: darkTheme,
       initialRoute: isLogin ? Routes.MAIN_HOME_PAGE : Routes.SIGN_IN_PAGE,
-      getPages: AppPages.routes
+      getPages: AppPages.routes,
+      // themeMode: ThemeMode.system,
     );
   }
 }

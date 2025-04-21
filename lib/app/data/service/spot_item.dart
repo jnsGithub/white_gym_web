@@ -3,7 +3,7 @@ import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot_item.dart';
 
 class SpotItemManagement{
-  final db = FirebaseFirestore.instance;
+  // final db = FirebaseFirestore.instance;
 
   Future<List<SpotItem>> getSpotItemList() async {
     List<SpotItem> spotItemList = [];

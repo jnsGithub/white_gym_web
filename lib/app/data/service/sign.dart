@@ -5,14 +5,14 @@ import 'package:white_gym_web/app/data/models/staff.dart';
 import 'package:white_gym_web/global/global.dart';
 
 class Sign{
-  final db = FirebaseFirestore.instance;
+  // final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
 
-  Future<void> test() async {
-    var snapShot = db.collection('user').doc('cTuOZ9gXCXd6dGVs4M3Z').get();
-
-    var data = snapShot.then((value) => print(value.data()));
-  }
+  // Future<void> test() async {
+  //   var snapShot = db.collection('user').doc('cTuOZ9gXCXd6dGVs4M3Z').get();
+  //
+  //   var data = snapShot.then((value) => print(value.data()));
+  // }
 
   Future<bool> signUp(String email, String password, String name, String position, List<String> spotIdList, String hp) async {
     try {

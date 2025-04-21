@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/app/data/models/spot.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/ticket.dart';
 import 'package:white_gym_web/app/data/models/user_data.dart';
 
 class UserDataManagement{
-  final db = FirebaseFirestore.instance;
 
   // 사용자 데이터 get
   Future<List<UserData>> getUserDataList() async {
@@ -82,6 +84,7 @@ class UserDataManagement{
       return [];
     }
   }
+
   Future<int> getAllUsersLength() async {
     try{
       return await userDB.where('ticket.spotDocumentId', whereIn: myInfo.value.position == '마스터' ? null : myInfo.value.spotIdList).count().get().then((value) => value.count!);
@@ -95,8 +98,8 @@ class UserDataManagement{
   Future<List<UserData>> refreshUserData(List<UserData> userDataList) async {
     try{
       List<UserData> temp = [];
-        var snapshot = await userDB.orderBy('createDate', descending: true).endBeforeDocument(await userDB.doc(userDataList.first.documentId).get()).get();
-        print('userDataList.first : ${userDataList.first.documentId}');
+      var snapshot = await userDB.orderBy('createDate', descending: true).endBeforeDocument(await userDB.doc(userDataList.first.documentId).get()).get();
+      print('userDataList.first : ${userDataList.first.documentId}');
       print('snapshot.docs.length : ${snapshot.docs.length}');
       for(var doc in snapshot.docs){
         print(doc.id);
@@ -169,7 +172,7 @@ class UserDataManagement{
           beforeUserData.ticket.pause += 1;
         }
       }
-      await db.collection('adminModifyHistory').doc().set({
+      await adminHistoryDB.doc().set({
         'userDocumentId': userData.documentId,
         'adminDocumentId': myInfo.value.documentId,
         'beforeTicket': beforeUserData?.ticket.toJson(),
@@ -187,43 +190,115 @@ class UserDataManagement{
 
   int count = 0;
   var a;
-  Future<void> getDummyUserData() async {
+
+  Future<List<UserData>> getUserList({UserData? lastUser, Spot? selectedSpot, bool init = true, required int maxListCount}) async {
     try{
-      // List<UserData> userDataList = [];
-      final snapshot = await db.collection('user').where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: false).where('ticket.subscribe', isEqualTo: true).get();
-      for(var i in snapshot.docs){
-        // if(i.data()['phone'].toString().length > 2){
-        //   print(i.data()['phone']);
-        // }
-        // print(i.data()['phone'].toString().substring(0, 3));
-        print(i.data()['name']);
-        a = i.id;
-        // if(i.data()['phone'].toString() != '' && i.data()['phone'].toString().length > 3 && i.data()['phone'].toString().substring(0, 4).contains('99')){
-        //   print('${i.data()['phone']} - ${i.data()['name']}');
-          count++;
-        // }
+      print('add함');
+      if(init){
+        late QuerySnapshot snapshot;
+        if(myInfo.value.position == '마스터'){
+          if(selectedSpot!.documentId.isEmpty){
+            snapshot = await userDB
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount)
+                .get();
+          }
+          else{
+            snapshot = await userDB
+                .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount)
+                .get();
+          }
+        }
+        else{
+          snapshot = await userDB
+              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+              .orderBy('createDate', descending: true)
+              .limit(maxListCount)
+              .get();
+        }
+
+        List<UserData> userList = [];
+        for(var i in snapshot.docs){
+          userList.add(UserData.fromJson(i));
+        }
+        return userList;
       }
-      print(count);
-      count = 0;
+      else{
+        late QuerySnapshot snapshot;
+        if(selectedSpot!.documentId.isEmpty){
+          if(myInfo.value.position == '마스터'){
+            snapshot = await userDB
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount+1)
+                .startAfterDocument(await userDB.doc(lastUser!.documentId).get())
+                .get();
+          }
+          else{
+            snapshot = await userDB
+                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount+1)
+                .startAfterDocument(await userDB.doc(lastUser!.documentId).get())
+                .get();
+          }
+        }
+        else{
+          snapshot = await userDB
+              .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+              .orderBy('createDate', descending: true)
+              .limit(maxListCount+1)
+              .startAfterDocument(await userDB.doc(lastUser!.documentId).get())
+              .get();
+        }
+
+        List<UserData> userList = [];
+        snapshot.docs.removeAt(0);
+        for(var i in snapshot.docs){
+          userList.add(UserData.fromJson(i));
+        }
+        return userList;
+      }
     }
     catch(e){
-      print(a);
-      print(count);
-      count = 0;
       print(e);
+      return [];
     }
   }
 
-  Future<List<UserData>> getUser(UserData lastUser) async {
+  Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
     try{
-      final snapshot = await db.collection('user')
-          .orderBy('createDate', descending: true)
-          .startAfterDocument(await db.collection('user').doc(lastUser.documentId).get())
-          .limit(11)
-          .get();
+      late QuerySnapshot snapshot;
+      if(selectedSpot.documentId.isEmpty){
+        if(myInfo.value.position == '마스터'){
+          snapshot = await userDB
+              .orderBy('createDate', descending: true)
+              .where('name', isEqualTo: userName)
+              .get();
+        }
+        else{
+          snapshot = await userDB
+              .orderBy('createDate', descending: true)
+              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+              .where('name', isEqualTo: userName)
+              .get();
+        }
+        // snapshot = await db.collection('user')
+        //     .orderBy('createDate', descending: true)
+        //     .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+        //     .where('name', isEqualTo: userName)
+        //     .get();
+      }
+      else{
+        snapshot = await userDB
+            .orderBy('createDate', descending: true)
+            .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+            .where('name', isEqualTo: userName)
+            .get();
+      }
 
       List<UserData> userList = [];
-      snapshot.docs.removeAt(0);
       for(var i in snapshot.docs){
         userList.add(UserData.fromJson(i));
       }
@@ -234,4 +309,99 @@ class UserDataManagement{
       return [];
     }
   }
+
+  Future<void> getDummyUserData() async {
+    try{
+      // List<UserData> userDataList = [];
+      final snapshot = await userDB.where('name', isEqualTo: '소정후').get();
+      final snapshot2 = await userDB.where('name', isEqualTo: '성승화').get();
+
+      // final snapshot = await userDB.where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: false).where('ticket.subscribe', isEqualTo: true).get();
+      for(var i in snapshot.docs){
+        await FirebaseFirestore.instance.collection('user_test').doc(i.id).set(i.data());
+        // }
+      }
+      for(var i in snapshot2.docs){
+        await FirebaseFirestore.instance.collection('user_test').doc(i.id).set(i.data());
+        // }
+      }
+    }
+    catch(e){
+      print(a);
+      print(count);
+      count = 0;
+      print(e);
+    }
+  }
+
+
+// Future<void> setTestDB() async{
+//   QuerySnapshot userSnapshot = await db.collection('user').limit(1000).get();
+//   QuerySnapshot spotSnapshot = await db.collection('spot').get();
+//   QuerySnapshot staffSnapshot = await db.collection('staff').get();
+//   QuerySnapshot adminModifyHistorySnapshot = await db.collection('adminModifyHistory').get();
+//   QuerySnapshot spotItemSnapshot = await db.collection('spotItem').get();
+//
+//   String userTest = 'user_test';
+//   String spotTest = 'spot_test';
+//   String staffTest = 'staff_test';
+//   String adminModifyHistoryTest = 'adminModifyHistory_test';
+//   String spotItemTest = 'spotItem_test';
+//
+//
+//   log(name: 'INFO', 'Data load success!');
+//   log(name: 'INFO', '--------------------------------------------------------------------');
+//   log(name: 'USER', 'User data set start!');
+//   int count = 0;
+//   var endCount = userSnapshot.docs.length;
+//   for(var i in userSnapshot.docs){
+//     await db.collection(userTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+//     count ++;
+//     log(name: 'USER', '${count} / ${endCount}');
+//   }
+//   log(name: 'USER', 'User data set success!');
+//   log(name: 'INFO', '--------------------------------------------------------------------');
+//   log(name: 'SPOT', 'Spot data set start!');
+//   endCount = spotSnapshot.docs.length;
+//   for(var i in spotSnapshot.docs){
+//     await db.collection(spotTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+//     count ++;
+//     log(name: 'SPOT', '${count} / ${endCount}');
+//   }
+//   log(name: 'SPOT', 'Staff data set success!');
+//   log(name: 'INFO', '--------------------------------------------------------------------');
+//   log(name: 'STAFF', 'Staff data set start!');
+//   endCount = staffSnapshot.docs.length;
+//   count = 0;
+//   for(var i in staffSnapshot.docs){
+//     await db.collection(staffTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+//     count ++;
+//     log(name: 'STAFF', '${count} / ${endCount}');
+//   }
+//   log(name: 'STAFF', 'Staff data set success!');
+//   log(name: 'INFO', '--------------------------------------------------------------------');
+//   log(name: 'ADMIN_HISTORY', 'Admin history data set start!');
+//   endCount = adminModifyHistorySnapshot.docs.length;
+//   count = 0;
+//   for(var i in adminModifyHistorySnapshot.docs){
+//     await db.collection(adminModifyHistoryTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+//     count ++;
+//     log(name: 'ADMINHISTORY', '${count} / ${endCount}');
+//   }
+//   log(name: 'ADMIN_HISTORY', 'Admin history data set success!');
+//   log(name: 'INFO', '--------------------------------------------------------------------');
+//   log(name: 'SPOT_ITEM', 'SpotItem data set start!');
+//
+//   endCount = spotItemSnapshot.docs.length;
+//   count = 0;
+//
+//   for(var i in spotItemSnapshot.docs){
+//     await db.collection(spotItemTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+//     count ++;
+//     log(name: 'SPOT_ITEM', '${count} / ${endCount}');
+//   }
+//   log(name: 'SPOT_ITEM', 'SpotItem data set success!');
+//
+//
+// }
 }

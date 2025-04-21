@@ -3,7 +3,7 @@ import 'package:white_gym_web/app/data/models/staff.dart';
 import 'package:white_gym_web/global/global.dart';
 
 class StaffManagement{
-  final db = FirebaseFirestore.instance;
+  // final db = FirebaseFirestore.instance;
 
   // 직원 데이터 get
   Future<List<Staff>> getStaffList() async {

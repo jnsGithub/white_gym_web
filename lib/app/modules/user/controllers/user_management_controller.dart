@@ -12,15 +12,8 @@ import 'package:jns_package/jns_package.dart' as jns;
 import 'dart:async';
 
 class UserManagementController extends GetxController{
-  RxBool isAddView = false.obs;
 
   TextEditingController searchController = TextEditingController();
-
-  TextEditingController memberShipNameController = TextEditingController();
-  TextEditingController memberShipPriceController = TextEditingController();
-  TextEditingController useDayController = TextEditingController();
-  TextEditingController todayUseCountController = TextEditingController();
-  TextEditingController pauseCountController = TextEditingController();
 
   UserDataManagement userDataManagement = UserDataManagement();
   SpotManagement spotManagement = SpotManagement();
@@ -32,6 +25,10 @@ class UserManagementController extends GetxController{
 
   RxInt a = 0.obs;
   RxInt selectedPage = 1.obs;
+
+  int maxUserCount = 0;
+
+  RxInt maxListCount = 10.obs;
 
   RxList<Spot> spotList = <Spot>[].obs;
   Rx<Spot> selectedSpot = Spot(
@@ -69,8 +66,7 @@ class UserManagementController extends GetxController{
   }
 
   init() async {
-    print('전체유저 조회');
-    print(await userDataManagement.getAllUsersLength());
+    // print(await userDataManagement.getAllUsersLength());
     await getUserDataList();
     await getSpotList();
 
@@ -104,7 +100,9 @@ class UserManagementController extends GetxController{
       selectedSpot.value = mySpotList[0];
       spotList.insert(0, Spot.empty());
     }
-    a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);
+    a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
+        ? maxListCount.value
+        : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);
     //userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
   }
@@ -118,7 +116,9 @@ class UserManagementController extends GetxController{
       else{
         userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text)).toList();// && element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
       }
-      a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
+      a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
+          ? maxListCount.value
+          : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);//userDataListView.length > 10 ? 10 : userDataListView.length;
       update();
     } catch(e){
       print(e);
@@ -126,18 +126,11 @@ class UserManagementController extends GetxController{
   }
 
   Future<void> getUserDataList() async {
-    userDataList.value = await userDataManagement.getUserDataList();
-    // List<UserData> temp = await userDataManagement.getUserDataList();
-    // List<UserData> temp2 = [];
-    // if(myInfo.value.position != '마스터') {
-    //   for(var i in myInfo.value.spotIdList){
-    //     temp2 = temp2 + temp.where((element) => element.ticket.spotDocumentId == i).toList();
-    //   }
-    // }
-    // else{
-    //   temp2 = temp;
-    // }
-    // userDataList.value = temp2;
+    // userDataList.value = await userDataManagement.getUserDataList();
+    userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
+    userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
+
+    maxUserCount = await userDataManagement.getAllUsersLength();
   }
 
   int useDayCalculation(UserData userData) {
@@ -386,47 +379,47 @@ class UserManagementController extends GetxController{
                   Text('성별', style: contentTextStyle,),
                   Spacer(),
                   Obx(() => DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Text(
-                          textAlign: TextAlign.left,
-                          user.value.gender == 1 ? '남성' : '여성',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        items: [
-                          DropdownMenuItem(child: Text('남성'), value: 1,),
-                          DropdownMenuItem(child: Text('여성'), value: 0,),
-                        ],
-                        onChanged: (value){
-                          print(value);
-                          user.update((val) {
-                            val!.gender = value!;
-                          });
-                        },
-                        buttonStyleData: ButtonStyleData(
-                          decoration: BoxDecoration(
-                            color: bg,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          height: 50,
-                          width: 282,
-                        ),
-                        dropdownStyleData: const DropdownStyleData(
-                          decoration: BoxDecoration(
-                              color: bg,
-                              borderRadius: BorderRadius.all(Radius.circular(6))
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: Text(
+                        textAlign: TextAlign.left,
+                        user.value.gender == 1 ? '남성' : '여성',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
+                      items: [
+                        DropdownMenuItem(child: Text('남성'), value: 1,),
+                        DropdownMenuItem(child: Text('여성'), value: 0,),
+                      ],
+                      onChanged: (value){
+                        print(value);
+                        user.update((val) {
+                          val!.gender = value!;
+                        });
+                      },
+                      buttonStyleData: ButtonStyleData(
+                        decoration: BoxDecoration(
+                          color: bg,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: 50,
+                        width: 282,
+                      ),
+                      dropdownStyleData: const DropdownStyleData(
+                        decoration: BoxDecoration(
+                            color: bg,
+                            borderRadius: BorderRadius.all(Radius.circular(6))
+                        ),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
+                      ),
                     ),
+                  ),
                   )
                 ],
               ),
@@ -520,7 +513,7 @@ class UserManagementController extends GetxController{
                             '저정 완료',
                             '저장이 완료되었습니다.');
                       }
-                      },
+                    },
                   ),
                 ],
               )
