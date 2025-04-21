@@ -227,18 +227,15 @@ class SignInPage extends GetView<LoginController> {
                   ),),
                 ),
               ),
-<<<<<<< HEAD
               // TextButton(
               //     onPressed: () async {
               //       await controller.userDataManagement.getDummyUserData();
               //     }, child: Text('test button'))
-=======
               TextButton(
                   onPressed: () async {
                     // await test_repository().test();
                     // await controller.userDataManagement.getDummyUserData();
                   }, child: Text('test button'))
->>>>>>> 76defc7 (Test DB 적용 버전)
             ],
           ),
         ),
