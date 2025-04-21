@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:white_gym_web/app/data/util/format_data.dart';
 import 'package:white_gym_web/app/modules/staff/controllers/staff_management_controller.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
-import 'package:white_gym_web/global/global.dart';
 import 'package:number_pagination/number_pagination.dart';
 
 
@@ -25,13 +22,6 @@ class StaffManagementPage extends GetView<StaffManagementController> {
     double phoneWidth = size.width * 0.1302;
     double createdWidth = size.width * 0.1042;
     double approvedWidth = size.width * 0.0828;
-    // double staffTypeWidth = 200;
-    // double spotWidth = 200;
-    // double nameWidth = 150;
-    // double emailWidth = 260;
-    // double phoneWidth = 250;
-    // double createdWidth = 200;
-    // double approvedWidth = 159;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -237,9 +227,6 @@ class StaffManagementPage extends GetView<StaffManagementController> {
                                             controller.init();
                                           }else{
                                             controller.deleteApprovedDialog(context, size, controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index]);
-                                            // controller.staffList.removeWhere((element) => element.documentId == controller.selectedStaffList[index].documentId);
-                                            // await controller.staffManagement.deleteStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
-                                            // controller.init();
                                           }
                                         }, child: Text(controller.tabController.index == 0 ? '승인' : '삭제', style: TextStyle(fontSize: size.width * 0.0068, color: controller.tabController.index == 0 ? mainColor : Color(0xffFF3C3C), fontWeight: FontWeight.w500),))
                                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:white_gym_web/app/data/service/test.dart';
 import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
@@ -226,10 +227,18 @@ class SignInPage extends GetView<LoginController> {
                   ),),
                 ),
               ),
+<<<<<<< HEAD
               // TextButton(
               //     onPressed: () async {
               //       await controller.userDataManagement.getDummyUserData();
               //     }, child: Text('test button'))
+=======
+              TextButton(
+                  onPressed: () async {
+                    // await test_repository().test();
+                    // await controller.userDataManagement.getDummyUserData();
+                  }, child: Text('test button'))
+>>>>>>> 76defc7 (Test DB 적용 버전)
             ],
           ),
         ),

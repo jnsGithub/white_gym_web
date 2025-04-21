@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:white_gym_web/app/data/models/staff.dart';
 
-String version = 'v1.0.9';
+String version = 'v1.1.0';
 
 CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user_test');
 CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff_test');
@@ -29,7 +29,7 @@ Rx<Staff> myInfo = Staff(
 
 Future<void> getMyInfo(String uid) async {
   try {
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('staff').doc(uid).get();
+    DocumentSnapshot snapshot = await staffDB.doc(uid).get();
     myInfo.value = Staff.fromJson(snapshot);
   } catch (e) {
     print('내 정보 가져올때 걸림 : ${e}');

@@ -85,7 +85,11 @@ class UserDataManagement{
     }
   }
 
+<<<<<<< HEAD
   Future<int> getAllUsersLength(Spot selectedSpot) async {
+=======
+  Future<int> getAllUsersLength() async {
+>>>>>>> 76defc7 (Test DB 적용 버전)
     try{
       List<String>? sort = [];
       if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
@@ -347,6 +351,7 @@ class UserDataManagement{
   }
 
 
+<<<<<<< HEAD
 // Future<void> setTestDB() async{
 //   QuerySnapshot userSnapshot = await db.collection('user').limit(1000).get();
 //   QuerySnapshot spotSnapshot = await db.collection('spot').get();
@@ -416,4 +421,75 @@ class UserDataManagement{
 //
 //
 // }
+=======
+  // Future<void> setTestDB() async{
+  //   QuerySnapshot userSnapshot = await db.collection('user').limit(1000).get();
+  //   QuerySnapshot spotSnapshot = await db.collection('spot').get();
+  //   QuerySnapshot staffSnapshot = await db.collection('staff').get();
+  //   QuerySnapshot adminModifyHistorySnapshot = await db.collection('adminModifyHistory').get();
+  //   QuerySnapshot spotItemSnapshot = await db.collection('spotItem').get();
+  //
+  //   String userTest = 'user_test';
+  //   String spotTest = 'spot_test';
+  //   String staffTest = 'staff_test';
+  //   String adminModifyHistoryTest = 'adminModifyHistory_test';
+  //   String spotItemTest = 'spotItem_test';
+  //
+  //
+  //   log(name: 'INFO', 'Data load success!');
+  //   log(name: 'INFO', '--------------------------------------------------------------------');
+  //   log(name: 'USER', 'User data set start!');
+  //   int count = 0;
+  //   var endCount = userSnapshot.docs.length;
+  //   for(var i in userSnapshot.docs){
+  //     await db.collection(userTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+  //     count ++;
+  //     log(name: 'USER', '${count} / ${endCount}');
+  //   }
+  //   log(name: 'USER', 'User data set success!');
+  //   log(name: 'INFO', '--------------------------------------------------------------------');
+  //   log(name: 'SPOT', 'Spot data set start!');
+  //   endCount = spotSnapshot.docs.length;
+  //   for(var i in spotSnapshot.docs){
+  //     await db.collection(spotTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+  //     count ++;
+  //     log(name: 'SPOT', '${count} / ${endCount}');
+  //   }
+  //   log(name: 'SPOT', 'Staff data set success!');
+  //   log(name: 'INFO', '--------------------------------------------------------------------');
+  //   log(name: 'STAFF', 'Staff data set start!');
+  //   endCount = staffSnapshot.docs.length;
+  //   count = 0;
+  //   for(var i in staffSnapshot.docs){
+  //     await db.collection(staffTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+  //     count ++;
+  //     log(name: 'STAFF', '${count} / ${endCount}');
+  //   }
+  //   log(name: 'STAFF', 'Staff data set success!');
+  //   log(name: 'INFO', '--------------------------------------------------------------------');
+  //   log(name: 'ADMIN_HISTORY', 'Admin history data set start!');
+  //   endCount = adminModifyHistorySnapshot.docs.length;
+  //   count = 0;
+  //   for(var i in adminModifyHistorySnapshot.docs){
+  //     await db.collection(adminModifyHistoryTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+  //     count ++;
+  //     log(name: 'ADMINHISTORY', '${count} / ${endCount}');
+  //   }
+  //   log(name: 'ADMIN_HISTORY', 'Admin history data set success!');
+  //   log(name: 'INFO', '--------------------------------------------------------------------');
+  //   log(name: 'SPOT_ITEM', 'SpotItem data set start!');
+  //
+  //   endCount = spotItemSnapshot.docs.length;
+  //   count = 0;
+  //
+  //   for(var i in spotItemSnapshot.docs){
+  //     await db.collection(spotItemTest).doc(i.id).set(i.data() as Map<String, dynamic>);
+  //     count ++;
+  //     log(name: 'SPOT_ITEM', '${count} / ${endCount}');
+  //   }
+  //   log(name: 'SPOT_ITEM', 'SpotItem data set success!');
+  //
+  //
+  // }
+>>>>>>> 76defc7 (Test DB 적용 버전)
 }

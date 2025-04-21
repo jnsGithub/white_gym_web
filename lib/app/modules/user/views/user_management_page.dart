@@ -77,7 +77,10 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                                 controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                                 await controller.getUserDataList();
+<<<<<<< HEAD
                                 // controller.maxUserCount = controller.userDataListView.length;
+=======
+>>>>>>> 76defc7 (Test DB 적용 버전)
 
                                 // controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
                                 //
@@ -919,9 +922,15 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                                 width: size.width * 0.0219,
                                                                 child: Text(
                                                                     '락커',
+<<<<<<< HEAD
                                                                     textAlign: TextAlign.right,
                                                                     style: TextStyle(fontSize: tranSize(16), color: gray700, fontWeight: FontWeight.w600)
                                                                 )
+=======
+                                                                     textAlign: TextAlign.right,
+                                                                    style: TextStyle(fontSize: tranSize(16), color: gray700, fontWeight: FontWeight.w600)
+                                                                    )
+>>>>>>> 76defc7 (Test DB 적용 버전)
                                                             ),
                                                             Obx(() => Checkbox(
                                                               activeColor: user.ticket.subscribe ? gray500 : mainColor,
@@ -966,7 +975,11 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                             ),
                                                             Text(
                                                                 '원',
+<<<<<<< HEAD
                                                                 style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
+=======
+                                                                 style: TextStyle(fontSize: 16, color: gray700, fontWeight: FontWeight.w600))
+>>>>>>> 76defc7 (Test DB 적용 버전)
                                                           ],
                                                         ),
                                                       ),
@@ -997,7 +1010,11 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                             ),
                                                             Text(
                                                                 '번',
+<<<<<<< HEAD
                                                                 style: TextStyle(fontSize: tranSize(16), color: gray700, fontWeight: FontWeight.w600))
+=======
+                                                                 style: TextStyle(fontSize: tranSize(16), color: gray700, fontWeight: FontWeight.w600))
+>>>>>>> 76defc7 (Test DB 적용 버전)
                                                           ],
                                                         ),
                                                       ) : Container(),
@@ -1122,7 +1139,10 @@ class UserManagementPage extends GetView<UserManagementController> {
                             }
                           },
                           onPressedNext: () async {
+<<<<<<< HEAD
                             print('${controller.userDataListView.length} / ${controller.maxListCount.value}');
+=======
+>>>>>>> 76defc7 (Test DB 적용 버전)
                             if(controller.selectedPage.value >= (controller.maxUserCount / controller.maxListCount.value).ceil()){
                               return;
                             }
@@ -1180,11 +1200,15 @@ class UserManagementPage extends GetView<UserManagementController> {
       ),
     );
   }
+<<<<<<< HEAD
   Widget nextAndPrevButton({
     required Function() onPressedPrev,
     required Function() onPressedNext,
     required String pageNumber
   }){
+=======
+  Widget nextAndPrevButton({required Function() onPressedPrev, required Function() onPressedNext, required String pageNumber}){
+>>>>>>> 76defc7 (Test DB 적용 버전)
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
