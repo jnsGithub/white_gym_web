@@ -75,7 +75,9 @@ class UserManagementController extends GetxController{
 
   userListSort() {
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();// && element.ticket.paymentBranch != '').toList();
-    mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
+    mySpotList.value = myInfo.value.position == '마스터'
+        ? spotList
+        : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
     if(mySpotList.length > 1){
       mySpotList.insert(0, Spot.empty());
       if(myInfo.value.position != '마스터'){
@@ -114,7 +116,8 @@ class UserManagementController extends GetxController{
     userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
 
-    maxUserCount = await userDataManagement.getAllUsersLength();
+    maxUserCount = await userDataManagement.getAllUsersLength(selectedSpot.value);
+    print('maxUserCount: $maxUserCount');
   }
 
   int useDayCalculation(UserData userData) {
@@ -488,8 +491,11 @@ class UserManagementController extends GetxController{
                           return;
                         }
                       }
-                      userDataList.insert(0, user.value);
-                      userListSort();
+                      // userDataList.insert(0, user.value);
+                      await getUserDataList();
+                      selectedPage.value = 1;
+                      update();
+                      // userListSort();
                       // controller.init();
                       Get.back();
                       if(!Get.isSnackbarOpen) {

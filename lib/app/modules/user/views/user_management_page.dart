@@ -77,6 +77,7 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                                 controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                                 await controller.getUserDataList();
+                                // controller.maxUserCount = controller.userDataListView.length;
 
                                 // controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
                                 //
@@ -1121,6 +1122,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                             }
                           },
                           onPressedNext: () async {
+                            print('${controller.userDataListView.length} / ${controller.maxListCount.value}');
                             if(controller.selectedPage.value >= (controller.maxUserCount / controller.maxListCount.value).ceil()){
                               return;
                             }

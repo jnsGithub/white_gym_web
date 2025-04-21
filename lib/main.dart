@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       initialRoute: isLogin ? Routes.MAIN_HOME_PAGE : Routes.SIGN_IN_PAGE,
       getPages: AppPages.routes,
-      // themeMode: ThemeMode.system,
+      // themeMode: ThemeMode.dark,
     );
   }
 }

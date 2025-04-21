@@ -85,9 +85,21 @@ class UserDataManagement{
     }
   }
 
-  Future<int> getAllUsersLength() async {
+  Future<int> getAllUsersLength(Spot selectedSpot) async {
     try{
-      return await userDB.where('ticket.spotDocumentId', whereIn: myInfo.value.position == '마스터' ? null : myInfo.value.spotIdList).count().get().then((value) => value.count!);
+      List<String>? sort = [];
+      if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
+        if(selectedSpot.documentId.isEmpty){
+          sort = null;
+        }
+        else{
+          sort = [selectedSpot.documentId];
+        }
+      }
+      else{
+        sort = myInfo.value.spotIdList;
+      }
+      return await userDB.where('ticket.spotDocumentId', whereIn: sort).count().get().then((value) => value.count!);
     }
     catch(e){
       print(e);
