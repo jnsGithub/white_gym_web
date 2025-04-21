@@ -1178,7 +1178,11 @@ class UserManagementPage extends GetView<UserManagementController> {
       ),
     );
   }
-  Widget nextAndPrevButton({required Function() onPressedPrev, required Function() onPressedNext, required String pageNumber}){
+  Widget nextAndPrevButton({
+    required Function() onPressedPrev,
+    required Function() onPressedNext,
+    required String pageNumber
+  }){
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [

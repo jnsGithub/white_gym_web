@@ -7,12 +7,12 @@ import 'package:white_gym_web/app/data/models/staff.dart';
 
 String version = 'v1.0.9';
 
-CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user');
-CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff');
-CollectionReference<Map<String, dynamic>> spotDB = FirebaseFirestore.instance.collection('spot');
-CollectionReference<Map<String, dynamic>> spotItemDB = FirebaseFirestore.instance.collection('spotItem');
+CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user_test');
+CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff_test');
+CollectionReference<Map<String, dynamic>> spotDB = FirebaseFirestore.instance.collection('spot_test');
+CollectionReference<Map<String, dynamic>> spotItemDB = FirebaseFirestore.instance.collection('spotItem_test');
 CollectionReference<Map<String, dynamic>> visitHistoryDB = FirebaseFirestore.instance.collection('visitHistory');
-CollectionReference<Map<String, dynamic>> adminHistoryDB = FirebaseFirestore.instance.collection('adminModifyHistory');
+CollectionReference<Map<String, dynamic>> adminHistoryDB = FirebaseFirestore.instance.collection('adminModifyHistory_test');
 
 
 

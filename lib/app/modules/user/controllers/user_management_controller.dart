@@ -71,20 +71,6 @@ class UserManagementController extends GetxController{
     await getSpotList();
 
     userListSort();
-    // userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();// && element.ticket.paymentBranch != '').toList();
-    // mySpotList.value = myInfo.value.position == '마스터' ? spotList : spotList.where((element) => myInfo.value.spotIdList.contains(element.documentId)).toList();
-    // if(mySpotList.length > 1){
-    //   mySpotList.insert(0, Spot.empty());
-    //   if(myInfo.value.position != '마스터'){
-    //     spotList.insert(0, Spot.empty());
-    //   }
-    // }
-    // else{
-    //   selectedSpot.value = mySpotList[0];
-    //   spotList.insert(0, Spot.empty());
-    // }
-    // a.value = userDataListView.length - ((selectedPage.value-1) * 10) > 10 ? 10 : userDataListView.length - ((selectedPage.value-1) * 10);//userDataListView.length > 10 ? 10 : userDataListView.length;
-    // update();
   }
 
   userListSort() {
@@ -103,7 +89,6 @@ class UserManagementController extends GetxController{
     a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
         ? maxListCount.value
         : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);
-    //userDataListView.length > 10 ? 10 : userDataListView.length;
     update();
   }
 
@@ -114,11 +99,11 @@ class UserManagementController extends GetxController{
         userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
       }
       else{
-        userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text)).toList();// && element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
+        userDataListView.value = userDataList.where((element) => element.name.contains(searchController.text)).toList();
       }
       a.value = userDataListView.length - ((selectedPage.value-1) * maxListCount.value) > maxListCount.value
           ? maxListCount.value
-          : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);//userDataListView.length > 10 ? 10 : userDataListView.length;
+          : userDataListView.length - ((selectedPage.value-1) * maxListCount.value);
       update();
     } catch(e){
       print(e);
@@ -126,7 +111,6 @@ class UserManagementController extends GetxController{
   }
 
   Future<void> getUserDataList() async {
-    // userDataList.value = await userDataManagement.getUserDataList();
     userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
 
