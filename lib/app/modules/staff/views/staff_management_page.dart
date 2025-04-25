@@ -241,7 +241,9 @@ class StaffManagementPage extends GetView<StaffManagementController> {
                                             // await controller.staffManagement.deleteStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
                                             // controller.init();
                                           }
-                                        }, child: Text(controller.tabController.index == 0 ? '승인' : '삭제', style: TextStyle(fontSize: size.width * 0.0068, color: controller.tabController.index == 0 ? mainColor : Color(0xffFF3C3C), fontWeight: FontWeight.w500),))
+                                          controller.searchController.clear();
+                                        },
+                                        child: Text(controller.tabController.index == 0 ? '승인' : '삭제', style: TextStyle(fontSize: size.width * 0.0068, color: controller.tabController.index == 0 ? mainColor : Color(0xffFF3C3C), fontWeight: FontWeight.w500),))
                                 ),
                               ],
                             ),

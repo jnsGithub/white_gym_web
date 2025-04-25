@@ -25,6 +25,7 @@ class UserManagementController extends GetxController{
 
   RxInt a = 0.obs;
   RxInt selectedPage = 1.obs;
+  RxInt maxPage = 1.obs;
 
   int maxUserCount = 0;
 
@@ -59,9 +60,9 @@ class UserManagementController extends GetxController{
   }
 
 
-  updateUserDate(UserData userData, UserData beforeUserData) async {
+  updateUserData(UserData userData, UserData beforeUserData) async {
     await userDataManagement.updateUserTicket(userData, false, beforeUserData: beforeUserData);
-    init();
+    // init();
     update();
   }
 
@@ -69,6 +70,7 @@ class UserManagementController extends GetxController{
     // print(await userDataManagement.getAllUsersLength());
     await getUserDataList();
     await getSpotList();
+    maxPage.value = (maxUserCount / maxListCount.value).ceil();
 
     userListSort();
   }
@@ -500,7 +502,7 @@ class UserManagementController extends GetxController{
                       Get.back();
                       if(!Get.isSnackbarOpen) {
                         Get.snackbar(
-                            '저정 완료',
+                            '저장 완료',
                             '저장이 완료되었습니다.');
                       }
                     },
@@ -552,7 +554,7 @@ class UserManagementController extends GetxController{
               print(userData.ticket.endDate);
               await userDataManagement.updateUserTicket(userData, false);
             }
-            init();
+            searchController.clear();
             Get.back();
             update();
           },

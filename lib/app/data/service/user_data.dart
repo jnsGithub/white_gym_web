@@ -46,36 +46,7 @@ class UserDataManagement{
         return allUserData;
       }
       else{
-        // int a = 0;
-        // print('start');
-        //
-        // userDB.orderBy('createDate', descending: true).get().then((result) {
-        //   print('시작');
-        //   var controller = Get.find<UserManagementController>();
-        //   for(var doc in result.docs){
-        //     controller.userDataList.add(UserData.fromJson(doc));
-        //     print(a);
-        //     a++;
-        //   }
-        //
-        //   controller.userListSort();
-        // });
-
-        // List locker = [];
-        // for (var i in locker){
-        //   if(i.userId == ''){
-        //     userList.add(UserData.empty());
-        //   }
-        //    else{
-        //     var q = await userDB.doc(i.userId).get();
-        //     userList.add(UserData.fromJson(q));
-        //   }
-        // }
         final result = await userDB.orderBy('createDate', descending: true).get();
-        // for(var doc in result.docs){
-        //   userList.add(UserData.fromJson(doc));
-        //   userList.
-        // }
         return result.docs.map((doc) => UserData.fromJson(doc)).toList();
       }
     }
@@ -279,9 +250,52 @@ class UserDataManagement{
     }
   }
 
+  // Future<List<UserData>> searchUserList(Spot selectedSpot, String userName, List<UserData> userList, List<DocumentSnapshot> docList) async {
+  //   try{
+  //     late QuerySnapshot snapshot;
+  //       if(myInfo.value.position == '마스터'){
+  //         if(userList.isEmpty){
+  //           print(1);
+  //           snapshot = await userDB
+  //               .where('name', isGreaterThanOrEqualTo: userName)
+  //               .limit(1)
+  //               .get();
+  //           if(snapshot.docs.isNotEmpty){
+  //             print(2);
+  //             userList.add(UserData.fromJson(snapshot.docs.first));
+  //             docList.add(snapshot.docs.first);
+  //             searchUserList(selectedSpot, userName, userList, docList);
+  //           }
+  //         }
+  //         else{
+  //           print(3);
+  //           snapshot = await userDB
+  //               .orderBy('name')
+  //               .where('name', isGreaterThanOrEqualTo: userName)
+  //               .startAfterDocument(docList.last)
+  //               .limit(2)
+  //               .get();
+  //           print(snapshot.docs.isNotEmpty);
+  //           if(snapshot.docs.isNotEmpty){
+  //             print(4);
+  //             userList.add(UserData.fromJson(snapshot.docs.last));
+  //             searchUserList(selectedSpot, userName, userList,docList);
+  //           }
+  //         }
+  //         print(5);
+  //       }
+  //     return userList;
+  //   }
+  //   catch(e){
+  //     print(e);
+  //     return [];
+  //   }
+  // }
+
   Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
     try{
       late QuerySnapshot snapshot;
+      List<UserData> userList = [];
       if(selectedSpot.documentId.isEmpty){
         if(myInfo.value.position == '마스터'){
           snapshot = await userDB
@@ -310,7 +324,6 @@ class UserDataManagement{
             .get();
       }
 
-      List<UserData> userList = [];
       for(var i in snapshot.docs){
         userList.add(UserData.fromJson(i));
       }
@@ -325,18 +338,18 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await userDB.where('name', isEqualTo: '소정후').get();
-      final snapshot2 = await userDB.where('name', isEqualTo: '성승화').get();
-
-      // final snapshot = await userDB.where('ticket.spotItem.isSubscribe', isEqualTo: true).where('ticket.status', isEqualTo: false).where('ticket.subscribe', isEqualTo: true).get();
+      final snapshot = await userDB.where('name', isGreaterThanOrEqualTo: '소').get();
       for(var i in snapshot.docs){
-        await FirebaseFirestore.instance.collection('user_test').doc(i.id).set(i.data());
-        // }
+        print(i.data()['name']);
+        // userDataList.add(UserData.fromJson(i));
       }
-      for(var i in snapshot2.docs){
-        await FirebaseFirestore.instance.collection('user_test').doc(i.id).set(i.data());
-        // }
-      }
+
+      // var a = snapshot.docs.first.data();
+      // a['phone'] = '01053410964';
+      // a['name'] = '백영훈';
+      // await FirebaseFirestore.instance.collection('user').doc().set(a);
+      print('doc count : ${snapshot.docs.length}');
+
     }
     catch(e){
       print(a);

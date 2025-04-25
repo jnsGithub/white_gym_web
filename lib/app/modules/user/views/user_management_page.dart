@@ -140,11 +140,12 @@ class UserManagementPage extends GetView<UserManagementController> {
                                     return;
                                   }
                                   print('검색어 : ${controller.searchController.text}');
-                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);
+                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);//, [], []);
                                   print('검색어 : ${controller.userDataListView}');
                                   controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                       ? controller.maxListCount.value
                                       : controller.userDataListView.length;
+                                  controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
                                   controller.update();
                                 },
                               ),
@@ -152,6 +153,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                               border: InputBorder.none,
                             ),
                             onSubmitted: (value) async {
+                              controller.selectedPage.value = 1;
                               if(controller.searchController.text.isEmpty){
                                 controller.init();
 
@@ -160,12 +162,11 @@ class UserManagementPage extends GetView<UserManagementController> {
                                     : controller.userDataListView.length;
                                 return;
                               }
-                              print('검색어 : ${controller.searchController.text}');
-                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);
-                              print('검색어 : ${controller.userDataListView}');
+                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);// , [], []);
                               controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                   ? controller.maxListCount.value
                                   : controller.userDataListView.length;
+                              controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
                               controller.update();
                             },
                             onChanged: (String value) async {
@@ -215,7 +216,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                 onPressed: () async {
                                   saving(context);
                                   await Future.delayed(Duration(seconds: 2), (){
-                                    ToExcel().toExcel(controller.userDataListView, controller.selectedSpot.value.name);
+                                    ToExcel().toExcel(controller.userDataListView, controller.selectedSpot.value.name, selectedSpot: controller.selectedSpot.value);
                                   });
                                 },
                                 child: Row(
@@ -321,7 +322,7 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                             int num = (controller.selectedPage.value - 1) * controller.maxListCount.value + index;
 
-                            UserData user = controller.userDataListView[num].copyWith();
+                            UserData user = controller.userDataListView[num];
                             UserData temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
@@ -652,8 +653,9 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                         ? userData.ticket.paymentBranch
                                                         : selectedSpotName.value;
                                                     // await controller.updateUserDate(userData);
-                                                    await controller.updateUserDate(userData, temp);
-                                                    controller.update();
+                                                    await controller.updateUserData(userData, temp);
+                                                    controller.userDataListView[num] = userData;
+                                                    controller.searchController.clear();
                                                     Get.back();
                                                     if(!Get.isSnackbarOpen) {
                                                       Get.snackbar(
@@ -661,14 +663,14 @@ class UserManagementPage extends GetView<UserManagementController> {
                                                           '저장이 완료되었습니다.');
                                                     }
                                                     await Future.delayed(Duration(seconds: 2), (){
-                                                      if(Navigator.of(context).canPop()){
+                                                      if(Navigator.of(context).canPop() && Get.currentRoute == '/user'){
                                                         Get.back();
                                                       }
                                                     });
                                                   } catch(e){
                                                     Get.back();
                                                     if(!Get.isSnackbarOpen){
-                                                      Get.snackbar('저정 실패', '잠시 후 다시 시도해주세요.');
+                                                      Get.snackbar('저장 실패', '잠시 후 다시 시도해주세요.');
                                                     }
                                                     print(e);
                                                   }
@@ -1014,10 +1016,8 @@ class UserManagementPage extends GetView<UserManagementController> {
                                   ),
                                 ),
                                 )
-
                               ],
                             );
-
                           },
                         ),
                         SizedBox(height: 20,),
@@ -1052,11 +1052,11 @@ class UserManagementPage extends GetView<UserManagementController> {
                                   ),
                                 ),
                                 DropdownMenuItem<int>(
-                                  value: 20,
+                                  value: 30,
                                   child: Center(
                                     child: Text(
                                       textAlign: TextAlign.center,
-                                      '20',
+                                      '30',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: gray900,
@@ -1066,11 +1066,11 @@ class UserManagementPage extends GetView<UserManagementController> {
                                   ),
                                 ),
                                 DropdownMenuItem<int>(
-                                  value: 30,
+                                  value: 50,
                                   child: Center(
                                     child: Text(
                                       textAlign: TextAlign.center,
-                                      '30',
+                                      '50',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: gray900,
@@ -1111,7 +1111,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                             )
                         ),
                         nextAndPrevButton(
-                          pageNumber: '${controller.selectedPage.value}/${(controller.maxUserCount / controller.maxListCount.value).ceil()}',
+                          pageNumber: '${controller.selectedPage.value}/${controller.maxPage.value}',
                           onPressedPrev: () async {
                             if(controller.selectedPage.value > 1){
                               controller.selectedPage.value--;
@@ -1122,9 +1122,20 @@ class UserManagementPage extends GetView<UserManagementController> {
                             }
                           },
                           onPressedNext: () async {
+
                             print('${controller.userDataListView.length} / ${controller.maxListCount.value}');
-                            if(controller.selectedPage.value >= (controller.maxUserCount / controller.maxListCount.value).ceil()){
+                            if(controller.selectedPage.value >= controller.maxPage.value){
+                              if(!Get.isSnackbarOpen){
+                                Get.snackbar('마지막 페이지입니다.', '더 이상 불러올 수 없습니다.');
+                              }
                               return;
+                            }
+                            if(Get.isSnackbarOpen){
+                              Get.back();
+                              saving(context);
+                            }
+                            else{
+                              saving(context);
                             }
                             controller.selectedPage.value++;
 
@@ -1138,13 +1149,16 @@ class UserManagementPage extends GetView<UserManagementController> {
                               controller.a.value = controller.userDataListView.length - ((controller.selectedPage.value-1) * controller.maxListCount.value) > controller.maxListCount.value
                                   ? controller.maxListCount.value
                                   : controller.userDataListView.length - ((controller.selectedPage.value-1) * controller.maxListCount.value);
-
                               controller.update();
+                              Get.back();
+
                             } else if(controller.selectedPage.value < (controller.userDataListView.length / controller.maxListCount.value).ceil()){
                               controller.a.value = controller.userDataListView.length - ((controller.selectedPage.value-1) * controller.maxListCount.value) > controller.maxListCount.value
                                   ? controller.maxListCount.value
                                   : controller.userDataListView.length - ((controller.selectedPage.value-1) * controller.maxListCount.value);
                               controller.update();
+                              Get.back();
+
                             }
                           },
                         ),

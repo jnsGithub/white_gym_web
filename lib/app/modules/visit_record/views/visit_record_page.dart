@@ -47,7 +47,6 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                                 ? null
                                 : (String? value){
                               controller.selectedSpot.value = controller.spotList.firstWhere((element) => element.documentId == value);
-                              print(value);
                               controller.selectedPage.value = 1;
                               controller.update();
                             },
@@ -80,17 +79,21 @@ class VisitRecordPage extends GetView<VisitRecordController> {
                         ? visitHistoryDB
                         .where('spotDocumentId', isEqualTo: controller.selectedSpot.value.documentId)
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(1000)
+                        .orderBy('createDate', descending: true)
+                        .limit(1000)
+                        .snapshots()
+                        : myInfo.value.position == '마스터'
+                        ? visitHistoryDB
+                        .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
+                        .orderBy('createDate', descending: true)
+                        .limit(1000)
                         .snapshots()
                         : visitHistoryDB
+                        .where('spotDocumentId', whereIn: myInfo.value.spotIdList)
                         .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        .orderBy('createDate', descending: true).limit(1000)
+                        .orderBy('createDate', descending: true)
+                        .limit(1000)
                         .snapshots(),
-                        // : visitHistoryDB
-                        // .where('createDate', isLessThan: Timestamp.fromDate(afterOneYear))
-                        // .orderBy('createDate', descending: true)
-                        // .limit(1)
-                        // .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return Center(child: CircularProgressIndicator());

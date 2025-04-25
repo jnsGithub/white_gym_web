@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -6,9 +7,12 @@ import 'package:white_gym_web/app/data/util/format_data.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/user_data.dart';
 
+import '../models/spot.dart';
+
 class ToExcel{
   late Excel excel;
   late Sheet sheet;
+  late List<UserData> userList;
 
   List<TextCellValue> header = [
     TextCellValue('지점'),
@@ -21,9 +25,28 @@ class ToExcel{
     TextCellValue('사물함 번호'),
     TextCellValue('마케팅 정보 수신동의 여부')];
 
-  toExcel(List<UserData> list, String spotName) async {
+  toExcel(List<UserData> list, String spotName,{Spot? selectedSpot}) async {
     try{
       // 생성자에서 초기화
+      List<UserData> userList = [];
+      List<String>? spotIdList;
+      if(selectedSpot!.documentId != ''){
+        spotIdList = [selectedSpot.documentId];
+      }
+      else{
+        if(myInfo.value.position == '마스터'){
+          spotIdList = null;
+        } else {
+          spotIdList = myInfo.value.spotIdList;
+        }
+      }
+      QuerySnapshot snapshot = await userDB.where('ticket.spotDocumentId', whereIn: spotIdList).get();
+
+      for(var doc in snapshot.docs){
+        userList.add(UserData.fromJson(doc));
+      }
+
+
       excel = Excel.createExcel();
       sheet = excel['Sheet1'];
       CellStyle cellStyle = CellStyle(
@@ -33,8 +56,8 @@ class ToExcel{
         fontSize: 12,
       );
       // 헤더 및 데이터 추가
-      addHeaderAndData(list);
-      for(int i = 0; i < list.length + 3; i++){
+      addHeaderAndData(userList);
+      for(int i = 0; i < userList.length + 3; i++){
         for(int j = 0; j < header.length; j++){
           sheet.cell(CellIndex.indexByColumnRow(columnIndex: j, rowIndex: i)).cellStyle = cellStyle;
         }
@@ -42,7 +65,7 @@ class ToExcel{
       sheet.setDefaultColumnWidth(20);
       sheet.setColumnWidth(2, 10);
       sheet.setColumnWidth(3, 30);
-      await saveExcel(spotName);
+      await saveExcel(selectedSpot.name);
       print('엑셀 파일 생성 완료');
       Get.back();
     } catch(e){
@@ -65,7 +88,7 @@ class ToExcel{
       List<TextCellValue> rowData = [
         TextCellValue(row.ticket.paymentBranch),
         TextCellValue(row.name),
-        TextCellValue(row.gender == 0 ? '남자' : '여자'),
+        TextCellValue(row.gender == 0 ? '여자' : '남자'),
         TextCellValue(formatPhoneNumber(row.phone)),
         TextCellValue(formatDate(row.ticket.createDate)),
         TextCellValue(row.ticket.spotDocumentId == '' || row.ticket.endDate.isBefore(DateTime.now()) ? '-' : row.ticket.subscribe ? '구독 멤버쉽' : '일반 멤버쉽'),

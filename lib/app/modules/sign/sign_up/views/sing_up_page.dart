@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/app/modules/sign/sign_up/controllers/sign_up_controller.dart';
+import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
@@ -185,7 +186,7 @@ class SignUpPage extends GetView<SignUpController> {
                             return;
                           }
                           if(await controller.sign.signUp(controller.emailController.text, controller.passwordController.text, controller.nameController.text, controller.positionList[controller.selectedType.value], controller.selectedSpotIdList, controller.hpController.text)){
-                            Get.offAllNamed('/signIn');
+                            Get.offAllNamed(Routes.SIGN_IN_PAGE);
                             Get.snackbar('회원가입 성공', '승인이 완료되면 로그인 할 수 있습니다.');
                           }
                           else{
