@@ -132,20 +132,31 @@ class UserManagementPage extends GetView<UserManagementController> {
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.search_rounded, color: gray500,),
                                 onPressed: () async {
+                                  controller.selectedPage.value = 1;
+                                  saving(context);
                                   if(controller.searchController.text.isEmpty){
                                     controller.init();
                                     controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                         ? controller.maxListCount.value
                                         : controller.userDataListView.length;
+                                    controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
+                                    if(Get.isSnackbarOpen){
+                                      Get.back();
+                                    }
+                                    Get.back();
                                     return;
                                   }
                                   print('검색어 : ${controller.searchController.text}');
-                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);//, [], []);
-                                  print('검색어 : ${controller.userDataListView}');
+                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text, [], []);
+                                  // print('검색어 : ${controller.userDataListView}');
                                   controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                       ? controller.maxListCount.value
                                       : controller.userDataListView.length;
                                   controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
+                                  if(Get.isSnackbarOpen){
+                                    Get.back();
+                                  }
+                                  Get.back();
                                   controller.update();
                                 },
                               ),
@@ -154,19 +165,29 @@ class UserManagementPage extends GetView<UserManagementController> {
                             ),
                             onSubmitted: (value) async {
                               controller.selectedPage.value = 1;
+                              saving(context);
                               if(controller.searchController.text.isEmpty){
                                 controller.init();
 
                                 controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                     ? controller.maxListCount.value
                                     : controller.userDataListView.length;
+                                controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
+                                if(Get.isSnackbarOpen){
+                                  Get.back();
+                                }
+                                Get.back();
                                 return;
                               }
-                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);// , [], []);
+                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text, [], []);
                               controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                   ? controller.maxListCount.value
                                   : controller.userDataListView.length;
                               controller.maxPage.value = (controller.userDataListView.length / controller.maxListCount.value).ceil() > 1 ? (controller.userDataListView.length / controller.maxListCount.value).ceil() : 1;
+                              if(Get.isSnackbarOpen){
+                                Get.back();
+                              }
+                              Get.back();
                               controller.update();
                             },
                             onChanged: (String value) async {
@@ -333,8 +354,8 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                             if(isStatusFalse.value){
                               user.ticket = Ticket.empty();
-                              user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
-                              user.ticket.spotDocumentId = controller.userDataListView[num].ticket.spotDocumentId;
+                              user.ticket.paymentBranch = temp.ticket.paymentBranch;
+                              user.ticket.spotDocumentId = temp.ticket.spotDocumentId;
                             }
 
                             memberShipNameController.text = user.ticket.spotItem.name;
