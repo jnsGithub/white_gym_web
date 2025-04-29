@@ -195,11 +195,21 @@ class UserDataManagement{
           }
         }
         else{
-          snapshot = await userDB
-              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-              .orderBy('createDate', descending: true)
-              .limit(maxListCount)
-              .get();
+          if(selectedSpot!.documentId.isEmpty){
+            snapshot = await userDB
+                .orderBy('createDate', descending: true)
+                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''],)
+                .limit(maxListCount)
+                .get();
+          }
+          else{
+            snapshot = await userDB
+                .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount)
+                .get();
+          }
+
         }
 
         List<UserData> userList = [];
@@ -220,7 +230,7 @@ class UserDataManagement{
           }
           else{
             snapshot = await userDB
-                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''])
                 .orderBy('createDate', descending: true)
                 .limit(maxListCount+1)
                 .startAfterDocument(await userDB.doc(lastUser!.documentId).get())
@@ -300,14 +310,16 @@ class UserDataManagement{
         if(myInfo.value.position == '마스터'){
           snapshot = await userDB
               .orderBy('createDate', descending: true)
-              .where('name', isEqualTo: userName)
+              .where('name', isGreaterThanOrEqualTo: userName)
+              .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
               .get();
         }
         else{
           snapshot = await userDB
               .orderBy('createDate', descending: true)
-              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-              .where('name', isEqualTo: userName)
+              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''])
+              .where('name', isGreaterThanOrEqualTo: userName)
+              .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
               .get();
         }
         // snapshot = await db.collection('user')
@@ -320,7 +332,8 @@ class UserDataManagement{
         snapshot = await userDB
             .orderBy('createDate', descending: true)
             .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
-            .where('name', isEqualTo: userName)
+            .where('name', isGreaterThanOrEqualTo: userName)
+            .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
             .get();
       }
 

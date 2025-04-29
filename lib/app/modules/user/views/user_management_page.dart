@@ -82,6 +82,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                 // controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
                                 //
                                 controller.selectedPage.value = 1;
+                                controller.maxPage.value = (controller.maxUserCount / controller.maxListCount.value).ceil();
                                 controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                     ? controller.maxListCount.value
                                     : controller.userDataListView.length;
@@ -139,9 +140,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                         : controller.userDataListView.length;
                                     return;
                                   }
-                                  print('검색어 : ${controller.searchController.text}');
                                   controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);//, [], []);
-                                  print('검색어 : ${controller.userDataListView}');
                                   controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                       ? controller.maxListCount.value
                                       : controller.userDataListView.length;
@@ -322,7 +321,7 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                             int num = (controller.selectedPage.value - 1) * controller.maxListCount.value + index;
 
-                            UserData user = controller.userDataListView[num];
+                            UserData user = controller.userDataListView[num].copyWith();
                             UserData temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
