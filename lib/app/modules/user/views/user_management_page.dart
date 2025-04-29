@@ -33,15 +33,6 @@ class UserManagementPage extends GetView<UserManagementController> {
     double itemFinishWidth = size.width * 0.099;
     double marketingWidth = size.width * 0.0781;
     double moreWidth = size.width * 0.051;
-    // double spotWidth = 170;
-    // double nameWidth = 170;
-    // double sexWidth = 170;
-    // double hpWidth = 190;
-    // double createdDateWidth = 190;
-    // double itemWidth = 180;
-    // double itemFinishWidth = 190;
-    // double marketingWidth = 150;
-    // double moreWidth = 98;
     return Scaffold(
       body: GetBuilder<UserManagementController>(
           builder: (controller) {
@@ -74,13 +65,8 @@ class UserManagementPage extends GetView<UserManagementController> {
                               onChanged: controller.mySpotList.length == 1
                                   ? null
                                   : (String? value) async {
-
                                 controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                                 await controller.getUserDataList();
-                                // controller.maxUserCount = controller.userDataListView.length;
-
-                                // controller.userDataListView.value = controller.userDataList.where((element) => element.ticket.spotDocumentId.contains(controller.selectedSpot.value.documentId) && element.ticket.paymentBranch != '').toList();
-                                //
                                 controller.selectedPage.value = 1;
                                 controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                     ? controller.maxListCount.value
@@ -146,9 +132,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                     Get.back();
                                     return;
                                   }
-                                  print('검색어 : ${controller.searchController.text}');
-                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text, [], []);
-                                  // print('검색어 : ${controller.userDataListView}');
+                                  controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);//, [], []);
                                   controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                       ? controller.maxListCount.value
                                       : controller.userDataListView.length;
@@ -179,7 +163,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                 Get.back();
                                 return;
                               }
-                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text, [], []);
+                              controller.userDataListView.value = await controller.userDataManagement.searchUserList(controller.selectedSpot.value, controller.searchController.text);//, [], []);
                               controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                   ? controller.maxListCount.value
                                   : controller.userDataListView.length;
@@ -189,11 +173,6 @@ class UserManagementPage extends GetView<UserManagementController> {
                               }
                               Get.back();
                               controller.update();
-                            },
-                            onChanged: (String value) async {
-                              // controller.searchUserList();
-
-                              // controller.update();
                             },
                           ),
                         ),

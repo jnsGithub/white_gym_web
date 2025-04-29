@@ -59,7 +59,7 @@ class UserDataManagement{
   Future<int> getAllUsersLength(Spot selectedSpot) async {
     try{
       List<String>? sort = [];
-      if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
+      if(myInfo.value.position == '마스터'){
         if(selectedSpot.documentId.isEmpty){
           sort = null;
         }
@@ -195,11 +195,21 @@ class UserDataManagement{
           }
         }
         else{
-          snapshot = await userDB
-              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-              .orderBy('createDate', descending: true)
-              .limit(maxListCount)
-              .get();
+          if(selectedSpot!.documentId.isEmpty){
+            snapshot = await userDB
+                .orderBy('createDate', descending: true)
+                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''],)
+                .limit(maxListCount)
+                .get();
+          }
+          else{
+            snapshot = await userDB
+                .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+                .orderBy('createDate', descending: true)
+                .limit(maxListCount)
+                .get();
+          }
+
         }
 
         List<UserData> userList = [];
@@ -220,7 +230,7 @@ class UserDataManagement{
           }
           else{
             snapshot = await userDB
-                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+                .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''])
                 .orderBy('createDate', descending: true)
                 .limit(maxListCount+1)
                 .startAfterDocument(await userDB.doc(lastUser!.documentId).get())
@@ -250,104 +260,40 @@ class UserDataManagement{
     }
   }
 
-  Future<List<UserData>> searchUserList(Spot selectedSpot, String userName, List<UserData> userList, List<DocumentSnapshot> docList) async {
-    try{
-      late QuerySnapshot snapshot;
-        if(myInfo.value.position == '마스터'){
-          if(userList.isEmpty){
-            print(1);
-            snapshot = await userDB
-                .orderBy('name')
-                .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId.isEmpty ? null : selectedSpot.documentId)
-                .where('name', isGreaterThanOrEqualTo: userName)
-                .where('name', isLessThanOrEqualTo: userName + '\uf8ff')
-                // .limit(1)
-                .get();
-
-            // print(snapshot.docs.length);
-            for(var i in snapshot.docs){
-              Map a = i.data() as Map;
-              print(a['name']);
-              userList.add(UserData.fromJson(i));
-            }
-            // Map<String, dynamic> data = snapshot.docs.first.data() as Map<String, dynamic>;
-            // if(snapshot.docs.isNotEmpty && data['name'].toString().substring(0, userName.length) == userName) {
-            //   print(2);
-            //   userList.add(UserData.fromJson(snapshot.docs.first));
-            //   docList.add(snapshot.docs.first);
-            //   return await searchUserList(selectedSpot, userName, userList, docList);
-            // }
-          }
-          else{
-            print(3);
-            snapshot = await userDB
-                .orderBy('name')
-                .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId.isEmpty ? null : selectedSpot.documentId)
-                .where('name', isGreaterThanOrEqualTo: userName)
-                .startAfterDocument(docList.last)
-                .limit(1)
-                .get();
-            print(snapshot.docs.isNotEmpty);
-            if(snapshot.docs.isNotEmpty){
-              Map<String, dynamic> data = snapshot.docs.last.data() as Map<String, dynamic>;
-              print(data['name'].toString().substring(0, userName.length));
-              if(data['name'].toString().substring(0, userName.length) == userName) {
-                print(data['name']);
-                userList.add(UserData.fromJson(snapshot.docs.last));
-                docList.add(snapshot.docs.last);
-                return await searchUserList(
-                    selectedSpot, userName, userList, docList);
-              }
-            }
-          }
-          print(5);
-          print('---------------------------');
-        }
-        print(6);
-        print(userList.length);
-      return userList;
-    }
-    catch(e){
-      print(e);
-      return [];
-    }
-  }
-
-  // Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
+  // Future<List<UserData>> searchUserList(Spot selectedSpot, String userName, List<UserData> userList, List<DocumentSnapshot> docList) async {
   //   try{
   //     late QuerySnapshot snapshot;
-  //     List<UserData> userList = [];
-  //     if(selectedSpot.documentId.isEmpty){
   //       if(myInfo.value.position == '마스터'){
-  //         snapshot = await userDB
-  //             .orderBy('createDate', descending: true)
-  //             .where('name', isEqualTo: userName)
-  //             .get();
+  //         if(userList.isEmpty){
+  //           print(1);
+  //           snapshot = await userDB
+  //               .where('name', isGreaterThanOrEqualTo: userName)
+  //               .limit(1)
+  //               .get();
+  //           if(snapshot.docs.isNotEmpty){
+  //             print(2);
+  //             userList.add(UserData.fromJson(snapshot.docs.first));
+  //             docList.add(snapshot.docs.first);
+  //             searchUserList(selectedSpot, userName, userList, docList);
+  //           }
+  //         }
+  //         else{
+  //           print(3);
+  //           snapshot = await userDB
+  //               .orderBy('name')
+  //               .where('name', isGreaterThanOrEqualTo: userName)
+  //               .startAfterDocument(docList.last)
+  //               .limit(2)
+  //               .get();
+  //           print(snapshot.docs.isNotEmpty);
+  //           if(snapshot.docs.isNotEmpty){
+  //             print(4);
+  //             userList.add(UserData.fromJson(snapshot.docs.last));
+  //             searchUserList(selectedSpot, userName, userList,docList);
+  //           }
+  //         }
+  //         print(5);
   //       }
-  //       else{
-  //         snapshot = await userDB
-  //             .orderBy('createDate', descending: true)
-  //             .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-  //             .where('name', isEqualTo: userName)
-  //             .get();
-  //       }
-  //       // snapshot = await db.collection('user')
-  //       //     .orderBy('createDate', descending: true)
-  //       //     .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-  //       //     .where('name', isEqualTo: userName)
-  //       //     .get();
-  //     }
-  //     else{
-  //       snapshot = await userDB
-  //           .orderBy('createDate', descending: true)
-  //           .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
-  //           .where('name', isEqualTo: userName)
-  //           .get();
-  //     }
-  //
-  //     for(var i in snapshot.docs){
-  //       userList.add(UserData.fromJson(i));
-  //     }
   //     return userList;
   //   }
   //   catch(e){
@@ -355,6 +301,52 @@ class UserDataManagement{
   //     return [];
   //   }
   // }
+
+  Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
+    try{
+      late QuerySnapshot snapshot;
+      List<UserData> userList = [];
+      if(selectedSpot.documentId.isEmpty){
+        if(myInfo.value.position == '마스터'){
+          snapshot = await userDB
+              .orderBy('createDate', descending: true)
+              .where('name', isGreaterThanOrEqualTo: userName)
+              .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
+              .get();
+        }
+        else{
+          snapshot = await userDB
+              .orderBy('createDate', descending: true)
+              .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList + [''])
+              .where('name', isGreaterThanOrEqualTo: userName)
+              .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
+              .get();
+        }
+        // snapshot = await db.collection('user')
+        //     .orderBy('createDate', descending: true)
+        //     .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
+        //     .where('name', isEqualTo: userName)
+        //     .get();
+      }
+      else{
+        snapshot = await userDB
+            .orderBy('createDate', descending: true)
+            .where('ticket.spotDocumentId', isEqualTo: selectedSpot.documentId)
+            .where('name', isGreaterThanOrEqualTo: userName)
+            .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
+            .get();
+      }
+
+      for(var i in snapshot.docs){
+        userList.add(UserData.fromJson(i));
+      }
+      return userList;
+    }
+    catch(e){
+      print(e);
+      return [];
+    }
+  }
 
   Future<void> getDummyUserData() async {
     try{
