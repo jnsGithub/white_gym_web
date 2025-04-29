@@ -59,7 +59,7 @@ class UserDataManagement{
   Future<int> getAllUsersLength(Spot selectedSpot) async {
     try{
       List<String>? sort = [];
-      if(myInfo.value.position == '마스터' || (myInfo.value.position == '지점장' && myInfo.value.spotIdList.length > 1)){
+      if(myInfo.value.position == '마스터'){
         if(selectedSpot.documentId.isEmpty){
           sort = null;
         }

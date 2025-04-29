@@ -41,7 +41,7 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
 
   @override
   void onInit() {
-    tabController = TabController(vsync: this, length: myTabs.length);
+    tabController = TabController(vsync: this, length: myInfo.value.position == '마스터' ? myTabs.length : myTabs.length - 1, initialIndex: 0);
     super.onInit();
     init();
   }
@@ -130,8 +130,7 @@ class StaffManagementController extends GetxController with GetTickerProviderSta
           currentUserChange(value);
         },
         controller: tabController,
-        tabs: myInfo.value.position != '마스터' ? myTabs.where((element) =>
-        element.text != '지점장').toList() : myTabs,
+        tabs: myInfo.value.position != '마스터' ? myTabs.where((element) => element.text != '지점장').toList() : myTabs,
         labelColor: mainColor,
         unselectedLabelColor: gray300,
         labelStyle: const TextStyle(
