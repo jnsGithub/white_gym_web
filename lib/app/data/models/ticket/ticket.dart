@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:white_gym_web/app/data/models/spot_item/spot_item.dart';
 
+import '../../util/converter.dart';
+
 part 'ticket.freezed.dart';
 part 'ticket.g.dart';
 
@@ -19,7 +21,9 @@ abstract class Ticket with _$Ticket {
     required  bool status,
     required  bool subscribe,
     required bool passTicket,
+    @DateListConverter()
     required  List<DateTime> pauseStartDate,
+    @DateListConverter()
     required  List<DateTime> pauseEndDate,
     required  DateTime endDate,
     required  final DateTime createDate,

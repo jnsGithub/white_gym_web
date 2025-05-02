@@ -260,48 +260,6 @@ class UserDataManagement{
     }
   }
 
-  // Future<List<UserData>> searchUserList(Spot selectedSpot, String userName, List<UserData> userList, List<DocumentSnapshot> docList) async {
-  //   try{
-  //     late QuerySnapshot snapshot;
-  //       if(myInfo.value.position == '마스터'){
-  //         if(userList.isEmpty){
-  //           print(1);
-  //           snapshot = await userDB
-  //               .where('name', isGreaterThanOrEqualTo: userName)
-  //               .limit(1)
-  //               .get();
-  //           if(snapshot.docs.isNotEmpty){
-  //             print(2);
-  //             userList.add(UserData.fromJson(snapshot.docs.first));
-  //             docList.add(snapshot.docs.first);
-  //             searchUserList(selectedSpot, userName, userList, docList);
-  //           }
-  //         }
-  //         else{
-  //           print(3);
-  //           snapshot = await userDB
-  //               .orderBy('name')
-  //               .where('name', isGreaterThanOrEqualTo: userName)
-  //               .startAfterDocument(docList.last)
-  //               .limit(2)
-  //               .get();
-  //           print(snapshot.docs.isNotEmpty);
-  //           if(snapshot.docs.isNotEmpty){
-  //             print(4);
-  //             userList.add(UserData.fromJson(snapshot.docs.last));
-  //             searchUserList(selectedSpot, userName, userList,docList);
-  //           }
-  //         }
-  //         print(5);
-  //       }
-  //     return userList;
-  //   }
-  //   catch(e){
-  //     print(e);
-  //     return [];
-  //   }
-  // }
-
   Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
     try{
       late QuerySnapshot snapshot;
@@ -322,11 +280,6 @@ class UserDataManagement{
               .where('name', isLessThanOrEqualTo: '$userName\uf8ff')
               .get();
         }
-        // snapshot = await db.collection('user')
-        //     .orderBy('createDate', descending: true)
-        //     .where('ticket.spotDocumentId', whereIn: myInfo.value.spotIdList)
-        //     .where('name', isEqualTo: userName)
-        //     .get();
       }
       else{
         snapshot = await userDB

@@ -27,7 +27,9 @@ mixin _$Ticket {
   bool get status;
   bool get subscribe;
   bool get passTicket;
+  @DateListConverter()
   List<DateTime> get pauseStartDate;
+  @DateListConverter()
   List<DateTime> get pauseEndDate;
   DateTime get endDate;
   DateTime get createDate;
@@ -126,8 +128,8 @@ abstract mixin class $TicketCopyWith<$Res> {
       bool status,
       bool subscribe,
       bool passTicket,
-      List<DateTime> pauseStartDate,
-      List<DateTime> pauseEndDate,
+      @DateListConverter() List<DateTime> pauseStartDate,
+      @DateListConverter() List<DateTime> pauseEndDate,
       DateTime endDate,
       DateTime createDate,
       SpotItem spotItem});
@@ -264,8 +266,8 @@ class _Ticket implements Ticket {
       required this.status,
       required this.subscribe,
       required this.passTicket,
-      required final List<DateTime> pauseStartDate,
-      required final List<DateTime> pauseEndDate,
+      @DateListConverter() required final List<DateTime> pauseStartDate,
+      @DateListConverter() required final List<DateTime> pauseEndDate,
       required this.endDate,
       required this.createDate,
       required this.spotItem})
@@ -299,6 +301,7 @@ class _Ticket implements Ticket {
   final bool passTicket;
   final List<DateTime> _pauseStartDate;
   @override
+  @DateListConverter()
   List<DateTime> get pauseStartDate {
     if (_pauseStartDate is EqualUnmodifiableListView) return _pauseStartDate;
     // ignore: implicit_dynamic_type
@@ -307,6 +310,7 @@ class _Ticket implements Ticket {
 
   final List<DateTime> _pauseEndDate;
   @override
+  @DateListConverter()
   List<DateTime> get pauseEndDate {
     if (_pauseEndDate is EqualUnmodifiableListView) return _pauseEndDate;
     // ignore: implicit_dynamic_type
@@ -419,8 +423,8 @@ abstract mixin class _$TicketCopyWith<$Res> implements $TicketCopyWith<$Res> {
       bool status,
       bool subscribe,
       bool passTicket,
-      List<DateTime> pauseStartDate,
-      List<DateTime> pauseEndDate,
+      @DateListConverter() List<DateTime> pauseStartDate,
+      @DateListConverter() List<DateTime> pauseEndDate,
       DateTime endDate,
       DateTime createDate,
       SpotItem spotItem});

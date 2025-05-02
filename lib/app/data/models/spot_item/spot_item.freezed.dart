@@ -34,6 +34,7 @@ mixin _$SpotItem {
   RxBool get passTicket; // 전지점 이용 가능 여부
   int get sportswear; // 운동복 가격
   String get spotDocumentId; // spotDocumentId
+  @DateTimeConverter()
   DateTime get createDate;
 
   /// Create a copy of SpotItem
@@ -131,7 +132,7 @@ abstract mixin class $SpotItemCopyWith<$Res> {
       @RxBoolConverter() RxBool passTicket,
       int sportswear,
       String spotDocumentId,
-      DateTime createDate});
+      @DateTimeConverter() DateTime createDate});
 }
 
 /// @nodoc
@@ -257,7 +258,7 @@ class _SpotItem implements SpotItem {
       @RxBoolConverter() required this.passTicket,
       required this.sportswear,
       required this.spotDocumentId,
-      required this.createDate});
+      @DateTimeConverter() required this.createDate});
   factory _SpotItem.fromJson(Map<String, dynamic> json) =>
       _$SpotItemFromJson(json);
 
@@ -312,6 +313,7 @@ class _SpotItem implements SpotItem {
   final String spotDocumentId;
 // spotDocumentId
   @override
+  @DateTimeConverter()
   final DateTime createDate;
 
   /// Create a copy of SpotItem
@@ -416,7 +418,7 @@ abstract mixin class _$SpotItemCopyWith<$Res>
       @RxBoolConverter() RxBool passTicket,
       int sportswear,
       String spotDocumentId,
-      DateTime createDate});
+      @DateTimeConverter() DateTime createDate});
 }
 
 /// @nodoc

@@ -68,6 +68,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                                 controller.selectedSpot.value = controller.mySpotList.firstWhere((element) => element.documentId == value);
                                 await controller.getUserDataList();
                                 controller.selectedPage.value = 1;
+                                controller.maxPage.value = (controller.maxUserCount / controller.maxListCount.value).ceil();
                                 controller.a.value = controller.userDataListView.length > controller.maxListCount.value
                                     ? controller.maxListCount.value
                                     : controller.userDataListView.length;
@@ -322,7 +323,7 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                             int num = (controller.selectedPage.value - 1) * controller.maxListCount.value + index;
 
-                            UserData user = controller.userDataListView[num];
+                            UserData user = controller.userDataListView[num].copyWith();
                             UserData temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;

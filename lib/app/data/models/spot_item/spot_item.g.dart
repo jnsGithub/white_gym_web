@@ -25,7 +25,8 @@ _SpotItem _$SpotItemFromJson(Map<String, dynamic> json) => _SpotItem(
       passTicket: const RxBoolConverter().fromJson(json['passTicket'] as bool),
       sportswear: (json['sportswear'] as num).toInt(),
       spotDocumentId: json['spotDocumentId'] as String,
-      createDate: DateTime.parse(json['createDate'] as String),
+      createDate:
+          const DateTimeConverter().fromJson(json['createDate'] as Timestamp),
     );
 
 Map<String, dynamic> _$SpotItemToJson(_SpotItem instance) => <String, dynamic>{
@@ -45,5 +46,5 @@ Map<String, dynamic> _$SpotItemToJson(_SpotItem instance) => <String, dynamic>{
       'passTicket': const RxBoolConverter().toJson(instance.passTicket),
       'sportswear': instance.sportswear,
       'spotDocumentId': instance.spotDocumentId,
-      'createDate': instance.createDate.toIso8601String(),
+      'createDate': const DateTimeConverter().toJson(instance.createDate),
     };
