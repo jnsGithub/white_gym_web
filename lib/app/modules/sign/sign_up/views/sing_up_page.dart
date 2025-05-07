@@ -158,7 +158,11 @@ class SignUpPage extends GetView<SignUpController> {
                             }
                             return;
                           }
-                          if(controller.emailController.text.isEmpty || controller.hpController.text.isEmpty || controller.passwordController.text.isEmpty || controller.passwordCheckController.text.isEmpty || controller.nameController.text.isEmpty){
+                          if(controller.emailController.text.isEmpty
+                              || controller.hpController.text.isEmpty
+                              || controller.passwordController.text.isEmpty
+                              || controller.passwordCheckController.text.isEmpty
+                              || controller.nameController.text.isEmpty){
                             Get.back();
                             if(!Get.isSnackbarOpen){
                               Get.snackbar('입력 오류', '모든 항목을 입력해주세요.', backgroundColor: Colors.red, colorText: Colors.white);
@@ -185,7 +189,13 @@ class SignUpPage extends GetView<SignUpController> {
                             }
                             return;
                           }
-                          if(await controller.sign.signUp(controller.emailController.text, controller.passwordController.text, controller.nameController.text, controller.positionList[controller.selectedType.value], controller.selectedSpotIdList, controller.hpController.text)){
+                          if(await controller.sign.signUp(
+                              controller.emailController.text,
+                              controller.passwordController.text,
+                              controller.nameController.text,
+                              controller.positionList[controller.selectedType.value],
+                              controller.selectedSpotIdList,
+                              controller.hpController.text)){
                             Get.offAllNamed(Routes.SIGN_IN_PAGE);
                             Get.snackbar('회원가입 성공', '승인이 완료되면 로그인 할 수 있습니다.');
                           }

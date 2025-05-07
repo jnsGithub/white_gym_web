@@ -30,6 +30,7 @@ mixin _$SpotItem {
   int? get pause; // 일시정지 가능 횟수 (구독 여부가 True일 경우 0)
   int get locker; // 사물함 가격
   int? get monthly; // 개월 수
+  int? get day; // 일일
   @RxBoolConverter()
   RxBool get passTicket; // 전지점 이용 가능 여부
   int get sportswear; // 운동복 가격
@@ -72,6 +73,7 @@ mixin _$SpotItem {
             (identical(other.pause, pause) || other.pause == pause) &&
             (identical(other.locker, locker) || other.locker == locker) &&
             (identical(other.monthly, monthly) || other.monthly == monthly) &&
+            (identical(other.day, day) || other.day == day) &&
             (identical(other.passTicket, passTicket) ||
                 other.passTicket == passTicket) &&
             (identical(other.sportswear, sportswear) ||
@@ -99,6 +101,7 @@ mixin _$SpotItem {
       pause,
       locker,
       monthly,
+      day,
       passTicket,
       sportswear,
       spotDocumentId,
@@ -106,7 +109,7 @@ mixin _$SpotItem {
 
   @override
   String toString() {
-    return 'SpotItem(documentId: $documentId, name: $name, descriptions: $descriptions, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate)';
+    return 'SpotItem(documentId: $documentId, name: $name, descriptions: $descriptions, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, day: $day, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate)';
   }
 }
 
@@ -129,6 +132,7 @@ abstract mixin class $SpotItemCopyWith<$Res> {
       int? pause,
       int locker,
       int? monthly,
+      int? day,
       @RxBoolConverter() RxBool passTicket,
       int sportswear,
       String spotDocumentId,
@@ -160,6 +164,7 @@ class _$SpotItemCopyWithImpl<$Res> implements $SpotItemCopyWith<$Res> {
     Object? pause = freezed,
     Object? locker = null,
     Object? monthly = freezed,
+    Object? day = freezed,
     Object? passTicket = null,
     Object? sportswear = null,
     Object? spotDocumentId = null,
@@ -218,6 +223,10 @@ class _$SpotItemCopyWithImpl<$Res> implements $SpotItemCopyWith<$Res> {
           ? _self.monthly
           : monthly // ignore: cast_nullable_to_non_nullable
               as int?,
+      day: freezed == day
+          ? _self.day
+          : day // ignore: cast_nullable_to_non_nullable
+              as int?,
       passTicket: null == passTicket
           ? _self.passTicket
           : passTicket // ignore: cast_nullable_to_non_nullable
@@ -255,6 +264,7 @@ class _SpotItem implements SpotItem {
       required this.pause,
       required this.locker,
       required this.monthly,
+      required this.day,
       @RxBoolConverter() required this.passTicket,
       required this.sportswear,
       required this.spotDocumentId,
@@ -302,6 +312,9 @@ class _SpotItem implements SpotItem {
   @override
   final int? monthly;
 // 개월 수
+  @override
+  final int? day;
+// 일일
   @override
   @RxBoolConverter()
   final RxBool passTicket;
@@ -356,6 +369,7 @@ class _SpotItem implements SpotItem {
             (identical(other.pause, pause) || other.pause == pause) &&
             (identical(other.locker, locker) || other.locker == locker) &&
             (identical(other.monthly, monthly) || other.monthly == monthly) &&
+            (identical(other.day, day) || other.day == day) &&
             (identical(other.passTicket, passTicket) ||
                 other.passTicket == passTicket) &&
             (identical(other.sportswear, sportswear) ||
@@ -383,6 +397,7 @@ class _SpotItem implements SpotItem {
       pause,
       locker,
       monthly,
+      day,
       passTicket,
       sportswear,
       spotDocumentId,
@@ -390,7 +405,7 @@ class _SpotItem implements SpotItem {
 
   @override
   String toString() {
-    return 'SpotItem(documentId: $documentId, name: $name, descriptions: $descriptions, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate)';
+    return 'SpotItem(documentId: $documentId, name: $name, descriptions: $descriptions, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, day: $day, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate)';
   }
 }
 
@@ -415,6 +430,7 @@ abstract mixin class _$SpotItemCopyWith<$Res>
       int? pause,
       int locker,
       int? monthly,
+      int? day,
       @RxBoolConverter() RxBool passTicket,
       int sportswear,
       String spotDocumentId,
@@ -446,6 +462,7 @@ class __$SpotItemCopyWithImpl<$Res> implements _$SpotItemCopyWith<$Res> {
     Object? pause = freezed,
     Object? locker = null,
     Object? monthly = freezed,
+    Object? day = freezed,
     Object? passTicket = null,
     Object? sportswear = null,
     Object? spotDocumentId = null,
@@ -503,6 +520,10 @@ class __$SpotItemCopyWithImpl<$Res> implements _$SpotItemCopyWith<$Res> {
       monthly: freezed == monthly
           ? _self.monthly
           : monthly // ignore: cast_nullable_to_non_nullable
+              as int?,
+      day: freezed == day
+          ? _self.day
+          : day // ignore: cast_nullable_to_non_nullable
               as int?,
       passTicket: null == passTicket
           ? _self.passTicket

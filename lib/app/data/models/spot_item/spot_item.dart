@@ -24,6 +24,7 @@ abstract class SpotItem with _$SpotItem {
     required int? pause,                // 일시정지 가능 횟수 (구독 여부가 True일 경우 0)
     required int locker,                // 사물함 가격
     required int? monthly,              // 개월 수
+    required int? day,                  // 일일
     @RxBoolConverter()
     required RxBool passTicket,         // 전지점 이용 가능 여부
     required int sportswear,            // 운동복 가격
