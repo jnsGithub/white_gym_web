@@ -81,7 +81,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                           child: TextField(
                             controller: controller.nameController,
                             onChanged: (text){
-                              controller.selectedSpotItem.value.name = text;
+                              controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(name: text);
                             },
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                             maxLength: 20,
@@ -105,7 +105,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                   Text('상세 설명1:', style: childStyle,),
                                   componentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions1Controller, childStyle, 20, TextAlign.start, maxLength: 18,
                                     onChanged: (text){
-                                      controller.selectedSpotItem.value.descriptions1 = text;
+                                      controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(descriptions1: text);
                                     },
                                   ),
                                 ],
@@ -116,7 +116,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                   Text('상세 설명2:', style: childStyle,),
                                   componentTextField(300, '18글자 이내로 작성해주세요.', controller.descriptions2Controller, childStyle, 20, TextAlign.start, maxLength: 18,
                                     onChanged: (text){
-                                      controller.selectedSpotItem.value.descriptions2 = text;
+                                      controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(descriptions2: text);
                                     },
                                   ),
                                 ],
@@ -131,13 +131,13 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                               if(!controller.selectedSpotItem.value.isSubscribe.value)
                                 Row(
                                   children: [
-                                    Text('이용권 개월 수', style: childStyle,),
+                                    Text('이용권 일 수', style: childStyle,),
                                     componentTextField(95, '숫자만 입력', controller.monthlyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                       onChanged: (text){
-                                        controller.selectedSpotItem.value.monthly = int.parse(text);
+                                        controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(day: int.parse(text));
                                       },
                                     ),
-                                    Text('개월', style: childStyle,),
+                                    Text('일', style: childStyle,),
                                   ],
                                 ),
                               Row(
@@ -149,7 +149,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                         Text('이용권 일시정지 가능 횟수', style: childStyle,),
                                         componentTextField(95, '숫자만 입력', controller.pauseController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                           onChanged: (text){
-                                            controller.selectedSpotItem.value.pause = int.parse(text);
+                                            controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(pause: int.parse(text));
                                           },
                                         ),
                                         Text('회', style: childStyle,),
@@ -160,7 +160,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                       Text('일일 입장 가능 횟수', style: childStyle,),
                                       componentTextField(95, '숫자만 입력', controller.admissionController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                         onChanged: (text){
-                                          controller.selectedSpotItem.value.admission = int.parse(text);
+                                          controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(admission: int.parse(text));
                                         },
                                       ),
                                       Text('회', style: childStyle,),
@@ -227,7 +227,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                         children: [
                                           componentTextField(95, '숫자만 입력', controller.lockerController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                             onChanged: (text){
-                                              controller.selectedSpotItem.value.locker = int.parse(text);
+                                              controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(locker: int.parse(text));
                                             },
                                           ),
                                           Text('원', style: childStyle,),
@@ -243,7 +243,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                         children: [
                                           componentTextField(95, '숫자만 입력', controller.sportswearController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
                                             onChanged: (text){
-                                              controller.selectedSpotItem.value.sportswear = int.parse(text);
+                                              controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(sportswear: int.parse(text));
                                             },
                                           ),
                                           Text('원', style: childStyle,),
@@ -281,20 +281,22 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                     onChanged: (bool? bool){
                                       controller.selectedSpotItem.value.discountCheck.value = !controller.selectedSpotItem.value.discountCheck.value;
                                       if(controller.selectedSpotItem.value.discountCheck.value == false){
-                                        controller.selectedSpotItem.value.beforeDiscount = 0;
+                                        controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(beforeDiscount: 0);
+
                                       }
                                     }),
                                 GestureDetector(
                                     onTap: (){
                                       controller.selectedSpotItem.value.discountCheck.value = !controller.selectedSpotItem.value.discountCheck.value;
                                       if(controller.selectedSpotItem.value.discountCheck.value == false){
-                                        controller.selectedSpotItem.value.beforeDiscount = 0;
+                                        controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(beforeDiscount: 0);
+
                                       }
                                     },
                                     child: Text('할인 전 가격' , style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500),)),
                                 componentTextField(128, '숫자만 입력', controller.beforeDiscountController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
                                   onChanged: (text){
-                                    controller.selectedSpotItem.value.beforeDiscount = int.parse(text);
+                                    controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(beforeDiscount: int.parse(text));
                                   },
                                 ),
                                 Text('원', style: childStyle,)
@@ -325,7 +327,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                 Text(controller.selectedSpotItem.value.isSubscribe.value ? '멤버쉽 요금(월)' : '멤버쉽 요금', style: TextStyle(fontSize: 20, color: gray900, fontWeight: FontWeight.w500),),
                                 componentTextField(128, '숫자만 입력', controller.priceController, childStyle, 18, TextAlign.center, keyboardType: TextInputType.number,
                                   onChanged: (text){
-                                    controller.selectedSpotItem.value.price = int.parse(text);
+                                    controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(price: int.parse(text));
                                   },
                                 ),
                                 Text('원', style: childStyle,)

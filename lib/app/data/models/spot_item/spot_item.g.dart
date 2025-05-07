@@ -9,7 +9,7 @@ part of 'spot_item.dart';
 _SpotItem _$SpotItemFromJson(Map<String, dynamic> json) => _SpotItem(
       documentId: json['documentId'] as String,
       name: json['name'] as String,
-      descriptions: json['descriptions'] as String,
+      descriptions1: json['descriptions1'] as String,
       descriptions2: json['descriptions2'] as String,
       price: (json['price'] as num).toInt(),
       discountCheck:
@@ -22,6 +22,7 @@ _SpotItem _$SpotItemFromJson(Map<String, dynamic> json) => _SpotItem(
       pause: (json['pause'] as num?)?.toInt(),
       locker: (json['locker'] as num).toInt(),
       monthly: (json['monthly'] as num?)?.toInt(),
+      day: (json['day'] as num?)?.toInt(),
       passTicket: const RxBoolConverter().fromJson(json['passTicket'] as bool),
       sportswear: (json['sportswear'] as num).toInt(),
       spotDocumentId: json['spotDocumentId'] as String,
@@ -32,7 +33,7 @@ _SpotItem _$SpotItemFromJson(Map<String, dynamic> json) => _SpotItem(
 Map<String, dynamic> _$SpotItemToJson(_SpotItem instance) => <String, dynamic>{
       'documentId': instance.documentId,
       'name': instance.name,
-      'descriptions': instance.descriptions,
+      'descriptions1': instance.descriptions1,
       'descriptions2': instance.descriptions2,
       'price': instance.price,
       'discountCheck': const RxBoolConverter().toJson(instance.discountCheck),
@@ -43,6 +44,7 @@ Map<String, dynamic> _$SpotItemToJson(_SpotItem instance) => <String, dynamic>{
       'pause': instance.pause,
       'locker': instance.locker,
       'monthly': instance.monthly,
+      'day': instance.day,
       'passTicket': const RxBoolConverter().toJson(instance.passTicket),
       'sportswear': instance.sportswear,
       'spotDocumentId': instance.spotDocumentId,

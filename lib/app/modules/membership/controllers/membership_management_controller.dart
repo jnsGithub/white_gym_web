@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:white_gym_web/app/data/models/spot.dart';
-import 'package:white_gym_web/app/data/models/spot_item.dart';
+import 'package:white_gym_web/app/data/models/spot_item/spot_item.dart';
 import 'package:white_gym_web/app/data/service/spot_item.dart';
 
 class MembershipManagementController extends GetxController{
@@ -37,6 +37,7 @@ class MembershipManagementController extends GetxController{
     isSubscribe: true.obs,
     locker: 0,
     monthly: 0,
+    day: 0,
     name: '',
     passTicket: true.obs,
     pause: 0,
@@ -54,6 +55,7 @@ class MembershipManagementController extends GetxController{
   TextEditingController beforeDiscountController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController monthlyController = TextEditingController();
+  TextEditingController dayController = TextEditingController();
   TextEditingController pauseController = TextEditingController();
 
   RxInt selectedSpotIndex = 0.obs;
@@ -126,6 +128,7 @@ class MembershipManagementController extends GetxController{
       isSubscribe: true.obs,
       locker: 0,
       monthly: 0,
+      day: 0,
       name: '',
       passTicket: true.obs,
       pause: 0,
@@ -153,6 +156,7 @@ class MembershipManagementController extends GetxController{
             isSubscribe: selectedSpotItem.value.isSubscribe,
             locker: lockerController.text == '' ? 0 : int.parse(lockerController.text),
             monthly: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(monthlyController.text),
+            day: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(dayController.text),
             name: nameController.text,
             passTicket: selectedSpotItem.value.passTicket,
             pause: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(pauseController.text),
@@ -174,6 +178,7 @@ class MembershipManagementController extends GetxController{
       isSubscribe: true.obs,
       locker: 0,
       monthly: 0,
+      day: 0,
       name: '',
       passTicket: true.obs,
       pause: 0,

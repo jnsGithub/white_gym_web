@@ -135,7 +135,7 @@ class MembershipManagementListPage extends GetView<MembershipManagementControlle
                             onPressed: (){
                               controller.isDetailView.value = true;
                               controller.isUpdate = false;
-                              controller.selectedSpotItem.value.spotDocumentId = controller.selectedSpot.value.documentId;
+                              controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(spotDocumentId: controller.selectedSpot.value.documentId);
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(225, 54),
@@ -228,7 +228,7 @@ class MembershipManagementListPage extends GetView<MembershipManagementControlle
                             final item = controller.selectedSpotItemList.removeAt(oldIndex);
                             controller.selectedSpotItemList.insert(newIndex, item);
                             for(int i = 0 ; i < controller.selectedSpotItemList.length; i++){
-                              controller.selectedSpotItemList[i].index = i;
+                              controller.selectedSpotItemList[i] = controller.selectedSpotItemList[i].copyWith(index: i);
                             }
                             // controller.updateTodoList();
                           },

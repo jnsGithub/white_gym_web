@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot_item.dart';
+import 'package:white_gym_web/app/data/models/spot_item/spot_item.dart';
 
 class SpotItemManagement{
   // final db = FirebaseFirestore.instance;
@@ -12,7 +12,7 @@ class SpotItemManagement{
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
-        spotItemList.add(SpotItem.fromMap(data));
+        spotItemList.add(SpotItem.fromJson(data));
       }
       return spotItemList;
     } catch (e) {
@@ -23,7 +23,7 @@ class SpotItemManagement{
 
   Future<void> addSpotItem(SpotItem spotItem) async {
     try {
-      await spotItemDB.add(spotItem.toMap());
+      await spotItemDB.add(spotItem.toJson());
     } catch (e) {
       print('SpotItem 추가할때 걸림 : ${e}');
     }
@@ -31,7 +31,7 @@ class SpotItemManagement{
 
   Future<void> updateSpotItem(SpotItem spotItem) async {
     try {
-      await spotItemDB.doc(spotItem.documentId).update(spotItem.toMap());
+      await spotItemDB.doc(spotItem.documentId).update(spotItem.toJson());
     } catch (e) {
       print('SpotItem 업데이트할때 걸림 : ${e}');
     }
