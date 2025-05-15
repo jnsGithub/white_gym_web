@@ -343,7 +343,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                             memberShipNameController.text = user.ticket.spotItem.name;
                             memberShipPriceController.text = user.ticket.spotItem.price.toString();
                             useDayController.text = formatDate(user.ticket.createDate);
-                            endDateController.text = formatDate(user.ticket.endDate);
+                            endDateController.text = formatDate(user.ticket.endDate.add(Duration(days: 1)));
                             todayUseCountController.text = user.ticket.admission.toString();
                             pauseCountController.text = user.ticket.pause.toString();
                             sportswearPriceController.text = '';
