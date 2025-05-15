@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:white_gym_web/app/data/models/staff.dart';
+import 'package:white_gym_web/app/data/models/temp/staff.dart';
 
 String version = 'v beta 1.1.3';//'v1.1.3'; //'v beta';
 

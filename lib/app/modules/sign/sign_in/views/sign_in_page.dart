@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 import '../controllers/sign_in_controller.dart';

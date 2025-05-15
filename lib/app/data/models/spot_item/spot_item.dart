@@ -34,6 +34,26 @@ abstract class SpotItem with _$SpotItem {
   }) = _SpotItem;
 
   factory SpotItem.fromJson(Map<String, dynamic> json) => _$SpotItemFromJson(json);
+  factory SpotItem.empty() => SpotItem(
+        documentId: '',
+        name: '',
+        descriptions1: '',
+        descriptions2: '',
+        price: 0,
+        discountCheck: false.obs,
+        beforeDiscount: 0,
+        admission: 0,
+        index: 0,
+        isSubscribe: true.obs,
+        pause: 0,
+        locker: 0,
+        // monthly: 0,
+        daily: 0,
+        passTicket: true.obs,
+        sportswear: 0,
+        spotDocumentId: '',
+        createDate: DateTime.now(),
+      );
 }
 
 class RxBoolConverter implements JsonConverter<RxBool, bool> {

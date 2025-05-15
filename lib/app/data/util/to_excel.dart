@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:white_gym_web/app/data/util/format_data.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/user_data.dart';
 
-import '../models/spot.dart';
+import '../models/temp/spot.dart';
+import '../models/user/user.dart';
 
 class ToExcel{
   late Excel excel;
   late Sheet sheet;
-  late List<UserData> userList;
+  late List<User> userList;
 
   List<TextCellValue> header = [
     TextCellValue('지점'),
@@ -25,10 +25,10 @@ class ToExcel{
     TextCellValue('사물함 번호'),
     TextCellValue('마케팅 정보 수신동의 여부')];
 
-  toExcel(List<UserData> list, String spotName,{Spot? selectedSpot}) async {
+  toExcel(List<User> list, String spotName,{Spot? selectedSpot}) async {
     try{
       // 생성자에서 초기화
-      List<UserData> userList = [];
+      List<User> userList = [];
       List<String>? spotIdList;
       if(selectedSpot!.documentId != ''){
         spotIdList = [selectedSpot.documentId];
@@ -43,7 +43,7 @@ class ToExcel{
       QuerySnapshot snapshot = await userDB.where('ticket.spotDocumentId', whereIn: spotIdList).get();
 
       for(var doc in snapshot.docs){
-        userList.add(UserData.fromJson(doc));
+        userList.add(User.fromJson(doc.data() as Map<String, dynamic>));
       }
 
 
@@ -77,7 +77,7 @@ class ToExcel{
     }
   }
 
-  void addHeaderAndData(List<UserData> list) {
+  void addHeaderAndData(List<User> list) {
     // 헤더 추가
     // sheet.appendRow([TextCellValue(myInfo.name)]);
     sheet.appendRow([TextCellValue('')]);

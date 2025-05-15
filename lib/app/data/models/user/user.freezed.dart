@@ -19,9 +19,9 @@ mixin _$User {
   String get name;
   String get phone;
   String get birth;
-  String get storeDocumentId;
-  String get paymentCard;
-  String get fcmToken;
+  String? get storeDocumentId;
+  String? get paymentCard;
+  String? get fcmToken;
   int get gender;
   bool get pushAlarm;
   bool get smsAlarm;
@@ -98,9 +98,9 @@ abstract mixin class $UserCopyWith<$Res> {
       String name,
       String phone,
       String birth,
-      String storeDocumentId,
-      String paymentCard,
-      String fcmToken,
+      String? storeDocumentId,
+      String? paymentCard,
+      String? fcmToken,
       int gender,
       bool pushAlarm,
       bool smsAlarm,
@@ -126,9 +126,9 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? name = null,
     Object? phone = null,
     Object? birth = null,
-    Object? storeDocumentId = null,
-    Object? paymentCard = null,
-    Object? fcmToken = null,
+    Object? storeDocumentId = freezed,
+    Object? paymentCard = freezed,
+    Object? fcmToken = freezed,
     Object? gender = null,
     Object? pushAlarm = null,
     Object? smsAlarm = null,
@@ -152,18 +152,18 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _self.birth
           : birth // ignore: cast_nullable_to_non_nullable
               as String,
-      storeDocumentId: null == storeDocumentId
+      storeDocumentId: freezed == storeDocumentId
           ? _self.storeDocumentId
           : storeDocumentId // ignore: cast_nullable_to_non_nullable
-              as String,
-      paymentCard: null == paymentCard
+              as String?,
+      paymentCard: freezed == paymentCard
           ? _self.paymentCard
           : paymentCard // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
+              as String?,
+      fcmToken: freezed == fcmToken
           ? _self.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       gender: null == gender
           ? _self.gender
           : gender // ignore: cast_nullable_to_non_nullable
@@ -225,11 +225,11 @@ class _User implements User {
   @override
   final String birth;
   @override
-  final String storeDocumentId;
+  final String? storeDocumentId;
   @override
-  final String paymentCard;
+  final String? paymentCard;
   @override
-  final String fcmToken;
+  final String? fcmToken;
   @override
   final int gender;
   @override
@@ -317,9 +317,9 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String name,
       String phone,
       String birth,
-      String storeDocumentId,
-      String paymentCard,
-      String fcmToken,
+      String? storeDocumentId,
+      String? paymentCard,
+      String? fcmToken,
       int gender,
       bool pushAlarm,
       bool smsAlarm,
@@ -346,9 +346,9 @@ class __$UserCopyWithImpl<$Res> implements _$UserCopyWith<$Res> {
     Object? name = null,
     Object? phone = null,
     Object? birth = null,
-    Object? storeDocumentId = null,
-    Object? paymentCard = null,
-    Object? fcmToken = null,
+    Object? storeDocumentId = freezed,
+    Object? paymentCard = freezed,
+    Object? fcmToken = freezed,
     Object? gender = null,
     Object? pushAlarm = null,
     Object? smsAlarm = null,
@@ -372,18 +372,18 @@ class __$UserCopyWithImpl<$Res> implements _$UserCopyWith<$Res> {
           ? _self.birth
           : birth // ignore: cast_nullable_to_non_nullable
               as String,
-      storeDocumentId: null == storeDocumentId
+      storeDocumentId: freezed == storeDocumentId
           ? _self.storeDocumentId
           : storeDocumentId // ignore: cast_nullable_to_non_nullable
-              as String,
-      paymentCard: null == paymentCard
+              as String?,
+      paymentCard: freezed == paymentCard
           ? _self.paymentCard
           : paymentCard // ignore: cast_nullable_to_non_nullable
-              as String,
-      fcmToken: null == fcmToken
+              as String?,
+      fcmToken: freezed == fcmToken
           ? _self.fcmToken
           : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       gender: null == gender
           ? _self.gender
           : gender // ignore: cast_nullable_to_non_nullable

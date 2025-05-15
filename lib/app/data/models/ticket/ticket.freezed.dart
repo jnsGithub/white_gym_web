@@ -31,7 +31,9 @@ mixin _$Ticket {
   List<DateTime> get pauseStartDate;
   @DateListConverter()
   List<DateTime> get pauseEndDate;
+  @DateTimeConverter()
   DateTime get endDate;
+  @DateTimeConverter()
   DateTime get createDate;
   SpotItem get spotItem;
 
@@ -130,8 +132,8 @@ abstract mixin class $TicketCopyWith<$Res> {
       bool passTicket,
       @DateListConverter() List<DateTime> pauseStartDate,
       @DateListConverter() List<DateTime> pauseEndDate,
-      DateTime endDate,
-      DateTime createDate,
+      @DateTimeConverter() DateTime endDate,
+      @DateTimeConverter() DateTime createDate,
       SpotItem spotItem});
 
   $SpotItemCopyWith<$Res> get spotItem;
@@ -268,8 +270,8 @@ class _Ticket implements Ticket {
       required this.passTicket,
       @DateListConverter() required final List<DateTime> pauseStartDate,
       @DateListConverter() required final List<DateTime> pauseEndDate,
-      required this.endDate,
-      required this.createDate,
+      @DateTimeConverter() required this.endDate,
+      @DateTimeConverter() required this.createDate,
       required this.spotItem})
       : _pauseStartDate = pauseStartDate,
         _pauseEndDate = pauseEndDate;
@@ -318,8 +320,10 @@ class _Ticket implements Ticket {
   }
 
   @override
+  @DateTimeConverter()
   final DateTime endDate;
   @override
+  @DateTimeConverter()
   final DateTime createDate;
   @override
   final SpotItem spotItem;
@@ -425,8 +429,8 @@ abstract mixin class _$TicketCopyWith<$Res> implements $TicketCopyWith<$Res> {
       bool passTicket,
       @DateListConverter() List<DateTime> pauseStartDate,
       @DateListConverter() List<DateTime> pauseEndDate,
-      DateTime endDate,
-      DateTime createDate,
+      @DateTimeConverter() DateTime endDate,
+      @DateTimeConverter() DateTime createDate,
       SpotItem spotItem});
 
   @override

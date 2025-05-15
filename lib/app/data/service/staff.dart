@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:white_gym_web/app/data/models/staff.dart';
+import 'package:white_gym_web/app/data/models/temp/staff.dart';
 import 'package:white_gym_web/global/global.dart';
 
 class StaffManagement{

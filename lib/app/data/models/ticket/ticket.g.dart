@@ -23,8 +23,9 @@ _Ticket _$TicketFromJson(Map<String, dynamic> json) => _Ticket(
           const DateListConverter().fromJson(json['pauseStartDate'] as List),
       pauseEndDate:
           const DateListConverter().fromJson(json['pauseEndDate'] as List),
-      endDate: DateTime.parse(json['endDate'] as String),
-      createDate: DateTime.parse(json['createDate'] as String),
+      endDate: const DateTimeConverter().fromJson(json['endDate'] as Timestamp),
+      createDate:
+          const DateTimeConverter().fromJson(json['createDate'] as Timestamp),
       spotItem: SpotItem.fromJson(json['spotItem'] as Map<String, dynamic>),
     );
 
@@ -44,7 +45,7 @@ Map<String, dynamic> _$TicketToJson(_Ticket instance) => <String, dynamic>{
       'pauseStartDate':
           const DateListConverter().toJson(instance.pauseStartDate),
       'pauseEndDate': const DateListConverter().toJson(instance.pauseEndDate),
-      'endDate': instance.endDate.toIso8601String(),
-      'createDate': instance.createDate.toIso8601String(),
+      'endDate': const DateTimeConverter().toJson(instance.endDate),
+      'createDate': const DateTimeConverter().toJson(instance.createDate),
       'spotItem': instance.spotItem,
     };

@@ -8,10 +8,11 @@ import 'package:white_gym_web/app/data/util/format_data.dart';
 import 'package:white_gym_web/app/modules/user/controllers/user_management_controller.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
-import 'package:white_gym_web/app/data/models/ticket.dart';
-import 'package:white_gym_web/app/data/models/user_data.dart';
 import 'package:white_gym_web/app/data/util/to_excel.dart';
+
+import '../../../data/models/spot_item/spot_item.dart';
+import '../../../data/models/ticket/ticket.dart';
+import '../../../data/models/user/user.dart';
 
 class UserManagementPage extends GetView<UserManagementController> {
   const UserManagementPage({super.key});
@@ -321,8 +322,8 @@ class UserManagementPage extends GetView<UserManagementController> {
 
                             int num = (controller.selectedPage.value - 1) * controller.maxListCount.value + index;
 
-                            UserData user = controller.userDataListView[num].copyWith();
-                            UserData temp = controller.userDataListView[num].copyWith();
+                            User user = controller.userDataListView[num].copyWith();
+                            User temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
                             if(user.phone == '01073760662'){
@@ -335,9 +336,15 @@ class UserManagementPage extends GetView<UserManagementController> {
                             }
 
                             if(isStatusFalse.value){
-                              user.ticket = Ticket.empty();
-                              user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
-                              user.ticket.spotDocumentId = controller.userDataListView[num].ticket.spotDocumentId;
+                              Ticket emptyTicket = Ticket.empty();
+                              emptyTicket = emptyTicket.copyWith(
+                                  paymentBranch: controller.userDataListView[num].ticket.paymentBranch,
+                                  spotDocumentId: controller.userDataListView[num].ticket.spotDocumentId
+                              );
+                              user = user.copyWith(ticket: emptyTicket);
+                              // user.ticket = Ticket.empty();
+                              // user.ticket.paymentBranch = controller.userDataListView[num].ticket.paymentBranch;
+                              // user.ticket.spotDocumentId = controller.userDataListView[num].ticket.spotDocumentId;
                             }
 
                             memberShipNameController.text = user.ticket.spotItem.name;
@@ -605,58 +612,113 @@ class UserManagementPage extends GetView<UserManagementController> {
                                               jns.ConfirmButton(
                                                 onPressed: () async { // TODO: 저장버튼 구현해야함.
                                                   try{
-                                                    UserData userData = user.copyWith();
+                                                    User userData = user.copyWith();
+                                                    Ticket tempTicket = user.ticket.copyWith();
+                                                    SpotItem tempSpotItem = user.ticket.spotItem.copyWith();
 
                                                     print('-----------------------------------------');
                                                     // userData.ticket = controller.userDataListView[num].ticket;
                                                     if(userData.ticket.subscribe){
-                                                      userData.ticket.lockerNum = userData.ticket.lockerNum == ''
-                                                          ? 0
-                                                          : int.parse(lockerNumberController.text);
+                                                      tempTicket = tempTicket.copyWith(
+                                                        lockerNum: userData.ticket.lockerNum == ''
+                                                            ? 0
+                                                            : int.parse(lockerNumberController.text)
+                                                      );
+                                                      // userData.ticket.lockerNum = userData.ticket.lockerNum == ''
+                                                      //     ? 0
+                                                      //     : int.parse(lockerNumberController.text);
                                                       controller.userDataManagement.updateUserTicket(userData, false);
                                                       return;
                                                     }
                                                     saving(context);
 
                                                     if(!isStatusFalse.value && user.ticket.endDate.isBefore(DateTime.now())){
-                                                      userData.ticket.status = !isStatusFalse.value;
+                                                      tempTicket = tempTicket.copyWith(
+                                                        status: !isStatusFalse.value,
+                                                      );
+                                                      // userData.ticket.status = !isStatusFalse.value;
                                                     }
                                                     if(userData.ticket.userDocumentId == ''){
-                                                      userData.ticket.userDocumentId = userData.documentId;
+                                                      tempTicket = tempTicket.copyWith(
+                                                        userDocumentId: userData.documentId!,
+                                                      );
+                                                      // userData.ticket.userDocumentId = userData.documentId;
                                                     }
                                                     if(userData.ticket.spotDocumentId == '' && controller.selectedSpot.value.documentId != ''){
-                                                      userData.ticket.spotDocumentId = controller.selectedSpot.value.documentId;
+                                                      tempTicket = tempTicket.copyWith(
+                                                        spotDocumentId: controller.selectedSpot.value.documentId,
+                                                      );
+                                                      // userData.ticket.spotDocumentId = controller.selectedSpot.value.documentId;
                                                     }
                                                     if(userData.ticket.paymentBranch == '' && controller.selectedSpot.value.documentId != ''){
-                                                      userData.ticket.paymentBranch = controller.selectedSpot.value.name;
+                                                      tempTicket = tempTicket.copyWith(
+                                                        paymentBranch: controller.selectedSpot.value.name,
+                                                      );
+                                                      // userData.ticket.paymentBranch = controller.selectedSpot.value.name;
                                                     }
+                                                    tempTicket = tempTicket.copyWith(
+                                                        admission: int.parse(todayUseCountController.text),
+                                                        pause: int.parse(pauseCountController.text),
+                                                        passTicket: selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점',
+                                                        sportswear: sportswear.value,
+                                                        locker: locker.value,
+                                                        endDate: DateTime.parse(endDateController.text),
+                                                        lockerNum: !locker.value || lockerNumberController.text == ''
+                                                            ? 0
+                                                            : int.parse(lockerNumberController.text),
+                                                        spotDocumentId: selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
+                                                            ? userData.ticket.spotDocumentId
+                                                            : selectedSpotId.value,
+                                                        paymentBranch: selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
+                                                            ? userData.ticket.paymentBranch
+                                                            : selectedSpotName.value
+                                                    );
 
-                                                    userData.ticket.spotItem.name = memberShipNameController.text;
-                                                    userData.ticket.spotItem.price = int.parse(memberShipPriceController.text);
-                                                    userData.ticket.admission = int.parse(todayUseCountController.text);
-                                                    userData.ticket.pause = int.parse(pauseCountController.text);
-                                                    userData.ticket.passTicket = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점';
-                                                    userData.ticket.sportswear = sportswear.value;
-                                                    userData.ticket.locker = locker.value;
-                                                    userData.ticket.endDate = DateTime.parse(endDateController.text);
-                                                    userData.ticket.spotItem.sportswear = !userData.ticket.sportswear || sportswearPriceController.text == ''
-                                                        ? 0
-                                                        : int.parse(sportswearPriceController.text);
-                                                    userData.ticket.spotItem.locker = !userData.ticket.locker || lockerPriceController.text == ''
-                                                        ? 0
-                                                        : int.parse(lockerPriceController.text);
-                                                    userData.ticket.lockerNum = !locker.value || lockerNumberController.text == ''
-                                                        ? 0
-                                                        : int.parse(lockerNumberController.text);
-                                                    userData.ticket.spotItem.spotDocumentId = controller.selectedSpot.value.documentId;
-                                                    userData.ticket.spotDocumentId = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
-                                                        ? userData.ticket.spotDocumentId
-                                                        : selectedSpotId.value;
-                                                    userData.ticket.paymentBranch = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
-                                                        ? userData.ticket.paymentBranch
-                                                        : selectedSpotName.value;
+                                                    tempSpotItem = tempSpotItem.copyWith(
+                                                      name: memberShipNameController.text,
+                                                      price: int.parse(memberShipPriceController.text),
+                                                      sportswear: !userData.ticket.sportswear || sportswearPriceController.text == ''
+                                                          ? 0
+                                                          : int.parse(sportswearPriceController.text),
+                                                      locker: !userData.ticket.locker || lockerPriceController.text == ''
+                                                          ? 0
+                                                          : int.parse(lockerPriceController.text),
+                                                        spotDocumentId: controller.selectedSpot.value.documentId,
+                                                    );
+                                                    tempTicket = tempTicket.copyWith(
+                                                      spotItem: tempSpotItem,
+                                                    );
+
+                                                    // userData.ticket.spotItem.name = memberShipNameController.text;
+                                                    // userData.ticket.spotItem.price = int.parse(memberShipPriceController.text);
+                                                    // userData.ticket.admission = int.parse(todayUseCountController.text);
+                                                    // userData.ticket.pause = int.parse(pauseCountController.text);
+                                                    // userData.ticket.passTicket = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점';
+                                                    // userData.ticket.sportswear = sportswear.value;
+                                                    // userData.ticket.locker = locker.value;
+                                                    // userData.ticket.endDate = DateTime.parse(endDateController.text);
+                                                    // userData.ticket.spotItem.sportswear = !userData.ticket.sportswear || sportswearPriceController.text == ''
+                                                    //     ? 0
+                                                    //     : int.parse(sportswearPriceController.text);
+                                                    // userData.ticket.spotItem.locker = !userData.ticket.locker || lockerPriceController.text == ''
+                                                    //     ? 0
+                                                    //     : int.parse(lockerPriceController.text);
+                                                    // userData.ticket.lockerNum = !locker.value || lockerNumberController.text == ''
+                                                    //     ? 0
+                                                    //     : int.parse(lockerNumberController.text);
+                                                    // userData.ticket.spotItem.spotDocumentId = controller.selectedSpot.value.documentId;
+                                                    // userData.ticket.spotDocumentId = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
+                                                    //     ? userData.ticket.spotDocumentId
+                                                    //     : selectedSpotId.value;
+                                                    // userData.ticket.paymentBranch = selectedSpotId.value == '' || selectedSpotId.value == 'custom' || selectedSpotName.value == '전체 지점'
+                                                    //     ? userData.ticket.paymentBranch
+                                                    //     : selectedSpotName.value;
+
                                                     // await controller.updateUserDate(userData);
-                                                    await controller.updateUserData(userData, temp);
+                                                    User afterUserData = user.copyWith(
+                                                      ticket: tempTicket,
+                                                    );
+                                                    await controller.updateUserData(userData, afterUserData);
                                                     controller.userDataListView[num] = userData;
                                                     controller.searchController.clear();
                                                     Get.back();

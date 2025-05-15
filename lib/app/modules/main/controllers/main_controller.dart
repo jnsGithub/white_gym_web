@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:white_gym_web/app/data/models/staff.dart';
+import 'package:white_gym_web/app/data/models/temp/staff.dart';
 import 'package:white_gym_web/app/data/service/sign.dart';
 import 'package:white_gym_web/app/modules/membership/controllers/membership_management_controller.dart';
 import 'package:white_gym_web/app/modules/membership/views/membership_management_page.dart';
@@ -12,7 +12,7 @@ import 'package:white_gym_web/app/modules/user/views/user_management_page.dart';
 import 'package:white_gym_web/app/modules/visit_record/views/visit_record_page.dart';
 import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 
 
 

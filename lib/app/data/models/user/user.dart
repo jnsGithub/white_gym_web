@@ -12,9 +12,9 @@ abstract class User with _$User{
     required String name,
     required String phone,
     required final String birth,
-    required String storeDocumentId,
-    required String paymentCard,
-    required String fcmToken,
+    required String? storeDocumentId,
+    required String? paymentCard,
+    required String? fcmToken,
     required int gender,
     required final bool pushAlarm,
     required bool smsAlarm,
@@ -23,6 +23,20 @@ abstract class User with _$User{
 }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  factory User.empty() => User(
+      documentId: '',
+      name: '',
+      phone: '',
+      birth: '',
+      storeDocumentId: '',
+      paymentCard: '',
+      fcmToken: '',
+      gender: 0,
+      pushAlarm: false,
+      smsAlarm: false,
+      ticket: Ticket.empty(),
+      createDate: DateTime.now() as Timestamp);
 }
 
 class TimestampConverter implements JsonConverter<Timestamp, dynamic> {

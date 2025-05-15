@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/data/models/staff.dart';
+import 'package:white_gym_web/app/data/models/temp/staff.dart';
 import 'package:white_gym_web/global/global.dart';
 
 class Sign{

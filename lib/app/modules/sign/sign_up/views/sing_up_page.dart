@@ -4,7 +4,7 @@ import 'package:white_gym_web/app/modules/sign/sign_up/controllers/sign_up_contr
 import 'package:white_gym_web/app/routes/app_routes.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:jns_package/jns_package.dart' as jns;

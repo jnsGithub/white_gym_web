@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:meta/meta.dart';
 import 'dart:async';
 

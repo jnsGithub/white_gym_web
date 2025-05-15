@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class SpotManagement{

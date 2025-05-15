@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 
 import 'dart:convert';
 import 'dart:js' as js;

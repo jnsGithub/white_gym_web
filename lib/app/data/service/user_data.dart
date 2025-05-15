@@ -2,15 +2,16 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/ticket.dart';
-import 'package:white_gym_web/app/data/models/user_data.dart';
+import 'package:white_gym_web/app/data/models/temp/ticket.dart';
+
+import '../models/user/user.dart';
 
 class UserDataManagement{
 
   // 사용자 데이터 get
-  Future<List<UserData>> getUserDataList() async {
+  Future<List<User>> getUserDataList() async {
     try{
       if(myInfo.value.position != '마스터'){
         var future1 = userDB
@@ -28,13 +29,13 @@ class UserDataManagement{
 
         // Set을 사용하여 중복 제거
         Set<String> documentIds = {};
-        List<UserData> allUserData = [];
+        List<User> allUserData = [];
 
         for (var result in results) {
           for (var doc in result.docs) {
             if (!documentIds.contains(doc.id)) {
               documentIds.add(doc.id);
-              allUserData.add(UserData.fromJson(doc));
+              allUserData.add(User.fromJson(doc.data() as Map<String, dynamic>));
             }
           }
         }
@@ -47,10 +48,11 @@ class UserDataManagement{
       }
       else{
         final result = await userDB.orderBy('createDate', descending: true).get();
-        return result.docs.map((doc) => UserData.fromJson(doc)).toList();
+        return result.docs.map((doc) => User.fromJson(doc.data())).toList();
       }
     }
     catch(e){
+      print('getUserDataList 걸림');
       print(e);
       return [];
     }
@@ -73,14 +75,15 @@ class UserDataManagement{
       return await userDB.where('ticket.spotDocumentId', whereIn: sort).count().get().then((value) => value.count!);
     }
     catch(e){
+      print('getAllUsersLength 걸림');
       print(e);
       return 0;
     }
   }
 
-  Future<List<UserData>> refreshUserData(List<UserData> userDataList) async {
+  Future<List<User>> refreshUserData(List<User> userDataList) async {
     try{
-      List<UserData> temp = [];
+      List<User> temp = [];
       var snapshot = await userDB.orderBy('createDate', descending: true).endBeforeDocument(await userDB.doc(userDataList.first.documentId).get()).get();
       print('userDataList.first : ${userDataList.first.documentId}');
       print('snapshot.docs.length : ${snapshot.docs.length}');
@@ -92,12 +95,13 @@ class UserDataManagement{
       return temp;
     }
     catch(e){
+      print('refreshUserData 걸림');
       print(e);
       return [];
     }
   }
 
-  Future<bool> addUserData(UserData userData) async {
+  Future<bool> addUserData(User userData) async {
     try{
       final snapshot = await userDB.where('phone', isEqualTo: userData.phone).get();
       if(snapshot.docs.isNotEmpty){
@@ -112,6 +116,7 @@ class UserDataManagement{
       return true;
     }
     catch(e){
+      print('addUserData 걸림');
       print(e);
       if(!Get.isSnackbarOpen){
         Get.snackbar('회원 추가 실패', '잠시 후 다시 시도해주세요.');
@@ -120,7 +125,7 @@ class UserDataManagement{
     }
   }
 
-  Future<bool> updateUserData(UserData userData) async {
+  Future<bool> updateUserData(User userData) async {
     try{
       final snapshot = await userDB.where('phone', isEqualTo: userData.phone).get();
       final snapshot2 = await userDB.doc(userData.documentId).get();
@@ -139,6 +144,7 @@ class UserDataManagement{
       return true;
     }
     catch(e){
+      print('updateUserData 걸림');
       print(e);
       if(!Get.isSnackbarOpen){
         Get.snackbar('회원 추가 실패', '잠시 후 다시 시도해주세요.');
@@ -147,12 +153,12 @@ class UserDataManagement{
     }
   }
 
-  Future<void> updateUserTicket(UserData userData, bool isPause,{bool isStatusFalse = false, UserData? beforeUserData}) async {
+  Future<void> updateUserTicket(User userData, bool isPause,{bool isStatusFalse = false, User? beforeUserData}) async {
     try{
       if(isPause){
-        userData.ticket.pause -= 1;
+        userData = userData.copyWith(ticket: userData.ticket.copyWith(pause: userData.ticket.pause - 1)); //.pause -= 1;
         if(beforeUserData != null){
-          beforeUserData.ticket.pause += 1;
+          beforeUserData = beforeUserData.copyWith(ticket: beforeUserData.ticket.copyWith(pause: beforeUserData.ticket.pause + 1)); //.ticket.pause += 1;
         }
       }
       await adminHistoryDB.doc().set({
@@ -167,6 +173,7 @@ class UserDataManagement{
       });
     }
     catch(e){
+      print('updateUserTicket 걸림');
       print(e);
     }
   }
@@ -174,7 +181,12 @@ class UserDataManagement{
   int count = 0;
   var a;
 
-  Future<List<UserData>> getUserList({UserData? lastUser, Spot? selectedSpot, bool init = true, required int maxListCount}) async {
+  Future<List<User>> getUserList({User? lastUser, Spot? selectedSpot, bool init = true, required int maxListCount}) async {
+    String docId = '';
+    int count = 0;
+    String phone = '';
+    Map<String, dynamic> beforData = {};
+    Map<String, dynamic> afterData = {};
     try{
       print('add함');
       if(init){
@@ -212,10 +224,30 @@ class UserDataManagement{
 
         }
 
-        List<UserData> userList = [];
+        List<User> userList = [];
+
         for(var i in snapshot.docs){
-          userList.add(UserData.fromJson(i));
+          Map<String, dynamic> data = i.data() as Map<String, dynamic>;
+          beforData = afterData;
+          afterData = data;
+          data['documentId'] = i.id;
+          count++;
+          docId = data['documentId'];
+          phone = data['phone'];
+          print(data['ticket']['spotItem']['daily']);
+          if(data['ticket']['spotItem']['daily'] == null){
+            data['ticket']['spotItem']['daily'] = data['ticket']['spotItem']['monthly'] * 30;
+          }
+          // if(count < 1){
+          //   print(i.data());
+          // }
+          userList.add(User.fromJson(data));
+          if(count < 1){
+            print('여긴 되나?');
+          }
         }
+        print('완료?');
+        print(userList.length);
         return userList;
       }
       else{
@@ -246,10 +278,10 @@ class UserDataManagement{
               .get();
         }
 
-        List<UserData> userList = [];
+        List<User> userList = [];
         snapshot.docs.removeAt(0);
         for(var i in snapshot.docs){
-          userList.add(UserData.fromJson(i));
+          userList.add(User.fromJson(i.data() as Map<String, dynamic>));
         }
         return userList;
       }
@@ -302,10 +334,10 @@ class UserDataManagement{
   //   }
   // }
 
-  Future<List<UserData>> searchUserList(Spot selectedSpot, String userName) async {
+  Future<List<User>> searchUserList(Spot selectedSpot, String userName) async {
     try{
       late QuerySnapshot snapshot;
-      List<UserData> userList = [];
+      List<User> userList = [];
       if(selectedSpot.documentId.isEmpty){
         if(myInfo.value.position == '마스터'){
           snapshot = await userDB
@@ -338,11 +370,12 @@ class UserDataManagement{
       }
 
       for(var i in snapshot.docs){
-        userList.add(UserData.fromJson(i));
+        userList.add(User.fromJson(i.data() as Map<String, dynamic>));
       }
       return userList;
     }
     catch(e){
+      print('searchUserList 걸림');
       print(e);
       return [];
     }
@@ -362,6 +395,7 @@ class UserDataManagement{
 
     }
     catch(e){
+      print('getDummyUserData 걸림');
       print(a);
       print(count);
       count = 0;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/app/data/service/sign.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 

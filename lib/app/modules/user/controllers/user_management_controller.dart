@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot.dart';
-import 'package:white_gym_web/app/data/models/user_data.dart';
+import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/app/data/service/user_data.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 import 'dart:async';
+
+import '../../../data/models/user/user.dart';
 
 class UserManagementController extends GetxController{
 
@@ -18,8 +19,8 @@ class UserManagementController extends GetxController{
   UserDataManagement userDataManagement = UserDataManagement();
   SpotManagement spotManagement = SpotManagement();
 
-  RxList<UserData> userDataList = <UserData>[].obs;
-  RxList<UserData> userDataListView = <UserData>[].obs;
+  RxList<User> userDataList = <User>[].obs;
+  RxList<User> userDataListView = <User>[].obs;
 
   RxList<Spot> mySpotList = <Spot>[].obs;
 
@@ -45,7 +46,7 @@ class UserManagementController extends GetxController{
     devSnList: [],
   ).obs;
 
-  late UserData addUserData;
+  late User addUserData;
 
   @override
   void onInit() {
@@ -60,7 +61,7 @@ class UserManagementController extends GetxController{
   }
 
 
-  updateUserData(UserData userData, UserData beforeUserData) async {
+  updateUserData(User userData, User beforeUserData) async {
     await userDataManagement.updateUserTicket(userData, false, beforeUserData: beforeUserData);
     // init();
     update();
@@ -116,13 +117,14 @@ class UserManagementController extends GetxController{
 
   Future<void> getUserDataList() async {
     userDataList.value = await userDataManagement.getUserList(selectedSpot: selectedSpot.value, maxListCount: maxListCount.value);
+
     userDataListView.value = userDataList.where((element) => element.ticket.spotDocumentId.contains(selectedSpot.value.documentId)).toList();
 
     maxUserCount = await userDataManagement.getAllUsersLength(selectedSpot.value);
     print('maxUserCount: $maxUserCount');
   }
 
-  int useDayCalculation(UserData userData) {
+  int useDayCalculation(User userData) {
     int useDay = 0;
     if(userData.ticket.status){
       useDay = userData.ticket.endDate.difference(DateTime.now()).inDays;
@@ -137,8 +139,8 @@ class UserManagementController extends GetxController{
     spotList.value = await spotManagement.getSpotList();
   }
 
-  addUserDialog(BuildContext context, Size size, UserData? userData, UserManagementController controller){
-    late Rx<UserData> user;
+  addUserDialog(BuildContext context, Size size, User? userData, UserManagementController controller){
+    late Rx<User> user;
     bool readOnly = false;
     Rx<Spot> selectedSpot = Spot.empty().obs;
     print(readOnly);
@@ -152,10 +154,16 @@ class UserManagementController extends GetxController{
     selectedSpot.value = spotList[0];
 
     if(userData == null) {
-      user = UserData.empty().obs;
-      user.value.ticket.paymentBranch = selectedSpot.value.name;
-      user.value.ticket.spotDocumentId = selectedSpot.value.documentId;
-      user.value.gender = 1;
+      user = User.empty().obs;
+      user.value = user.value.copyWith(
+        ticket: user.value.ticket.copyWith(
+          spotDocumentId: selectedSpot.value.documentId,
+          paymentBranch: selectedSpot.value.name,),
+        gender: 1,
+      );
+      // user.value.ticket.paymentBranch = selectedSpot.value.name;
+      // user.value.ticket.spotDocumentId = selectedSpot.value.documentId;
+      // user.value.gender = 1;
     }
     else{
       user = userData.obs;
@@ -257,8 +265,14 @@ class UserManagementController extends GetxController{
                           selectedSpot.value = spotList.firstWhere((element) => element.documentId == value);
 
                           user.update((val) {
-                            val?.ticket.spotDocumentId = selectedSpot.value.documentId;
-                            val?.ticket.paymentBranch = selectedSpot.value.name;
+                            val = val?.copyWith(
+                              ticket: val.ticket.copyWith(
+                                spotDocumentId: selectedSpot.value.documentId,
+                                paymentBranch: selectedSpot.value.name,
+                              ),
+                            );
+                            // val?.ticket.spotDocumentId = selectedSpot.value.documentId;
+                            // val?.ticket.paymentBranch = selectedSpot.value.name;
                           });
 
                           print(user.value.ticket.paymentBranch); // 변경된 값 출력
@@ -386,7 +400,10 @@ class UserManagementController extends GetxController{
                       onChanged: (value){
                         print(value);
                         user.update((val) {
-                          val!.gender = value!;
+                          val = val!.copyWith(
+                            gender: value!
+                          );
+                          // val!.gender = value!;
                         });
                       },
                       buttonStyleData: ButtonStyleData(
@@ -435,7 +452,10 @@ class UserManagementController extends GetxController{
                       ],
                       onChanged: readOnly ? null : (value){
                         user.update((val) {
-                          val!.smsAlarm = value! as bool;
+                          val = val!.copyWith(
+                            smsAlarm: value! as bool
+                          );
+                          // val!.smsAlarm = value! as bool;
                         });
                       },
                       buttonStyleData: ButtonStyleData(
@@ -479,15 +499,22 @@ class UserManagementController extends GetxController{
                         return;
                       }
                       if(userData == null){
-                        user.value.name = nameController.text;
-                        user.value.phone = tempPhone;
+                        user.value = user.value.copyWith(
+                          name: nameController.text,
+                          phone: tempPhone,
+                        );
+                        // user.value.name = nameController.text;
+                        // user.value.phone = tempPhone;
                         if(!await userDataManagement.addUserData(user.value)){
                           return;
                         }
                       }
                       else{
                         user.update((val) {
-                          val!.phone = tempPhone;
+                          val = val!.copyWith(
+                            phone: tempPhone,
+                          );
+                          // val!.phone = tempPhone;
                         });
                         if(!await userDataManagement.updateUserData(user.value)){
                           return;
@@ -516,7 +543,7 @@ class UserManagementController extends GetxController{
     });
   }
 
-  pauseAndCancelDialog(BuildContext context, UserData userData, Size size){
+  pauseAndCancelDialog(BuildContext context, User userData, Size size){
     showDialog(context: (context), builder: (context){
       return jns.Dialog(
           topPadding: 80,
@@ -532,26 +559,45 @@ class UserManagementController extends GetxController{
             DateTime Date = DateTime.now();
             if(userData.ticket.status) {
               if (userData.ticket.subscribe) {
-                userData.ticket.status = false;
-                userData.ticket.subscribe = true;
+                userData = userData.copyWith(
+                  ticket: userData.ticket.copyWith(
+                    status: false,
+                    subscribe: true
+                  ),
+                );
+                // userData.ticket.status = false;
+                // userData.ticket.subscribe = true;
                 print(123123);
                 await userDataManagement.updateUserTicket(userData, false);
               } else {
-                userData.ticket.status = false;
-                userData.ticket.pauseStartDate.add(DateTime(Date.year, Date.month, Date.day, 0, 0, 0));
-                userData.ticket.pauseEndDate.add(DateTime(Date.year, Date.month, Date.day + 29, 0, 0, 0));
+                userData = userData.copyWith(
+                  ticket: userData.ticket.copyWith(
+                    status: false,
+                    pauseStartDate: userData.ticket.pauseStartDate..add(DateTime(Date.year, Date.month, Date.day)),
+                    pauseEndDate: userData.ticket.pauseEndDate..add(DateTime(Date.year, Date.month, Date.day + 29, 0, 0, 0)),
+                  ),
+                );
+                // userData.ticket.status = false;
+                // userData.ticket.pauseStartDate.add(DateTime(Date.year, Date.month, Date.day, 0, 0, 0));
+                // userData.ticket.pauseEndDate.add(DateTime(Date.year, Date.month, Date.day + 29, 0, 0, 0));
                 await userDataManagement.updateUserTicket(userData, true);
               }
             }
             else if(!userData.ticket.subscribe && !userData.ticket.status){
-              userData.ticket.status = true;
+              // userData.ticket.status = true;
+              // userData.ticket.endDate = userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays));
+              print(userData.ticket.endDate);
               print('-----------------------');
               print(DateTime(Date.year, Date.month, Date.day , 0, 0, 0).difference(DateTime(Date.year, Date.month, Date.day, 0, 0, 0)).inDays);
               print(userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day + 1, 0, 0, 0).difference(Date).inDays)));
               print(userData.ticket.pauseStartDate.last);
               userData.ticket.pauseEndDate.last = DateTime.now();
-              userData.ticket.endDate = userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays));
-              print(userData.ticket.endDate);
+              userData = userData.copyWith(
+                ticket: userData.ticket.copyWith(
+                  status: true,
+                  endDate: userData.ticket.endDate.add(Duration(days: DateTime(Date.year, Date.month, Date.day, 0, 0, 0).difference(userData.ticket.pauseStartDate.last).inDays)),
+                ),
+              );
               await userDataManagement.updateUserTicket(userData, false);
             }
             searchController.clear();
