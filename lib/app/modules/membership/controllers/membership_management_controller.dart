@@ -36,8 +36,8 @@ class MembershipManagementController extends GetxController{
     index: 0,
     isSubscribe: true.obs,
     locker: 0,
-    monthly: 0,
-    day: 0,
+    // monthly: 0,
+    daily: 0,
     name: '',
     passTicket: true.obs,
     pause: 0,
@@ -54,7 +54,7 @@ class MembershipManagementController extends GetxController{
   TextEditingController sportswearController = TextEditingController();
   TextEditingController beforeDiscountController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-  TextEditingController monthlyController = TextEditingController();
+  TextEditingController dailyController = TextEditingController();
   TextEditingController dayController = TextEditingController();
   TextEditingController pauseController = TextEditingController();
 
@@ -87,7 +87,7 @@ class MembershipManagementController extends GetxController{
     sportswearController.clear();
     beforeDiscountController.clear();
     priceController.clear();
-    monthlyController.clear();
+    dailyController.clear();
     pauseController.clear();
   }
 
@@ -127,8 +127,8 @@ class MembershipManagementController extends GetxController{
       index: 0,
       isSubscribe: true.obs,
       locker: 0,
-      monthly: 0,
-      day: 0,
+      // monthly: 0,
+      daily: 0,
       name: '',
       passTicket: true.obs,
       pause: 0,
@@ -155,8 +155,8 @@ class MembershipManagementController extends GetxController{
             index: selectedSpotItem.value.index,
             isSubscribe: selectedSpotItem.value.isSubscribe,
             locker: lockerController.text == '' ? 0 : int.parse(lockerController.text),
-            monthly: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(monthlyController.text),
-            day: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(dayController.text),
+            // monthly: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(monthlyController.text),
+            daily: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(dailyController.text),
             name: nameController.text,
             passTicket: selectedSpotItem.value.passTicket,
             pause: selectedSpotItem.value.isSubscribe.value ? 0 : int.parse(pauseController.text),
@@ -177,8 +177,8 @@ class MembershipManagementController extends GetxController{
       index: 0,
       isSubscribe: true.obs,
       locker: 0,
-      monthly: 0,
-      day: 0,
+      // monthly: 0,
+      daily: 0,
       name: '',
       passTicket: true.obs,
       pause: 0,
@@ -197,7 +197,7 @@ class MembershipManagementController extends GetxController{
     sportswearController.text = selectedSpotItem.value.sportswear.toString();
     beforeDiscountController.text = selectedSpotItem.value.beforeDiscount.toString();
     priceController.text = selectedSpotItem.value.price.toString();
-    monthlyController.text = selectedSpotItem.value.monthly.toString();
+    dailyController.text = selectedSpotItem.value.daily.toString();
     pauseController.text = selectedSpotItem.value.pause.toString();
   }
 }

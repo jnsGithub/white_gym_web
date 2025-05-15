@@ -325,9 +325,13 @@ class UserManagementPage extends GetView<UserManagementController> {
                             UserData temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
+                            if(user.phone == '01073760662'){
+                              print(isStatusFalse);
+                              print(user.ticket.pauseEndDate.last.isBefore(DateTime.now().add(Duration(days: -1))));
+                            }
 
                             if(user.ticket.pauseEndDate.isNotEmpty){
-                              isStatusFalse = (isStatusFalse.value && user.ticket.pauseEndDate.last.isBefore(DateTime.now().add(Duration(days: -1)))).obs;
+                              isStatusFalse = (isStatusFalse.value && user.ticket.pauseEndDate.last.isBefore(DateTime.now())).obs;
                             }
 
                             if(isStatusFalse.value){

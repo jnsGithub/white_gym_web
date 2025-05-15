@@ -132,9 +132,9 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                 Row(
                                   children: [
                                     Text('이용권 일 수', style: childStyle,),
-                                    componentTextField(95, '숫자만 입력', controller.monthlyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
+                                    componentTextField(95, '숫자만 입력', controller.dailyController, childStyle, 14, TextAlign.right, keyboardType: TextInputType.number,
                                       onChanged: (text){
-                                        controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(day: int.parse(text));
+                                        controller.selectedSpotItem.value = controller.selectedSpotItem.value.copyWith(daily: int.parse(text));
                                       },
                                     ),
                                     Text('일', style: childStyle,),
@@ -215,14 +215,14 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                       ),),
                       Container(height: 1, color: gray200,),
                       componentColumn('기타 서비스',
-                          Obx(() => SizedBox(
+                          SizedBox(
                               width: 270,
                               child: Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('개인 락커 비용${controller.selectedSpotItem.value.isSubscribe.value ? '(월)' : ''} ', style: childStyle,),
+                                      Text('개인 락커 비용 (월)', style: childStyle,),
                                       Row(
                                         children: [
                                           componentTextField(95, '숫자만 입력', controller.lockerController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
@@ -238,7 +238,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('회원복 비용${controller.selectedSpotItem.value.isSubscribe.value ? '(월)' : ''}', style: childStyle,),
+                                      Text('회원복 비용 (월)', style: childStyle,),
                                       Row(
                                         children: [
                                           componentTextField(95, '숫자만 입력', controller.sportswearController, childStyle, 14, TextAlign.center, keyboardType: TextInputType.number,
@@ -254,7 +254,7 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                                 ],
                               ),
                             ),
-                          )),
+                          ),
                       Container(height: 1, color: gray200,),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
@@ -346,16 +346,27 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                     Get.snackbar('멤버쉽 상품 이름을 입력해주세요.', '멤버쉽 상품 이름을 입력해주세요.');
                     return;
                   }
-                  if(controller.isUpdate){
-                    await controller.updateSpotItem();
+
+                  if(!controller.selectedSpotItem.value.isSubscribe.value){
+                    int daily = int.parse(controller.dailyController.text);
+                    print(daily);
+                    if(daily == 1 || daily == 365 || daily%30 == 0){
+                      if(controller.isUpdate){
+                        await controller.updateSpotItem();
+                      }
+                      else{
+                        await controller.addSpotItem();
+                      }
+                      // await controller.getSpotList();
+                      // await controller.getSpotItemList();
+                      controller.init();
+                      controller.isDetailView.value = false;
+                    }
+                    else{
+                      Get.snackbar('이용권 일 수를 확인해주세요.', '1일, 365일 또는 30의 배수로 입력해주세요.');
+                      return;
+                    }
                   }
-                  else{
-                    await controller.addSpotItem();
-                  }
-                  // await controller.getSpotList();
-                  // await controller.getSpotItemList();
-                  controller.init();
-                  controller.isDetailView.value = false;
                 })
               ],
             ),

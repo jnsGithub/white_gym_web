@@ -12,6 +12,12 @@ class SpotItemManagement{
       for (QueryDocumentSnapshot doc in snapshot.docs) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
+        data['daily'] = data['daily'] ?? data['monthly'] * 30;
+        if(data['monthly'] != null){
+          if(data['monthly'] == 12){
+            data['daily'] = 365;
+          }
+        }
         spotItemList.add(SpotItem.fromJson(data));
       }
       return spotItemList;

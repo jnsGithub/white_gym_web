@@ -351,17 +351,14 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await userDB.where('name', isGreaterThanOrEqualTo: '소').get();
-      for(var i in snapshot.docs){
-        print(i.data()['name']);
-        // userDataList.add(UserData.fromJson(i));
-      }
+      final snapshot = await userDB.doc('SRRFoBom6AtLpaL9txTz').get();
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      print(data['phone']);
 
       // var a = snapshot.docs.first.data();
       // a['phone'] = '01053410964';
       // a['name'] = '백영훈';
       // await FirebaseFirestore.instance.collection('user').doc().set(a);
-      print('doc count : ${snapshot.docs.length}');
 
     }
     catch(e){
