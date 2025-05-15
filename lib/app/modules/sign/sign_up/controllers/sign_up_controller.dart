@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/app/data/service/sign.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
+
+import '../../../../data/models/spot/spot.dart';
 
 class SignUpController extends GetxController {
   TextEditingController emailController = TextEditingController();

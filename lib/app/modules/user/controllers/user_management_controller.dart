@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/app/data/service/user_data.dart';
 import 'package:jns_package/jns_package.dart' as jns;
 import 'dart:async';
 
+import '../../../data/models/spot/spot.dart';
 import '../../../data/models/user/user.dart';
 
 class UserManagementController extends GetxController{

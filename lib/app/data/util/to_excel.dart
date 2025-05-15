@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:white_gym_web/app/data/util/format_data.dart';
 import 'package:white_gym_web/global/global.dart';
 
-import '../models/temp/spot.dart';
+import '../models/spot/spot.dart';
 import '../models/user/user.dart';
 
 class ToExcel{

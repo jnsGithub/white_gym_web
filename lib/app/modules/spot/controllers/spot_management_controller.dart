@@ -7,11 +7,12 @@ import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 
 import 'dart:convert';
 import 'dart:js' as js;
 import 'package:http/http.dart' as http;
+
+import '../../../data/models/spot/spot.dart';
 
 
 class SpotManagementController extends GetxController {
@@ -55,7 +56,10 @@ class SpotManagementController extends GetxController {
 
       // print(jsonStr);
       selectedRoadAddress.value = data['roadAddress'] ?? '';
-      selectedSpot.value.address = selectedRoadAddress.value;
+      selectedSpot.value = selectedSpot.value.copyWith(
+        address: selectedRoadAddress.value,
+      );
+      // selectedSpot.value.address = selectedRoadAddress.value;
       selectedAddressController.text = selectedRoadAddress.value;
       selectedJibunAddress.value = data['jibunAddress'] ?? '';
       selectedZonecode.value = data['zoneCode'] ?? '';
@@ -74,12 +78,20 @@ class SpotManagementController extends GetxController {
 
   Future<void> addSpot() async {
     List<String> imageUrlList = await uploadImage();
-    selectedSpot.value.name = selectedNameController.text;
-    selectedSpot.value.address = selectedAddressController.text;
-    selectedSpot.value.addressDetail = selectedAddressDetailController.text;
-    selectedSpot.value.descriptions = selectedDescriptionController.text;
-    selectedSpot.value.imageUrlList = imageUrlList.obs;
-    selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
+    selectedSpot.value = selectedSpot.value.copyWith(
+      name: selectedNameController.text,
+      address: selectedAddressController.text,
+      addressDetail: selectedAddressDetailController.text,
+      descriptions: selectedDescriptionController.text,
+      imageUrlList: imageUrlList.obs,
+      devSnList: devSnControllerList.map((e) => e.text).toList()
+    );
+    // selectedSpot.value.name = selectedNameController.text;
+    // selectedSpot.value.address = selectedAddressController.text;
+    // selectedSpot.value.addressDetail = selectedAddressDetailController.text;
+    // selectedSpot.value.descriptions = selectedDescriptionController.text;
+    // selectedSpot.value.imageUrlList = imageUrlList.obs;
+    // selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
     await SpotManagement().addSpot(selectedSpot.value);
     await getSpotList();
   }
@@ -102,11 +114,18 @@ class SpotManagementController extends GetxController {
 
 
   Future<void> updateSpot() async {
-    selectedSpot.value.name = selectedNameController.text;
-    selectedSpot.value.address = selectedAddressController.text;
-    selectedSpot.value.addressDetail = selectedAddressDetailController.text;
-    selectedSpot.value.descriptions = selectedDescriptionController.text;
-    selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
+    selectedSpot.value = selectedSpot.value.copyWith(
+      name: selectedNameController.text,
+      address: selectedAddressController.text,
+      addressDetail: selectedAddressDetailController.text,
+      descriptions: selectedDescriptionController.text,
+      devSnList: devSnControllerList.map((e) => e.text).toList()
+    );
+    // selectedSpot.value.name = selectedNameController.text;
+    // selectedSpot.value.address = selectedAddressController.text;
+    // selectedSpot.value.addressDetail = selectedAddressDetailController.text;
+    // selectedSpot.value.descriptions = selectedDescriptionController.text;
+    // selectedSpot.value.devSnList = devSnControllerList.map((e) => e.text).toList();
     await SpotManagement().updateSpot(selectedSpot.value, image, selectedSpot.value.imageUrlList.isEmpty);
     await getSpotList();
   }
@@ -152,8 +171,12 @@ class SpotManagementController extends GetxController {
       if (response.statusCode == 200) {
         var dataJson = jsonDecode(response.body);
         print(dataJson);
-        selectedSpot.value.lat = double.parse(dataJson['documents'][0]['y']);
-        selectedSpot.value.lon = double.parse(dataJson['documents'][0]['x']);
+        selectedSpot.value = selectedSpot.value.copyWith(
+          lat: double.parse(dataJson['documents'][0]['y']),
+          lon: double.parse(dataJson['documents'][0]['x']),
+        );
+        // selectedSpot.value.lat = double.parse(dataJson['documents'][0]['y']);
+        // selectedSpot.value.lon = double.parse(dataJson['documents'][0]['x']);
         update();
       } else {
         print('Error: ${response.statusCode}');

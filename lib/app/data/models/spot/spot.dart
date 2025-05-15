@@ -24,6 +24,19 @@ abstract class Spot with _$Spot {
   }) = _Spot;
 
   factory Spot.fromJson(Map<String, dynamic> json) => _$SpotFromJson(json);
+
+  factory Spot.empty() => Spot(
+        documentId: '',
+        name: '',
+        address: '',
+        addressDetail: '',
+        descriptions: '',
+        imageUrlList: RxList<String>(),
+        lat: 0,
+        lon: 0,
+        createDate: DateTime.now(),
+        devSnList: [],
+      );
 }
 
 class RxListConverter implements JsonConverter<RxList<String>, List<String>> {

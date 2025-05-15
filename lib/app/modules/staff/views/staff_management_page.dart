@@ -8,6 +8,8 @@ import 'package:white_gym_web/app/theme/app_color.dart';
 import 'package:white_gym_web/global/global.dart';
 import 'package:number_pagination/number_pagination.dart';
 
+import '../../../data/models/staff/staff.dart';
+
 
 
 
@@ -232,7 +234,9 @@ class StaffManagementPage extends GetView<StaffManagementController> {
                                         ),
                                         onPressed: () async {
                                           if(controller.tabController.index == 0){
-                                            controller.staffList.where((element) => element.documentId == controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId).first.isApproved = true;
+                                            Staff temp = controller.staffList.where((element) => element.documentId == controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId).first;
+                                            temp = temp.copyWith(isApproved: true);
+                                            // controller.staffList.where((element) => element.documentId == controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId).first.isApproved = true;
                                             await controller.staffManagement.approveStaff(controller.selectedStaffList[(controller.selectedPageNumber.value - 1) * 10 + index].documentId);
                                             controller.init();
                                           }else{

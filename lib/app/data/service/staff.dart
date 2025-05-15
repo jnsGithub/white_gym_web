@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:white_gym_web/app/data/models/temp/staff.dart';
 import 'package:white_gym_web/global/global.dart';
+
+import '../models/staff/staff.dart';
 
 class StaffManagement{
   // final db = FirebaseFirestore.instance;
@@ -9,7 +10,7 @@ class StaffManagement{
   Future<List<Staff>> getStaffList() async {
     try{
       final snapshot = await staffDB.orderBy('createDate', descending: true).get();
-      return snapshot.docs.map((doc) => Staff.fromJson(doc)).toList();
+      return snapshot.docs.map((doc) => Staff.fromJson(doc.data())).toList();
     }
     catch(e){
       print(e);

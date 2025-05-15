@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/temp/ticket.dart';
 
+import '../models/spot/spot.dart';
 import '../models/user/user.dart';
 
 class UserDataManagement{

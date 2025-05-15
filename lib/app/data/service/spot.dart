@@ -3,8 +3,9 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import '../models/spot/spot.dart' show Spot;
 
 class SpotManagement{
   // final db = FirebaseFirestore.instance;
@@ -17,7 +18,7 @@ class SpotManagement{
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
         data['devSnList'] = List<String>.from(data['devSnList'] ?? []);
-        spotList.add(Spot.fromMap(data));
+        spotList.add(Spot.fromJson(data));
       }
       return spotList;
     } catch (e) {
@@ -28,7 +29,7 @@ class SpotManagement{
 
   Future<void> addSpot(Spot spot) async {
     try {
-      await spotDB.add(spot.toMap());
+      await spotDB.add(spot.toJson());
     } catch (e) {
       print(e);
     }
