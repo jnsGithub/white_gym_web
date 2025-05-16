@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:white_gym_web/app/data/models/staff.dart';
 
-String version = 'v1.1.4';//'v1.1.3'; //'v beta';
+String version = 'v1.1.5';//'v1.1.3'; //'v beta';
 
 CollectionReference<Map<String, dynamic>> userDB = FirebaseFirestore.instance.collection('user');
 CollectionReference<Map<String, dynamic>> staffDB = FirebaseFirestore.instance.collection('staff');

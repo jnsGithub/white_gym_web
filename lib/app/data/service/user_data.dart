@@ -351,9 +351,11 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await userDB.doc('SRRFoBom6AtLpaL9txTz').get();
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      print(data['phone']);
+      final snapshot = await userDB.where('ticket.spotItem.monthly', isNull: true).get();
+
+      for(var i in snapshot.docs){
+        print(i.data()['phone']);
+      }
 
       // var a = snapshot.docs.first.data();
       // a['phone'] = '01053410964';

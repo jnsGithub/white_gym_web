@@ -367,6 +367,18 @@ class MembershipManagementDetailPage extends GetView<MembershipManagementControl
                       return;
                     }
                   }
+                  else{
+                    if(controller.isUpdate){
+                      await controller.updateSpotItem();
+                    }
+                    else{
+                      await controller.addSpotItem();
+                    }
+                    // await controller.getSpotList();
+                    // await controller.getSpotItemList();
+                    controller.init();
+                    controller.isDetailView.value = false;
+                  }
                 })
               ],
             ),
