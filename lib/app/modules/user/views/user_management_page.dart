@@ -325,10 +325,10 @@ class UserManagementPage extends GetView<UserManagementController> {
                             UserData temp = controller.userDataListView[num].copyWith();
 
                             RxBool isStatusFalse = user.ticket.endDate.isBefore(DateTime.now().add(Duration(days: -1))).obs;
-                            if(user.phone == '01073760662'){
-                              print(isStatusFalse);
-                              print(user.ticket.pauseEndDate.last.isBefore(DateTime.now().add(Duration(days: -1))));
-                            }
+                            // if(user.phone == '01073760662'){
+                            //   print(isStatusFalse);
+                            //   print(user.ticket.pauseEndDate.last.isBefore(DateTime.now().add(Duration(days: -1))));
+                            // }
 
                             if(user.ticket.pauseEndDate.isNotEmpty){
                               isStatusFalse = (isStatusFalse.value && user.ticket.pauseEndDate.last.isBefore(DateTime.now())).obs;
@@ -343,7 +343,7 @@ class UserManagementPage extends GetView<UserManagementController> {
                             memberShipNameController.text = user.ticket.spotItem.name;
                             memberShipPriceController.text = user.ticket.spotItem.price.toString();
                             useDayController.text = formatDate(user.ticket.createDate);
-                            endDateController.text = formatDate(user.ticket.endDate.add(Duration(days: 1)));
+                            endDateController.text = formatDate(user.ticket.endDate.add(Duration(days: user.ticket.subscribe ? 1 : 0)));
                             todayUseCountController.text = user.ticket.admission.toString();
                             pauseCountController.text = user.ticket.pause.toString();
                             sportswearPriceController.text = '';
