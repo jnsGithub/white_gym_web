@@ -233,7 +233,7 @@ class UserDataManagement{
           count++;
           docId = data['documentId'];
           phone = data['phone'];
-          print(data['ticket']['spotItem']['daily']);
+          print(data['ticket']['spotItem']['monthly']);
           if(data['ticket']['spotItem']['daily'] == null){
             data['ticket']['spotItem']['daily'] = data['ticket']['spotItem']['monthly'] * 30;
           }
@@ -369,8 +369,16 @@ class UserDataManagement{
       }
 
       for(var i in snapshot.docs){
-        userList.add(User.fromJson(i.data() as Map<String, dynamic>));
+        Map<String, dynamic> data = i.data() as Map<String, dynamic>;
+        data['documentId'] = i.id;
+        userList.add(User.fromJson(data));
       }
+      snapshot.docs.map((e){
+        Map<String, dynamic> data = e.data() as Map<String, dynamic>;
+        data['documentId'] = e.id;
+        return User.fromJson(data);
+
+      }).toList();
       return userList;
     }
     catch(e){
@@ -383,9 +391,10 @@ class UserDataManagement{
   Future<void> getDummyUserData() async {
     try{
       // List<UserData> userDataList = [];
-      final snapshot = await userDB.doc('SRRFoBom6AtLpaL9txTz').get();
-      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      print(data['phone']);
+      final snapshot = await userDB.where('ticket.spotItem.monthly', isNull: true).get();
+      for(var i in snapshot.docs){
+        print(i.data()['phone']);
+      }
 
       // var a = snapshot.docs.first.data();
       // a['phone'] = '01053410964';

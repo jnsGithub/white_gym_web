@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:white_gym_web/app/data/service/spot.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/temp/spot.dart';
 import 'package:white_gym_web/app/data/models/spot_item/spot_item.dart';
 import 'package:white_gym_web/app/data/service/spot_item.dart';
+
+import '../../../data/models/spot/spot.dart';
 
 class MembershipManagementController extends GetxController{
   RxBool isDetailView = false.obs;

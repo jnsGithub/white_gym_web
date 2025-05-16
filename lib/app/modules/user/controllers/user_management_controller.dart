@@ -69,8 +69,8 @@ class UserManagementController extends GetxController{
 
   init() async {
     // print(await userDataManagement.getAllUsersLength());
-    await getUserDataList();
     await getSpotList();
+    await getUserDataList();
     maxPage.value = (maxUserCount / maxListCount.value).ceil();
 
     userListSort();

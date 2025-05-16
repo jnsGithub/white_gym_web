@@ -10,7 +10,11 @@ class StaffManagement{
   Future<List<Staff>> getStaffList() async {
     try{
       final snapshot = await staffDB.orderBy('createDate', descending: true).get();
-      return snapshot.docs.map((doc) => Staff.fromJson(doc.data())).toList();
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data();
+        data['documentId'] = doc.id;
+            return Staff.fromJson(data);
+      }).toList();
     }
     catch(e){
       print(e);

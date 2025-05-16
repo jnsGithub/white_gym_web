@@ -18,11 +18,12 @@ class SpotManagement{
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['documentId'] = doc.id;
         data['devSnList'] = List<String>.from(data['devSnList'] ?? []);
+        data['imageUrlList'] = List<String>.from(data['imageUrlList'] ?? []);
         spotList.add(Spot.fromJson(data));
       }
       return spotList;
     } catch (e) {
-      print(e);
+      print('스팟 리스트 가져올때 걸림: $e');
       return [];
     }
   }
