@@ -15,7 +15,8 @@ class SpotItem {
   RxBool isSubscribe;         // 구독 여부
   int? pause;                // 일시정지 가능 횟수 (구독 여부가 True일 경우 0)
   int locker;               // 사물함 가격
-  int? monthly;              // 개월 수
+  // int? monthly;              // 개월 수
+  int? daily;                // 사용 가능 날짜
   RxBool passTicket;          // 전지점 이용 가능 여부
   int sportswear;           // 운동복 가격
   String spotDocumentId;    // spotDocumentId
@@ -32,7 +33,8 @@ class SpotItem {
     required this.index,
     required this.isSubscribe,
     required this.locker,
-    required this.monthly,
+    // required this.monthly,
+    required this.daily,
     required this.name,
     required this.passTicket,
     required this.pause,
@@ -44,6 +46,10 @@ class SpotItem {
   // JSON 데이터를 Dart 객체로 변환
   factory SpotItem.fromMap(Map<String, dynamic> map) {
     try {
+      int daily = map['daily'] ?? map['monthly'] * 30;
+      if(map['monthly'] == 12) {
+        daily = 365;
+      }
       return SpotItem(
         documentId: map['documentId'],
         admission: map['admission'],
@@ -55,7 +61,8 @@ class SpotItem {
         index: map['index'],
         isSubscribe: (map['isSubscribe'] as bool).obs,
         locker: map['locker'],
-        monthly: map['monthly'],
+        // monthly: map['monthly'],
+        daily: daily,
         name: map['name'],
         passTicket: (map['passTicket'] as bool).obs,
         pause: map['pause'],
@@ -75,7 +82,8 @@ class SpotItem {
         index: map['index'],
         isSubscribe: (map['isSubscribe'] as bool).obs,
         locker: map['locker'],
-        monthly: map['monthly'],
+        // monthly: map['monthly'],
+        daily: map['daily'],
         name: map['name'],
         passTicket: (map['passTicket'] as bool).obs,
         pause: map['pause'],
@@ -100,7 +108,8 @@ class SpotItem {
       'index': index,
       'isSubscribe': isSubscribe.value,
       'locker': locker,
-      'monthly': monthly,
+      // 'monthly': monthly,
+      'daily': daily,
       'name': name,
       'passTicket': passTicket.value,
       'pause': pause,
@@ -123,7 +132,8 @@ class SpotItem {
       index: 0,
       admission: 0,
       locker: 0,
-      monthly: 0,
+      // monthly: 0,
+      daily: 0,
       pause: 0,
       beforeDiscount: 0,
       price: 0,
@@ -144,6 +154,7 @@ class SpotItem {
     RxBool? isSubscribe,
     int? locker,
     int? monthly,
+    int? daily,
     String? name,
     RxBool? passTicket,
     int? pause,
@@ -162,7 +173,8 @@ class SpotItem {
       index: index ?? this.index,
       isSubscribe: isSubscribe ?? this.isSubscribe,
       locker: locker ?? this.locker,
-      monthly: monthly ?? this.monthly,
+      // monthly: monthly ?? this.monthly,
+      daily: daily ?? this.daily,
       name: name ?? this.name,
       passTicket: passTicket ?? this.passTicket,
       pause: pause ?? this.pause,
@@ -175,6 +187,23 @@ class SpotItem {
   @override
   String toString() {
     // TODO: implement toString
-    return 'SpotItem{documentId: $documentId, name: $name, descriptions1: $descriptions1, descriptions2: $descriptions2, price: $price, discountCheck: $discountCheck, beforeDiscount: $beforeDiscount, admission: $admission, index: $index, isSubscribe: $isSubscribe, pause: $pause, locker: $locker, monthly: $monthly, passTicket: $passTicket, sportswear: $sportswear, spotDocumentId: $spotDocumentId, createDate: $createDate}';
+    return 'SpotItem{'
+        'documentId: $documentId, '
+        'name: $name, '
+        'descriptions1: $descriptions1, '
+        'descriptions2: $descriptions2,'
+        ' price: $price, '
+        'discountCheck: $discountCheck, '
+        'beforeDiscount: $beforeDiscount, '
+        'admission: $admission, '
+        'index: $index, '
+        'isSubscribe: $isSubscribe, '
+        'pause: $pause, '
+        'locker: $locker, '
+        // 'monthly: $monthly, '
+        'passTicket: $passTicket,'
+        ' sportswear: $sportswear,'
+        ' spotDocumentId: $spotDocumentId, '
+        'createDate: $createDate}';
   }
 }

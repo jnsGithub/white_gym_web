@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:white_gym_web/global/global.dart';
-import 'package:white_gym_web/app/data/models/spot_item/spot_item.dart';
+
+import '../models/spot_item.dart';
 
 class SpotItemManagement{
   // final db = FirebaseFirestore.instance;
@@ -18,7 +19,7 @@ class SpotItemManagement{
             data['daily'] = 365;
           }
         }
-        spotItemList.add(SpotItem.fromJson(data));
+        spotItemList.add(SpotItem.fromMap(data));
       }
       return spotItemList;
     } catch (e) {
@@ -29,7 +30,7 @@ class SpotItemManagement{
 
   Future<void> addSpotItem(SpotItem spotItem) async {
     try {
-      await spotItemDB.add(spotItem.toJson());
+      await spotItemDB.add(spotItem.toMap());
     } catch (e) {
       print('SpotItem 추가할때 걸림 : ${e}');
     }
@@ -37,7 +38,7 @@ class SpotItemManagement{
 
   Future<void> updateSpotItem(SpotItem spotItem) async {
     try {
-      await spotItemDB.doc(spotItem.documentId).update(spotItem.toJson());
+      await spotItemDB.doc(spotItem.documentId).update(spotItem.toMap());
     } catch (e) {
       print('SpotItem 업데이트할때 걸림 : ${e}');
     }
